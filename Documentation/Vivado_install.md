@@ -111,11 +111,11 @@ ajout des fichiers XDC :
 
 https://github.com/Digilent/digilent-xdc
 
-il vous faudra pour ouvrir un projet sur une carte un fichier "xdc" représentant les entrées sorties de la carte. 
+il vous faudra un fichier "xdc" représentant les entrées sorties de la carte. il faudra l'ajouter en temps que "constraint file"
 
 Pour notre cas, on aura besoin du fichier Nexys4-master.xdc, que vous pouvez copier n'importe où (idéalement dans le dossier du projet). le fichier sera demandé lors de la création d'un projet 
 
-ATTENTION : cocher "add source files later" dans les options pour un projet en RTL. 
+ATTENTION : cocher "do not specify source at this time" dans les options pour un projet en RTL. 
 
 ## Windows
 
@@ -135,9 +135,9 @@ https://github.com/Digilent/digilent-xdc
 
 
 
-il vous faudra pour ouvrir un projet sur une carte un fichier "xdc" représentant les entrées sorties de la carte. 
+il vous faudra un fichier "xdc" représentant les entrées sorties de la carte. il faudra l'ajouter en temps que "constraint file"
 
 Pour notre cas, on aura besoin du fichier Nexys4-master.xdc, que vous pouvez copier n'importe où (idéalement dans le dossier du projet). le fichier sera demandé lors de la création d'un projet 
 
-ATTENTION : cocher "add source files later" dans les options pour un projet en RTL. 
+ATTENTION : cocher "do not specify source at this time" dans les options pour un projet en RTL. 
 
