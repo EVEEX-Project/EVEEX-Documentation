@@ -99,11 +99,45 @@ Pour la gestion de la carte :
 
 installer les paquets ```runtime``` et ```utilities``` 
 
-## Windows 
+
+
+Ajout des fichiers boards : 
+
+https://github.com/Digilent/vivado-boards
+
+télécharger l'archive, décompresser et ajouter les fichier contenu dans  ``new/boards_parts/``dans le dossier ``data/boards/boards`` du repertoire d'installation de Vivado
+
+ajout des fichiers XDC : 
+
+https://github.com/Digilent/digilent-xdc
+
+il vous faudra pour ouvrir un projet sur une carte un fichier "xdc" représentant les entrées sorties de la carte. 
+
+Pour notre cas, on aura besoin du fichier Nexys4-master.xdc, que vous pouvez copier n'importe où (idéalement dans le dossier du projet). le fichier sera demandé lors de la création d'un projet 
+
+ATTENTION : cocher "add source files later" dans les options pour un projet en RTL. 
+
+## Windows
 
 https://www.xilinx.com/support/download.html
 
 A priori tout marche du premier coup 
 
+Ajout des fichiers boards : 
 
+https://github.com/Digilent/vivado-boards
+
+télécharger l'archive, décompresser et ajouter les fichier contenu dans  ``new/boards_parts/``dans le dossier ``data/boards/boards`` du repertoire d'installation de Vivado
+
+ajout des fichiers XDC : 
+
+https://github.com/Digilent/digilent-xdc
+
+
+
+il vous faudra pour ouvrir un projet sur une carte un fichier "xdc" représentant les entrées sorties de la carte. 
+
+Pour notre cas, on aura besoin du fichier Nexys4-master.xdc, que vous pouvez copier n'importe où (idéalement dans le dossier du projet). le fichier sera demandé lors de la création d'un projet 
+
+ATTENTION : cocher "add source files later" dans les options pour un projet en RTL. 
 
