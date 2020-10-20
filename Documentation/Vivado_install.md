@@ -9,7 +9,7 @@ https://www.xilinx.com/support/download.html prendre l'archive complète (ne mar
 Dependencies: 
 
 ```
-sudo apt-get install libncurses5
+sudo apt-get install libtinfo-dev libncurses5-dev 
 ```
 
 tuto: 
