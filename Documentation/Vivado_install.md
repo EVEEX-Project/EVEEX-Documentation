@@ -99,7 +99,7 @@ Pour la gestion de la carte :
 
 installer les paquets ```runtime``` et ```utilities``` 
 
-
+https://reference.digilentinc.com/reference/software/adept/start?redirect=1
 
 Ajout des fichiers boards : 
 
