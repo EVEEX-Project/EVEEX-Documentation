@@ -43,10 +43,17 @@ L'objectif à la fin de cette année scolaire est d'obtenir un produit commercia
 
 ## Remerciements 
 
-- Nos encadrants Pascal Cotret, Jean-Christophe Le Lann et Joël Champeau, qui nous aident à définir les objectifs à atteindre, ainsi qu'a résoudre des problèmes théoriques. 
+- Nos encadrants Pascal Cotret, Jean-Christophe Le Lann et Joël Champeau, qui nous aident à définir les objectifs à atteindre, nous prettent le matériel nécessaire en particulier les cartes FPGA, ainsi qu'a résoudre des problèmes théoriques. 
+
 - Enjoy Digital, société créé par un Alumni Ensta-Bretagne, et son produit Litex qui nous sera très utile sur l'implémentation hardware. 
+
 - Le site FPGA4students pour ses tutoriels VHDL/Verilog.
+
 - Jean-Christophe Leinen pour ces conseils sur les méthodes Agiles.
+
+- Aliexpress pour les cameras pas chères. 
+
+  
 
 <div style="page-break-after: always; break-after: page;"></div>
 
