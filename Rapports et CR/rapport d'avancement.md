@@ -8,6 +8,7 @@ Encadrants : Pascal Cotret, Jean-Christophe Le Lann, Joël Champeau
 
 Most of the world's bandwidth is nowadays used for the exchange of multimedia content, especially video streaming. With more than 2 billion users every month on Youtube alone [5 - abstract], video streaming has not only become a taken-for-granted technology, but one that consumes a lot of resources both in terms of energy and storage.
 
+<<<<<<< Updated upstream
 To reduce these excessive consumptions a solution is video compression. While business consortia compete for royalties on their proprietary compression algorithms such as MPEG-1 or x264, we want to offer a viable and open source alternative.
 
 During this school year, we are going to design an algorithm to compress a raw video stream to send it over a network or simply to store it in a file, and then a second algorithm to decompress this data. Once the algorithm is operational and mature, we will carry out a purely hardware implementation in order to optimise the computing time and energy consumption related to data compression.
@@ -32,9 +33,8 @@ Il est évident que pour réaliser ces étapes, nous ne pouvons pas nous appuyer
 
 L'objectif à la fin de cette année scolaire est d'obtenir un produit commercialisable pour la compression et la transmission de flux vidéo sur le réseau en utilisant une webcam et deux cartes FPGA, toutes bien sûr open source et disponibles sur github.
 
-## Sommaire
-
-[Guillaume]
+## Table des matières
+[TOC]
 
 ## Remerciements 
 
@@ -47,7 +47,7 @@ L'objectif à la fin de cette année scolaire est d'obtenir un produit commercia
 
 ​	Aujourd'hui, le contenu vidéo, en particulier le *streaming* , représente 61% de la bande passante mondiale [1]. Cependant si les derniers algorithmes présentes des performances très convaincantes, force est de constater que les codecs anciens comme le MPEG-4 (mp4) sont encore très largement utilisés. Il n'existe pas aujourd'hui de codec *open-source* doté de performances en accord avec les besoins d’aujourd’hui que ce soit au niveau de la qualité d'image ou de la bande-passante nécessaire. Car en effet, et cela est peu connu, les codecs largement utilisés comme le H.265 ou le MP4 sont en source fermée (closed-source), et demande des royalties pour une utilisation commerciale par une entreprise. 
 
-![HEVC-License-Price-List](/media/sytrics/Storage/git/EVEEX-Documentation/Rapports et CR/Rapport d'avancement  projet Encode Vidéo Ensta-Bretagne Experimental (EVEEX).assets/HEVC-License-Price-List.png)
+![HEVC-License-Price-List](rapport d'avancement.assets/HEVC-License-Price-List.png)
 
 <center> <i> Figure 1: Carte des tarifs pour utiliser HVEC (h.265). Cela peut représenter un coût conséquent pour les entreprises </i></center>
 
@@ -133,7 +133,7 @@ La partie suivante concerne la mise en format des données. On utilise pour cela
 
 [Jean-no]
 
-![arbre](/media/sytrics/Storage/git/EVEEX-Documentation/Rapports et CR/Rapport d'avancement  projet Encode Vidéo Ensta-Bretagne Experimental (EVEEX).assets/arbre-1607441786592.png)
+![arbre](rapport d'avancement.assets/arbre.png)
 
 ```
 Encoded string : 10101001100110000110011011011011100100110101000010100010010111110101111100000101011001110101110000001001001101011111111010111010100111110011000101111101111010101100101110110011001001001101111000011111001000010
@@ -181,7 +181,7 @@ Sur conseil de nos encadrants, nous nous sommes donc intéresser à une solution
 
 ​	Toutes ces caractéristiques le rendent idéal pour notre algorithme. L’intérêt d'un tel système est aussi la possibilité, afin d'améliorer les performances de l'algorithme, de migrer certaines parties du code en VHDL afin de l’exécuter de la manière la plus optimisé possible. 
 
-​	L'objectif pour nous est ainsi de compiler notre code c pour l'architecture RiscV (qui est open-source), de créer une architecture processeur "sur-mesure" grâce à LiteX, et d'optimiser les phases critiques de l'algorithme afin d'exploiter le parallélisme du FPGA. 
+​	L'objectif pour nous est ainsi de compiler notre code c pour l'architecture RiscV (qui est open-source), de créer une architecture processeur "sur-mesure" grâce à LiteX, et d'optimiser les phPoints à venir ases critiques de l'algorithme afin d'exploiter le parallélisme du FPGA. 
 
 
 
@@ -189,23 +189,40 @@ Sur conseil de nos encadrants, nous nous sommes donc intéresser à une solution
 
 Nous avons adapté un code existant en vhdl afin d'afficher sur un écran en VGA le retour de la caméra 7670. La qualité d'image n'est pas la meilleure mais elle devrait être suffisante pour exploiter l'algorithme 
 
-![qualité](/media/sytrics/Storage/git/EVEEX-Documentation/Rapports et CR/Rapport d'avancement  projet Encode Vidéo Ensta-Bretagne Experimental (EVEEX).assets/qualité.jpg)
+![image0](rapport d'avancement.assets/qualité.jpg)
 
 <center> <i> Figure 5: rendu VGA de la camera OV7670 relié à un FPGA Nexys4 (il n'y a pas de compression l'image est affiché de manière directe). La colorimétrie est lié à l'absence de blindage des câbles reliant la camera à la carte. </i></center>
 
 Pour pallier le problème du branchement de la camera (connecteur Pmod), notre encadrant Pascal Cotret nous a conçu un adaptateur maison. 
 
-![imageonline-co-emojiadded](/media/sytrics/Storage/git/EVEEX-Documentation/Rapports et CR/Rapport d'avancement  projet Encode Vidéo Ensta-Bretagne Experimental (EVEEX).assets/imageonline-co-emojiadded.jpg)
+![imageonline-co-emojiadded](rapport d'avancement.assets/imageonline-co-emojiadded.jpg)
 
 Concernant le code en lui-même, nous commençons à comprendre la démarche de création d'un SOC, par notamment la réalisation des tutoriels LiteX proposé par Enjoy Digital. 
 
 ### Déroulement Agile du projet 
 
-Nous avons bien entendu respecter les principes de la méthode Agile pour 
+Nous avons bien entendu respecter les principes de la méthode Agile pour la construction du projet. premièrement nous avons défini les rôles que chacun aurait à tenir au sein du projet : 
 
-[Guillaume]
+* Guillaume Leinen : ***Scrum Master***. C'est en quelque sorte le "maître du jeu". C'est lui qui va rythmer l'activité des sprints pour son Scrum (ici toute l'équipe du projet). Sur un projet impliquant un si faible nombre de personne, il va bien entendu aussi participer au développement. Il est aussi le garant du respect de la méthode Agile. Enfin le SM ne décide pas seul des taches de chacun mais veille à ce que chacun fasse ce qu'il souhaite faire pour faire avancer le projet dans son domaine de compétence. 
+* Alexandre Froehlich : ***Product Owner*** . C'est l'équipier qui a la charge supplémentaire au sein du projet de vérifier que les activités du scrum sont utiles au projet final et correspondent au cahier des charges et exigences du projet. Traditionnellement, le PO se trouve chez le client pour de plus gros projets, en ce sens M. Le Lann à aussi jouer une part du rôle en nous guidant sur les démarches à suivre concernant le développement ou en nous fournissant des documentations techniques sur d'autres technologies de compression vidéo. 
+* Hussein Saad, Jean-Noël Clink, Hugo Questroy :  ***Equipiers***. Ils se concentre sur la réalisation du travail et le feed-back quand celui ci est terminé. Nous nous concentrons sur des retours à l'oral ou sous forme de courtes démos vidéos, car la rédaction d'un rapport écrit est longue, rigide sur la forme et fastidieuse surtout dans un cadre agile ou l'important est de réaliser la tache plutôt que de la documenter. 
 
-## Points à venir 
+Les rôles ainsi distribués nous avons choisi de séparer la force de travail en 2 parties distinctes mais dont le travail peut être transverse: 
+
+* Une partie "Software" constitué d'Alexandre, Hugo et jean-Noël. Leur travail consiste à se focaliser sur la construction de l'algorithme et son développement dans plusieurs langages. 
+* une partie "Hardware" constitué de Guillaume et Hussein. Ils se focalisent sur l'implémentation matériel de l'algorithme, la gestion du FPGA et de ces constituants (RAM, I/O)
+
+Néanmoins avec l'introduction de LiteX, mélangeant code et matériel, cette séparation n'a plus vraiment de sens. Nous avons donc commencé à nous en séparer et à distribuer les taches en fonction des appétences de chacun, qu'elles soient algorithmiques ou électroniques. 
+
+Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela nous nous sommes orientés sur un outil simple qui s'intègre à Github : ***ZenHub*** 
+
+![zenhubmp](rapport d'avancement.assets/zenhubmp.png)
+
+
+
+
+
+### Points à venir 
 
 [Hugo pour le software - Hussein au niveau LiteX ]
 
