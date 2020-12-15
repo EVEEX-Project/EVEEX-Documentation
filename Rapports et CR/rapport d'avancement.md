@@ -90,16 +90,16 @@ Les points de vocabulaires au niveau de exigences seront définis par la suite d
 
 | Numéro identifiant l'exigence |                           Exigence                           |                    Performances attendues                    |  Certitude quant à la réalisation de cette exigence (en %)   |
 | :---------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-|               1               | Le projet doit être intégralement open-source et accessible gratuitement (exigence non fonctionnelle) |                             None                             | 100% : Après analyse, il est probable que l'intégralité des solutions à incorporer soient open source. En revanche, la chaîne de compilation sur FPGA dépend du fabricant de la carte choisie par un utilisateur. Si ces logiciels (Intel Quartus, Xilinx Vivado) sont gratuits, il ne sont en revanche pas open source. Malgré tout, il existe des solutions FPGA (carte + IDE) open-sources comme Lattice. |
-|              2.1              | L'algorithme doit pouvoir recevoir un flux photos et vidéo "brut" et le convertir en format exploitable |          Conversion d'un flux RGB en flux YUV/YCbCr          | 100% : La conversion étant un simple calcul matriciel, il est facile à implémenter dans un language haut-niveau (Python), et possiblement implémentable de façon directe en HDL sur la carte FPGA. |
-|             2.2.1             |       L'algorithme doit compresser des données brutes        | Dans un premier temps, performances analogues au MPEG-1 => 20:1 pour une photo, 100:1 pour une vidéo | 50% : Si le taux de compression d'une image semble atteignable (à l'heure actuelle environ 10:1 en Python), le taux vidéo va demander pas mal d'optimisations du code en langage C. |
-|             2.2.2             |    L'algorithme doit décompresser les données compressées    |      Identiques (ou supérieures) à celles de l'encodage      | 100% : Le décodage d'un arbre du Huffman est plus rapide que l'encodage (à cause du temps de génération important du dictionnaire de Huffman). |
-|             2.2.3             | L'algorithme doit compresser les données d'une manière originale (pas une copie de MPEG) |                             None                             | 80% : Nous pensons incorporer une taille variable de macroblocs de traitement, ce qui nous différenciera fondamentalement du MPEG. |
-|             2.3.1             | L'algorithme doit pouvoir formater les données compressées afin qu'elles puissent être envoyées via un réseau |                             None                             | 100% : Nous avons une bonne maîtrise du bitstream en Python, et l'implémentation C est en cours. |
-|             2.3.2             | L'algorithme doit pouvoir recevoir les données par le réseau et les comprendre |                             None                             |          100% : Pour les mêmes raisons que la 2.3.1          |
-|             2.4.1             | L'algorithme doit permettre l'affichage d'une image décodée  |               Affichage VGA sur la carte FPGA                | 100% : Si on utilise Litex, cela est déjà réalisé en VHDL natif. |
-|              3.1              |   L'algorithme doit pouvoir s’exécuter sur une carte FPGA    |  Identiques ou supérieures à la version PC de l'algorithme   | 70% : Avec l'utilisation d'un SOC riscV, l'implémentation en C devrait être jouable. Le principal point bloquant est la gestion de la mémoire sur la carte FPGA. |
-|              4.1              | L'algorithme implémenté sur FPGA doit induire une faible consommation électrique | Inférieure à la consommation d'un PC exécutant l'algorithme (ie < 30W) | 100% : Les FPGA consomment peu d'énergie (notre modèle s'alimente via un port micro-USB). |
+|               1               | Le projet doit-être intégralement open-source et accessible gratuitement. (exigence non fonctionnelle) |                             None                             | 100% => après analyse, il est probable que l'intégralité des solutions à incorporer soit open-source. En revanche, la chaîne de compilation sur FPGA dépend du fabricant de la carte choisi par un utilisateur. Si ces logiciels (Intel Quartus, Xilinx Vivado) sont gratuits, il ne sont en revanche pas open-source. Malgré tout il existe des solutions FPGA (carte + IDE) open-sources comme Lattice. |
+|              2.1              | L'algorithme doit pouvoir recevoir un flux photos et vidéo "brut" et le convertir en format exploitable |          Conversion d'un flux RGB en flux YUV/YCbCr          | 100%, la conversion étant un simple calcul matriciel, il est facile à implémenter dans un language haut-niveau (python), et possiblement implémentable de façon direct en HDL sur la carte FPGA. |
+|             2.2.1             |        l'algorithme doit compresser les données brut         | Dans un premier temps, performances analogues au MPEG-1 => 20:1 pour une photo, 100:1 pour vidéo | 50%, si le taux de compression image semble atteignable (à l'heure actuelle environ 10:1 en python), le taux vidéo va demander pas mal d'optimisation du code en langage c. |
+|             2.2.2             |    l'algorithme doit décompresser des données compressés     |            Identiques ou supérieurs à l'encodage             | 100%, le décodage d'un arbre du Huffmann est plus rapide que l'encodage. |
+|             2.2.3             | l'algorithme doit compresser les données d'une manière originale (pas une copie de MPEG) |                             None                             | 80%, Nous pensons incorporer une taille variable de macrobloc de traitement, ce qui nous différencie fondamentalement du MPEG |
+|             2.3.1             | l'algorithme doit pouvoir formater les données compresser afin qu'elle puissent être envoyé en réseau. |                             None                             | 100%, nous avons une bonne maîtrise du bitstream en python et l'implémentation c est en cours. |
+|             2.3.2             | l'algorithme doit pouvoir recevoir les données par le réseau et les comprendre |                             None                             |                 100% pour les mêmes raisons                  |
+|             2.4.1             | l'algorithme doit permettre un affichage d'une image décodé  |               affichage VGA sur la carte fpga                |   100% si on utilise Litex, et déjà réalisé en vhdl natif    |
+|              3.1              |   l'algorithme doit pouvoir s’exécuter sur une carte FPGA    |   identiques ou supérieurs à la version pc de l'algorithme   | 70%, avec l'utilisation d'un SOC riscV l'implémentation C devrait être jouable. Le principal point bloquant est la gestion de la mémoire sur la carte FPGA. |
+|              4.1              | l'algorithme implémenté sur fpga doit induire une faible consommation électrique | Inférieure à la consommation d'un PC exécutant l'algorithme. (<30W) | 100%, les fpga consomment nativement peu d'énergie (notre modèle s'alimente par port micro-usb) |
 
 On rajoute à ces exigences les fonctions définissant les relations entre l'algorithme et les acteurs externes. Pour cela, la méthode du diagramme en pieuvre est utilisée. Elle permet d'illustrer clairement les fonctions accomplies par le système (ie l'algorithme EVEEX). 
 
@@ -136,7 +136,7 @@ Ensuite, l'image est découpée en **macroblocs** de 16x16 pixels. En réalité,
 
 Après cette étape, on applique diverses transformations **à chacune de ces matrices-macroblocs YUV** afin de les compresser. Ces transformations font partie de **l'étape d'encodage**.
 
-* Tout d'abord, on va appliquer la Transformation en Cosinus Discrète, ou **DCT**, qui est une transformation linéaire et **réversible** qui va permettre de **concentrer** les données d'un macrobloc YUV donnée dans la diagonale de l'image de sortie (la diagonale "nord-ouest / sud-est"). Ainsi, en-dehors de cette zone, les composantes de l'image (après application de la DCT)  seront relativement faibles en valeur absolue, ce qui sera **très pratique** lors des étapes suivantes.
+* Une Transformation en Cosinus Discrète, ou **DCT**, qui est une transformation linéaire et **réversible** qui va permettre de **concentrer** les données du macrobloc YUV dans la diagonale de l'image de sortie (la diagonale "nord-ouest / sud-est"). Ainsi, en-dehors de cette zone, les composantes de l'image (après application de la DCT)  seront relativement faibles en valeur absolue, ce qui sera **très pratique** lors des étapes suivantes.
 
 * On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT ainsi généré. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur 16x16 = 256. **On passe donc d'un array à 2 dimensions à un array en une seule dimension.** Ce découpage va se faire selon les 2x16-1 = 31 diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici **extrêmement commode**, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, partout ailleurs, ces valeurs seront moindres.
 
@@ -253,12 +253,12 @@ Au niveau du FPGA, les choses ont récemment évolué.
 
 Nous étions partis pour développer l'algorithme entièrement en langage HDL, en passant pour les fonctions compliquées par un outil de *High Level Synthesis* (HLS). Cependant, nous nous sommes rendus compte qu'il serait compliqué de continuer ainsi, et cela pour de multiples raisons : 
 
-* La HLS permet en théorie de transformer un code écrit en C en un code HDL comme le VHDL ou le Verilog. Le problème de la HLS est qu'elle induit de l’opacité dans le code machine final (on ne contrôle pas la génération de code). De plus, la syntaxe C nécessaire à son interprétation par le logiciel de HLS est extrêmement contraignante (impossible de faire des mallocs, typage limité aux types primaires, etc [4]). 
-* Les langages HDL comme le VHDL sont extrêmement durs à appréhender, la courbe d'apprentissage est très abrupte (la syntaxe est très différente, c'est très bas niveau, les types sont limités à des mots binaires, etc). De plus, il serait assez déraisonnable de vouloir apprendre la programmation machine en HDL en seulement quelques mois.
-* L'interface de développement Xilinx Vivado, bien qu'elle permette quelques fonctionnalités intéressantes, notamment pour l'analyse de code et son optimisation, est très lourde à installer (80 Go sur le disque dur) et est très difficile à prendre en main (environ 2 semaines pour comprendre le fonctionnement du framework et des principales fonctionnalités). On voudrait privilégier un IDE plus simple.
-* Enfin, la gestion des I/O ainsi que de la RAM demande dans la grande majorité des cas de faire appel à des bibliothèques de Xilinx, qui sont gratuites pour certaines (et très chères pour d'autres), et qui sont surtout *closed-sourced*. 
+* La HLS permet en théorie de transformer un code écrit en c en un code HDL comme le VHDL ou le Verilog. Le problème de la HLS est qu'elle induit de l’opacité dans le code machine finale (on ne contrôle pas la génération de code). Aussi la syntaxe c nécessaire à son interprétation par le logiciel de HLS est extrêmement contraignante (impossible de faire des mallocs, typage limité aux types primaires,etc...[5]). 
+* les langages HDl comme le VHDL sont extrêmement durs à appréhender, la courbe d'apprentissage est très abrupte (la syntaxe est très différente, c'est très bas niveau, les types limités à des mots binaires, etc...). il est assez déraisonnable d'apprendre la programmation machine en HDL en seulement quelques mois 
+* l'interface de développement Xilinx Vivado, si elle permet quelques fonctionnalités intéressantes notamment pour l'analyse de code et l'optimisation, est très lourde à installer (80 go sur le disque dur) et très difficile à prendre en main (environ 2 semaines pour comprendre le fonctionnement du framework et les principales fonctionnalités). On voudrait privilégier un IDE plus simple.
+* enfin, la gestion des I/O ainsi que de la RAM demande dans la grande majorité des cas de faire appel à des bibliothèques de xilinx, qui sont gratuites pour certaines (et très chères pour d'autres []), et qui sont surtout *closed-sourced*. 
 
-Sur conseil de nos encadrants, nous nous sommes donc intéressés à une solution alternative proposée par Florent Kermarrec (ENSTA promotion 2008) et sa société Enjoy Digital, spécialisée dans la fabrication de solutions FPGA *sur mesure*. Cette personne à développé un outil appelé **LiteX**. 
+Sur conseil de nos encadrants, nous nous sommes donc intéresser à une solution alternative proposé par Florent Kermarrec, ENSTA promotion 2008 et sa société "Enjoy Digital" spécialisé dans la fabrication de solutions FPGA sur-mesures. Cette personne à développer un outil appeler **"LITEX"**. [6] 
 
 ```
                                       +---------------+
@@ -323,7 +323,7 @@ Néanmoins, avec l'introduction de LiteX (mélangeant code et matériel), cette 
 
 Concernant les sprints eux-mêmes, nous nous sommes orientés sur des sprints de **2 semaines**, avec un objectif de release (programme, documentation, fonctions supplémentaires, etc) **tous les 3 sprints**. Nous évaluons chaque tâche par un **système de points**, prenant en compte : la difficulté de la tâche, la longueur prévue, ou le nombre de personnes impliquées dans celle-ci. 
 
-Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela, nous nous sommes orientés sur un outil simple qui s'intègre à Github : ***ZenHub***.
+Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela nous nous sommes orientés sur un outil simple qui s'intègre à Github : ***ZenHub*** [7] 
 
 ![zenhubmp](rapport d'avancement.assets/zenhubmp.png)
 
@@ -371,7 +371,7 @@ Une autre amélioration serait d'avoir des macroblocs qui soient dynamiques : po
 <center> <i>Figure 14 : Exemple d'un découpage en macroblocs dynamiques (à droite), comparé à un découpage en macroblocs de taille fixe (à gauche)</i></center>
 
 
-Pour le deuxième semestre, nous allons utiliser **LiteX** pour la création du SOC avec un architecture RiscV. L'avantage est que c'est open-source, ce qui est précisément l'un des objectifs premiers de notre projet. De plus, comme expliqué dans la diagramme, nous allons continuer de réaliser le code en C pour le compiler en utilisant l'architecture RiscV, et on va générer un accélérateur matériel par synthèse de haut niveau (High Level Synthesis, ou HLS). Nous allons aussi créer un CPU wrapper en Python et l'appeler avec **LiteX**.
+Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LITEX** pour la création du SOC avec un architecture RISC V, avec l'avantage que c'est open-source ce qui est le but de notre projet. Comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV. Parallelement à ça, nous essayerons d'accelerer certaines fonctionnalités clés du programme par l'ajout de code écrit directement en verilog. Certaines fonctions comme le codage Huffman ou la RLE existe deja comme des IP propriétaires de Xilinx [8] et il devrait etre possible avec la documentation fourni de copier le fonctionement de ces IP. 
 
 ![LiteX_framework](rapport d'avancement.assets/LiteX_framework-1608039573819.png)
 
@@ -398,10 +398,12 @@ L'optimisation des fonctions critiques sera clé dans l'interet de l'implémenta
 
 [4]Moore, A., 2017. *Fpgas For Dummies*. 2nd ed. [ebook] Intel Altera. Available at:  <https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/misc/fpgas-for-dummies-ebook.pdf> [Accessed 31 September 2020].
 
-[5] 2014. *Vivado Design Suite Tutorial : High-Level Synthesis*. [ebook] Available at:  <https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_2/ug871-vivado-high-level-synthesis-tutorial.pdf> [Accessed 15 October 2020].
+[5]Chireux, N., 1999. Compression d'images fixes. [cours] Available at: https://www.chireux.fr/mp/cours/Compression%20JPEG.pdf [Accessed 31 September 2020]
 
-[6] LiteX-hub - Collaborative FPGA projects around LiteX. Available at: https://github.com/litex-hub [Accessed 1 December 2020]. 
+[6] 2014. *Vivado Design Suite Tutorial : High-Level Synthesis*. [ebook] Available at:  <https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_2/ug871-vivado-high-level-synthesis-tutorial.pdf> [Accessed 15 October 2020].
 
-[7] Zenhub.com - project Management in Github. Available at: https://www.zenhub.com/ [Accessed 15 october 2020]
+[7] LiteX-hub - Collaborative FPGA projects around LiteX. Available at: https://github.com/litex-hub [Accessed 1 December 2020]. 
 
-[8] Pilai, L., 2003. *Huffman Coding*. [pdf] Available at:  <https://www.xilinx.com/support/documentation/application_notes/xapp616.pdf> [Accessed 1 December 2020].
+[8] Zenhub.com - project Management in Github. Available at: https://www.zenhub.com/ [Accessed 15 october 2020]
+
+[9] Pilai, L., 2003. *Huffman Coding*. [pdf] Available at:  <https://www.xilinx.com/support/documentation/application_notes/xapp616.pdf> [Accessed 1 December 2020].
