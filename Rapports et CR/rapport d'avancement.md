@@ -126,26 +126,35 @@ La réalisation de l'algorithme constitue une part très importante du projet, p
 
 Pour cet algorithme de traitement des données, nous nous sommes basés sur le MJPEG, car il est relativement simple à appréhender. **L'objectif de notre algorithme est de compresser l'image de référence le plus possible (ie avoir le meilleur taux de compression), et ce le plus rapidement et efficacement possible.**
 
-Le fonctionnement de l'algorithme est détaillé dans le diagramme en bloc ci-dessous. Il est composé de plusieurs phases, dont certaines necessitant quelques concepts mathématiques.
+Le fonctionnement de l'algorithme est détaillé dans le diagramme en bloc fourni en annexe. Il est composé de plusieurs phases, dont certaines necessitant quelques concepts mathématiques. Pour chacune des 3 étapes principales de l'algorithme (encodage, passage réseau et décodage), nous ferons un zoom sur le diagramme que nous avons effectué (par souci de simplicité).
 
-L'image, au format RGB (que sort nativement la plupart des cameras), est tout d'abord convertie au format chrominance/luminance (YUV). 
+L'image, au format RGB (que sort nativement la plupart des cameras), est tout d'abord **convertie au format chrominance/luminance (YUV)**. 
 
-Ensuite l'image est découpée en **macroblocs** de 16x16 pixels. En réalité, comme une image RGB contient 3 canaux de couleur, les macroblocs sont en fait de taille 16x16x3, mais, par abus de langage, et par souci de simplicité, nous dirons simplement qu'ils ont une taille de 16x16 (ou NxN dans le cas général). Cette taille de macroblocs n'est pas arbitraire. En effet, nous avons déterminé **empiriquement** que, pour notre prototype, **et pour des images pré-existantes en 480p (720 x 480 pixels) ou alors générées aléatoirement**, les macroblocs 16x16 étaient ceux qui produisaient les meilleurs taux de compression parmi les tailles standards de macroblocs, à savoir 8x8, 16x16 et 32x32 pixels. Cette décomposition en macroblocs permet de faciliter le traitement de l'image et de paralléliser les taches. Nous nous différencierons des autres algorithmes existants en rendant cette taille de macroblocs **variable** en fonction du contenu du macrobloc. Par exemple, si un macrobloc présente un taux de contraste élevé, on réduit sa taille, alors que si c'est un aplat de couleur, on l'augmente. Cela permettra (a priori) d'améliorer le taux de compression.
+Ensuite l'image est découpée en **macroblocs** de 16x16 pixels. En réalité, comme une image RGB contient 3 canaux de couleur, les macroblocs sont en fait de taille 16x16x3, mais, par abus de langage, et par souci de simplicité, nous dirons simplement qu'ils ont une taille de 16x16 (ou NxN dans le cas général). Cette taille de macroblocs n'est pas arbitraire. En effet, nous avons déterminé **empiriquement** que, pour notre prototype, **et pour des images pré-existantes en 480p (720x480 pixels) ou alors générées aléatoirement**, les macroblocs 16x16 étaient ceux qui produisaient les meilleurs taux de compression parmi les tailles standards de macroblocs, à savoir 8x8, 16x16 et 32x32 pixels. Cette décomposition en macroblocs permet de faciliter le traitement de l'image et de paralléliser les taches. De plus, nous nous différencierons des autres algorithmes existants en rendant cette taille de macroblocs **variable** en fonction du contenu du macrobloc. Par exemple, si un macrobloc présente un taux de contraste élevé, on réduit sa taille, alors que si c'est un aplat de couleur, on l'augmente. Cela permettra (a priori) d'améliorer le taux de compression.
 
-Après cette étape, on applique diverses transformations **à chacune de ces matrices-macroblocs** afin de les compresser : 
+Après cette étape, on applique diverses transformations **à chacune de ces matrices-macroblocs YUV** afin de les compresser. Ces transformations font partie de **l'étape d'encodage.** 
 
-* Une Transformation en Cosinus Discrète, ou **DCT**, qui est une transformation linéaire et **réversible** qui va permettre de **concentrer** les données du macrobloc YUV dans la diagonale de l'image de sortie (la diagonale "nord-ouest / sud-est"). Ainsi, en-dehors de cette zone, les composantes de l'image (après application de la DCT)  seront relativement faibles en valeur absolue, ce qui sera très pratique lors des étapes suivantes.
+* Une Transformation en Cosinus Discrète, ou **DCT**, qui est une transformation linéaire et **réversible** qui va permettre de **concentrer** les données du macrobloc YUV dans la diagonale de l'image de sortie (la diagonale "nord-ouest / sud-est"). Ainsi, en-dehors de cette zone, les composantes de l'image (après application de la DCT)  seront relativement faibles en valeur absolue, ce qui sera **très pratique** lors des étapes suivantes.
 
-* On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur 16x16 = 256. Ce découpage va se faire selon les 2x16-1 = 31 diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici **extrêmement commode**, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, partout ailleurs, elles seront moindres.
+* On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur 16x16 = 256. Ce découpage va se faire selon les 2x16-1 = 31 diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici **extrêmement commode**, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, partout ailleurs, ces valeurs seront moindres.
 
   ![zigzag](rapport d'avancement.assets/Zigzag linearization.png)
   
-  <center> <i> Figure 3 : Exemple de linéarisation en zigzag pour un macrobloc 6x6 </i></center>
+  <center> <i> Figure 3 : Exemple de linéarisation en zigzag pour un macrobloc 6x6 (pour un seul canal de couleur) </i></center>
 
-* On effectue maintenant l'étape de seuillage, aussi appelée **quantization**. Cette opération consiste à ramener à zéro tous les éléments des 3 listes issues de la linéarisation en zigzag qui sont inférieures **(en valeur absolue)** à un certain seuil, appelé *threshold*. Comme énoncé précédemment, la plupart des valeurs de ces 3 listes seront relativement faibles, donc appliquer ce seuillage va nous permettre d'avoir en sortie 3 listes avec **beaucoup de zéros**. Le seuil est ici déterminé empiriquement, à partir de tests sur des images-macroblocs générées aléatoirement. On a choisi *threshold* = 10, car il s'agissait de la valeur qui optimisait le taux de compression tout en ayant une bonne qualité d'image en sortie.
-* On passe ensuite à l'étape de la **RLE** (Run-Length Encoding). Cette étape consiste à regrouper de manière synthétique (dans des tuples) les séries de zéros obtenus après l'étape de la quantization. Concrètement, si dans une liste seuillée on a 124 zéros puis un 5.21 (par exemple), d'abord 5.21 est arrondi à l'entier le plus proche (ie 5), puis cette série de 125 entiers sera stockée dans le tuple (124, 5). Plus généralement, si l'on a le tuple RLE "(U, V)", cela signifie que l'on a U zéros puis l'entier **non-nul** V. Ainsi, chaque macrobloc sera décrit de manière **extrêmement synthétique** par une liste de tuples RLE. L'image finale, étant décomposée en une série de macroblocs, sera alors une liste de liste de tuples RLE.
+* On effectue maintenant l'étape de seuillage, aussi appelée **quantization**. Cette opération consiste à ramener à zéro tous les éléments des 3 listes (issues de la linéarisation en zigzag) qui sont inférieures **(en valeur absolue)** à un certain seuil, appelé *threshold* (ou *DEFAULT_QUANTIZATION_THREASHOLD* dans le code). Comme énoncé précédemment, la plupart des valeurs de ces 3 listes seront relativement faibles, donc appliquer ce seuillage va nous permettre d'avoir en sortie 3 listes avec **beaucoup de zéros**. Le seuil a ici été déterminé empiriquement, à partir d'une série de tests sur des images-macroblocs générées aléatoirement. **On a choisi *threshold* = 10, car il s'agissait de la valeur qui optimisait le taux de compression tout en ayant une bonne qualité d'image en sortie.**
 
-La partie suivante concerne le formatage des données. On utilise pour cela un arbre binaire de Huffman qui permet à la fois de compresser et de formater les données selon une trame précise. On appellera la trame à transmettre un **Bitstream**.
+* On passe ensuite à l'étape de la **RLE** (Run-Length Encoding). Cette étape consiste à regrouper de manière synthétique (dans des tuples, aussi appelés *tuples RLE*) les séries de zéros obtenus après l'étape de la quantization. Concrètement, si dans une liste seuillée on a 124 zéros puis un 5.21 (par exemple), d'abord 5.21 est arrondi à l'entier le plus proche (ici 5), puis cette série de 125 entiers sera stockée dans le tuple (124, 5). Plus généralement, si l'on a le tuple RLE "(U, V)", cela signifie que l'on a U zéros puis l'entier **non-nul** V. Ainsi, chaque macrobloc sera décrit de manière **extrêmement synthétique** par une liste de tuples RLE. L'image finale, étant décomposée en une série de macroblocs, sera alors une liste de liste de tuples RLE.
+
+
+
+![encodeur](rapport d'avancement.assets/Diagramme algo - Encodeur - PNG.png)
+
+<center> <i> Figure 4 : Fonctionnement simplifié de l'encodeur </i></center>
+
+
+
+La partie suivante concerne le formatage des données. On utilise pour cela un **arbre binaire de Huffman** qui permet à la fois de compresser et de formater les données selon une trame précise. On appellera la trame à transmettre un **bitstream**.
 
 ![arbre](rapport d'avancement.assets/arbre-1607441786592.png)
 
@@ -154,7 +163,85 @@ Encoded string : 101010011001100001100110110110111001001101010000101000100101111
 String decoded back : le chic de l'ensta bretagne sur la compression vide
 ```
 
-L'arbre se base sur la récurrence des caractères afin de les ordonner et d'adresser à chaque caractère un mot binaire. Les caractères correspondent ici en fait à un tuple RLE. **Plus un caractère apparaîtra souvent dans la frame RLE, moins le mot binaire qui lui est associé aura une taille élevée.**
+L'arbre se base sur la récurrence des caractères afin de les ordonner et d'adresser à chaque caractère un mot binaire. Les "caractères" correspondent ici en fait à un tuple RLE. **L'idée est que, plus un tuple RLE apparaîtra souvent dans la frame RLE, moins le mot binaire qui lui est associé aura une taille élevée.** Les correspondances tuple RLE / mot binaire sont indiquées dans un dictionnaire, appelé **dictionnaire de Huffman**.
+
+Après application de l'algorithme de Huffman, on se retrouve donc avec un dictionnaire de Huffman, ainsi qu'une frame RLE **prête à être encodée**. Le dictionnaire de Huffman est ensuite converti en bitstream (ici une chaîne de caractères de "0" et de "1"). 
+
+La raison pour laquelle on considère un bitstream, **envoyé d'un client à un serveur**, est parce que l'on veut simuler le transfert de données compressées d'un ordinateur à un autre, qui correspondront idéalement d'ici la fin de l'année à un flux vidéo compressé.
+
+**Comme rappelé en début de partie, l'objectif est d'avoir le meilleur taux de compression, c'est-à-dire minimiser la taille du bitstream total (envoyé du client au serveur) par rapport à la taille originale de l'image (en bits).**
+
+L'envoi du bitstream total se fera en **4 étapes** :
+
+1) On envoie l'en-tête de la frame (ou le **header**), qui va contenir les métadonnées générales de l'image considérée : l'identifiant de la frame (frame_id), le type de message (HEADER_MSG, ie 0), la largeur de l'image (img_width), la hauteur de l'image (img_height) et la taille des macroblocs (macroblock_size).
+
+2) On envoie ensuite le dictionnaire de Huffman encodé, **paquet par paquet**. Chaque paquet, de taille inférieure ou égale à *bufsize* (ici 4096 octets), contiendra les métadonnées du paquet (frame_id, type_msg = DICT_MSG = 1, index et packet_size), ainsi que ses données utiles, à savoir la partie du dictionnaire encodé que l'on veut envoyer. Chacun de ces paquets forment la partie **dict** du bitstream.
+
+3) On envoie ensuite les paquets associés à chacun des macroblocs, qui seront également de taille limitée (<= bufsize). De même, chacun des paquets envoyés contiendra les métadonnées du paquet (frame_id, type_msg = BODY_MSG = 2, macroblock_number, macroblock_index et packet_size) ainsi que la partie du bitstream associé à un macrobloc RLE, **encodé entre-temps depuis la frame RLE via l'algorithme de Huffman**. Chacun de ces paquets forment le *corps* du bitstream, aussi appelé **body**.
+
+4) Enfin, on envoie le message de fin, aussi appelée la queue du message (ou **tail**), qui est là simplement pour signaler que l'on arrive à la toute fin du bitstream. Ce message de fin contient juste frame_id et type_msg (HEADER_MSG, ie 3).
+
+**Il est important de noter que, comme on veut également optimiser les performances temporelles de cet algorithme, il est primordial que l'on puisse convertir la frame RLE en bitstream ET envoyer ce dernier au serveur le plus rapidement possible.** Ainsi, nous avons jugé intéressant de générer le bitstream dans un buffer via un thread en parallèle, comme ça le thread principal n'aura qu'à extraire les paquets à envoyer, sans avoir à perdre de temps à les convertir. De même, le thread "écrivain" n'aura pas à perdre de temps à attendre que le client envoie le paquet puis reçoive le message de retour du serveur (cf. diagramme).
+
+
+
+![partie réseau](rapport d'avancement.assets/Diagramme algo - Partie réseau - PNG.png)
+
+<center> <i> Figure 5 : Fonctionnement simplifié de la partie réseau </i></center>
+
+
+
+Maintenant que le serveur a reçu tout le bitstream associé à l'image compressée, on va pouvoir commencer l'étape de **décodage**, qui constitue la 3ème et dernière étape fondamentale de notre algorithme. Il s'agit en fait de l'étape d'encodage, mais effectuée dans l'ordre inverse. la seule étape qui ne ré-apparaît pas au décodage est la **quantization**, ce qui est logique puisqu'il s'agit d'une étape irréversible. En effet, si une valeur a été seuillée (ie ramenée à zéro), on n'a - à ce stade - aucun moyen de savoir quelle était sa valeur initiale avant le seuillage.
+
+
+
+![décodeur](rapport d'avancement.assets/Diagramme algo - Décodeur - PNG.png)
+
+<center> <i> Figure 6 : Fonctionnement simplifié du décodeur </i></center>
+
+
+
+**L'entièreté des étapes mises bout à bout sera visualisable dans un fichier à part, fourni en annexe (comme il s'agit d'une image trop détaillée pour être visualisée sur un document PDF classique).**
+
+En ce qui concerne les performances, pour une image typique en 480p, notre algorithme s'effectue en une vingtaine de secondes en moyenne, et a des taux de compression variant entre 10:1 et 5:1 en moyenne.
+
+
+
+![stats taux de compression](rapport d'avancement.assets/Screen stats taux de compression.PNG)
+
+<center> <i>Figure 7 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (DCT)</i></center>
+
+
+
+![screen stats temps d'exécution](rapport d'avancement.assets/Screens stats temps d'exécution.PNG)
+
+<center> <i> Figure 8 : Exemple typique de statistiques concernant les temps d'exécution de chaque étape de notre algorithme, pour une image en 480p (DCT) </i></center>
+
+
+
+**L'objectif est maintenant de traduire notre prototype Pyhton en C afin d'optimiser nos perfomances temporelles (et idéalement nos taux de compression).**
+
+
+
+Nous avons également mis en place une alternative à la DCT, la **iDTT** (integer Discrete Tchebychev Transform). Cette transformation va considérer (en entrée ET en sortie) des tableaux d'entiers, et non de flottants le fait la DCT. Par rapport à la DCT, cette transormation est un tout petit peu plus précise (ce qui se traduit concrètement par une qualité d'image un peu plus élevée), mais il s'avère que le temps de calcul est bien plus élevé que pour la DCT classique.
+
+
+
+![stats taux de compression iDTT](rapport d'avancement.assets/Screen stats taux de compression (iDTT).PNG)
+
+<center> <i>Figure 9 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (iDTT)</i></center>
+
+
+
+![stats temps d'exécution iDTT](rapport d'avancement.assets/Screens stats temps d'exécution (iDTT).PNG)
+
+<center> <i> Figure 10 : Exemple typique de statistiques concernant les temps d'exécution de chaque étape de notre algorithme, pour une image en 480p (iDTT) </i></center>
+
+
+
+Nous avons implémenté cette méthode supplémentaire afin de sortir un peu des sentiers battus et de voir ce que l'on pouvait faire (ou optimiser) avec des méthodes entières, et non flottantes. **Comme les performances temporelles de la DCT surpassent largement celles de la iDTT, nous continuerons évidemment à nous focaliser sur la DCT.**
+
+
 
 ### Implémentation de l'algorithme sur FPGA
 
@@ -189,7 +276,7 @@ Sur conseil de nos encadrants, nous nous sommes donc intéresser à une solution
                                          file    file
 ```
 
-<center> <i> Figure 4: Design flow de LiteX présent sur le github de Enjoy Digital </i></center>
+<center> <i> Figure 9: Design flow de LiteX présent sur le github de Enjoy Digital </i></center>
 
 ​	LiteX est un framework de développement fpga basé sur le langage **Migen**, lui-même reprenant la syntaxe et le fonctionnement de python. LiteX permet de développer des Firmwares FPGA aussi bien en bas-niveau avec un syntaxe python, qu'en haut niveau via la création d'un SOC d'architecture RiscV, capable notamment d’accueillir un kernel linux et d’exécuter du code c de manière normale (sans les inconvénients de la HLS). Il permet aussi de gérer nativement les principales entrées/sorties (ethernet, vga, usb) ainsi que le RAM, et ce par un code complètement open-source. 
 
@@ -205,7 +292,7 @@ Nous avons adapté un code existant en vhdl afin d'afficher sur un écran en VGA
 
 ![image0](rapport d'avancement.assets/qualité.jpg)
 
-<center> <i> Figure 5: rendu VGA de la camera OV7670 relié à un FPGA Nexys4 (il n'y a pas de compression l'image est affiché de manière directe). La colorimétrie est lié à l'absence de blindage des câbles reliant la camera à la carte. </i></center>
+<center> <i> Figure 11: rendu VGA de la camera OV7670 relié à un FPGA Nexys4 (il n'y a pas de compression l'image est affiché de manière directe). La colorimétrie est lié à l'absence de blindage des câbles reliant la camera à la carte. </i></center>
 
 Pour pallier le problème du branchement de la camera (connecteur Pmod), notre encadrant Pascal Cotret nous a conçu un adaptateur maison. 
 
@@ -219,7 +306,7 @@ Nous avons bien entendu respecter les principes de la méthode Agile pour la con
 
 * Guillaume Leinen : ***Scrum Master***. C'est en quelque sorte le "maître du jeu". C'est lui qui va rythmer l'activité des sprints pour son Scrum (ici toute l'équipe du projet). Sur un projet impliquant un si faible nombre de personne, il va bien entendu aussi participer au développement. Il est aussi le garant du respect de la méthode Agile. Enfin le SM ne décide pas seul des taches de chacun mais veille à ce que chacun fasse ce qu'il souhaite faire pour faire avancer le projet dans son domaine de compétence. 
 * Alexandre Froehlich : ***Product Owner*** . C'est l'équipier qui a la charge supplémentaire au sein du projet de vérifier que les activités du scrum sont utiles au projet final et correspondent au cahier des charges et exigences du projet. Traditionnellement, le PO se trouve chez le client pour de plus gros projets, en ce sens M. Le Lann à aussi jouer une part du rôle en nous guidant sur les démarches à suivre concernant le développement ou en nous fournissant des documentations techniques sur d'autres technologies de compression vidéo. 
-* Hussein Saad, Jean-Noël Clink, Hugo Questroy :  ***Equipiers***. Ils se concentre sur la réalisation du travail et le feed-back quand celui ci est terminé. Nous nous concentrons sur des retours à l'oral ou sous forme de courtes démos vidéos, car la rédaction d'un rapport écrit est longue, rigide sur la forme et fastidieuse surtout dans un cadre agile ou l'important est de réaliser la tache plutôt que de la documenter. 
+* Hussein Saad, Jean-Noël Clink, Hugo Questroy :  ***Equipiers***. Ils se concentre sur la réalisation du travail et le feed-back quand celui ci est terminé. Nous nous concentrons sur des retours à l'oral ou sous forme de courtes démos vidéos, car la rédaction d'un rapport écrit est longue, rigide sur la forme et fastidieuse, **surtout dans un cadre agile où l'important est de réaliser la tache plutôt que de la documenter.** 
 
 Les rôles ainsi distribués nous avons choisi de séparer la force de travail en 2 parties distinctes mais dont le travail peut être transverse: 
 
@@ -234,7 +321,7 @@ Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela no
 
 ![zenhubmp](rapport d'avancement.assets/zenhubmp.png)
 
-<center><i>figure x : page d'accueil du site Zenhub</i></center>
+<center><i>Figure 12 : page d'accueil du site Zenhub</i></center>
 
 Zenhub est un outil de suivi de projet qui est assez semblable à une solution comme Trello, mais néanmoins différente sur certains points clés: 
 
