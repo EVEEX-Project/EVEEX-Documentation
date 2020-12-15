@@ -273,6 +273,8 @@ et c'est le flot de conception HLS
 
 ![Flot de conception](C:\Users\saadhu\Desktop\EVEEX-Documentation-master\EVEEX-Documentation\Rapports et CR\img\Flot de conception.PNG )
 
+Dans notre travail, nous allons nous appuyer sur l'outil Vivado HLS de Xilinx, pour l'implémentation d'un accélérateur FPGA sur SoC. Parmi les améliorations les plus récentes dans le monde FPGA, nous trouvons les appareils SoC. FPGA (système sur puce-FPGA). Un SoC FPGA intègre un cœur de processeur dur et une logique programmable sur le même circuit. Intégration de fonctionnalités de gestion de haut niveau des processeurs et des opérations en temps réel.
+
 
 
 ## Annexes
