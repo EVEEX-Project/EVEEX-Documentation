@@ -434,3 +434,8 @@ L'optimisation des fonctions critiques sera clé dans l'intérêt de l'implémen
 **IDE:** Environnement de Développement.
 
 **Frames:** Images qui composent une vidéo. On parle de FPS (Frame per Seconds) pour mesurer la fréquence d'affichage. 
+
+**HLS**: High Level Synthesis. Outil logiciel permettant de synthétiser du code haut niveau en un code de plus bas niveau. 
+
+**SoC**: System on Chip. Puce de sillicium intégrant plusieurs composants, comme de la mémoire, un processeur, et un composant de gestion d'entrées/sorties. 
+
