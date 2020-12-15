@@ -27,7 +27,7 @@ Pour réduire ces consommations excessives, une solution est la compression vid�
 
 Au cours de cette année scolaire, nous allons concevoir un algorithme pour compresser un flux vidéo brut afin de l'envoyer sur un réseau ou simplement de le stocker dans un fichier, puis un second algorithme pour décompresser ces données. Une fois que l'algorithme sera opérationnel et mature, nous procéderons à une implémentation purement matérielle afin d'optimiser le temps de calcul et la consommation d'énergie liés à la compression des données.
 
-Nous utiliserons plusieurs langages de programmation pour construire différents prototypes de façon incrémentale. Nous allons commencer par Python pour créer un algorithme naïf que tout le monde peut comprendre, puis nous allons le traduire en C pour optimiser son exécution et surtout pour commencer à nous rapprocher d'une implémentation matérielle. Enfin, nous allons traduire ce dernier code en utilisant LiTex pour créer l'implémentation matérielle sur FPGA. 
+Nous utiliserons plusieurs langages de programmation pour construire différents prototypes de façon incrémentale. Nous allons commencer par Python pour créer un algorithme naïf que tout le monde peut comprendre, puis nous allons le traduire en C pour optimiser son exécution et surtout pour commencer à nous rapprocher d'une implémentation matérielle. Enfin, nous allons traduire ce dernier code en utilisant LiteX pour créer l'implémentation matérielle sur FPGA. 
 
 Il est évident que pour réaliser ces étapes, nous ne pouvons pas nous appuyer sur les bibliothèques logicielles existantes pour des raisons de portabilité du code vers différents langages puis vers différentes plates-formes.
 
@@ -131,9 +131,7 @@ Après cette étape, on applique diverses transformations **à chacune de ces ma
 
 * On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur 16x16 = 256. Ce découpage va se faire selon les 2x16-1 = 31 diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici extrêmement commode, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, partout ailleurs, elles seront moindres.
 
-  ![zigzag](..\Rapports et CR\RAPPOR~1.ASS\ZIGZAG~1.PNG)
-
-![arbre](rapport d'avancement.assets/arbre.png)
+  ![Zigzag linearization](rapport d'avancement.assets/Zigzag linearization.png)
 
 * On effectue maintenant l'étape de seuillage, aussi appelée **quantization**. Cette opération consiste à ramener à zéro tous les éléments des 3 listes issues de la linéarisation en zigzag qui sont inférieures **(en valeur absolue)** à un certain seuil, appelé *threshold*. Comme énoncé précédemment, la plupart des valeurs de ces 3 listes seront relatievement faibles, donc appliquer ce seuillage va nous permettre d'avoir en sortie 3 listes avec beaucoup de zéros.
 
@@ -141,7 +139,7 @@ Après cette étape, on applique diverses transformations **à chacune de ces ma
 
 La partie suivante concerne le formatage des données. On utilise pour cela un arbre binaire de Huffman qui permet à la fois de compresser et de formater les données selon une trame précise. On appellera la trame à transmettre un **Bitstream**.
 
-![arbre](..\Rapports et CR\RAPPOR~1.ASS\ARBRE-~1.PNG)
+![arbre-1607441786592](rapport d'avancement.assets/arbre-1607441786592.png)
 
 ```
 Encoded string : 10101001100110000110011011011011100100110101000010100010010111110101111100000101011001110101110000001001001101011111111010111010100111110011000101111101111010101100101110110011001001001101111000011111001000010
@@ -222,13 +220,36 @@ Les rôles ainsi distribués nous avons choisi de séparer la force de travail e
 
 Néanmoins avec l'introduction de LiteX, mélangeant code et matériel, cette séparation n'a plus vraiment de sens. Nous avons donc commencé à nous en séparer et à distribuer les taches en fonction des appétences de chacun, qu'elles soient algorithmiques ou électroniques. 
 
+Concernant les sprints eux-mêmes, nous nous sommes orientés sur des sprints de **2 semaines**, avec un objectif de release (programme, documentation, fonction supplémentaire) **tout les 3 sprints**. nous évaluons chaque tache par un **système de points** prenant en compte la difficulté de la tache, la longueur prévue, ou le nombre de personnes impliqués dans celle-ci. 
+
 Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela nous nous sommes orientés sur un outil simple qui s'intègre à Github : ***ZenHub*** 
 
 ![zenhubmp](rapport d'avancement.assets/zenhubmp.png)
 
+<center><i>figure x : page d'accueil du site Zenhub</i></center>
 
+Zenhub est un outil de suivi de projet qui est assez semblable à une solution comme Trello, mais néanmoins différente sur certains points clés: 
 
+* Les taches sont appelés *issues*, par analogie aux *issues* que l'on peut soumettre à un code existant sur github. Cette similarité permet notamment de relié une tache réalisée à un *push* de code github. Nous n'avons pas pour l'instant utilisé cette fonctionnalité et c'est quelque chose que souhaitons faire à l'avenir. En revanche l'autre nous a été plus utile. 
+* Le formalisme automatique permet à Zenhub d'**analyser les données** et d'en extraire différentes **statistiques et diagrammes**. Cela permet de surveiller facilement la répartition des taches et la dynamique de groupe, et ce de façon automatique. 
 
+Voici quelques exemples des statistiques et panneau de Zenhub. 
+
+![zenhub_main](rapport d'avancement.assets/zenhub_main.png)
+
+*Le premier panneau, et le principal, ressemble le plus à Trello. On sépare les issues en 2 catégories "à faire", sur le plus long terme dans le icebox et à court terme dans le backlog, puis une catégorie d'issues en cours "in progress". Une fois la tache réalisée elle part dans "Done" où l'on explique l'issue à tout le reste de l'équipe, et une fois cette étape faite, l'issue est "fermée". On peut trier les issues par différentes catégories, et les affecter à des "Milestones" (qui sont les sprints).*
+
+![velocity](rapport d'avancement.assets/velocity.png)
+
+*Une des statistiques les plus intéressantes est le "velocity tracking". il permet via le systèmes de points de notation des issues de voir facilement l’étendu du travail réalisé au sein d'un sprint. Les sprints terminées sont grisés. On constate une périodicité due notamment à la release tout les 3 sprints. On rajoute des issues au fur et a mesure des idées de tout le monde (le sprint 7 est amené à grossir).*
+
+![](rapport d'avancement.assets/cumulative.png)
+
+*Le cumulative flow permet une vue différente du précédent graphique, avec notamment le découpage du workflow visible.*
+
+![burndown](rapport d'avancement.assets/burndown-1608024815604.png)
+
+*le dernier diagramme utile est le "burndown report". Il permet d'observer la progression du travail au sein d'un sprint. Il n'est pas très exploitable dans notre cas car on travaille sur les créneaux de projet donc toute les semaines. En revanche pour une équipe qui bosse à plein temps sur le projet cela pourrait s’avérer très utile.* 
 
 ### Points à venir 
 
