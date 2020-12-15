@@ -117,30 +117,38 @@ L'architecture physique étant plus spécialisé et technique, nous l'aborderons
 
 La réalisation de l'algorithme constitue une part très importante du projet, puisque les performances d'EVEEX découlent directement des choix en termes de traitement. 
 
-Pour cette algorithme de traitement des données, nous nous sommes basé sur le fonction du MJPEG, car il est relativement simple à appréhender. 
+Pour cet algorithme de traitement des données, nous nous sommes basés sur le MJPEG, car il est relativement simple à appréhender. **L'objectif de notre algorithme est de compresser l'image de référence le plus possible (ie avoir le meilleur taux de compression), et ce le plus rapidement et efficacement possible.**
 
-Le fonctionnement de l'algorithme est détaillé dans le diagramme en bloc si dessous. Il est composé de plusieurs phases, dont certaines necessitant quelques concepts mathématiques. 
+Le fonctionnement de l'algorithme est détaillé dans le diagramme en bloc ci-dessous. Il est composé de plusieurs phases, dont certaines necessitant quelques concepts mathématiques.
 
-L'image, au format RGB (que sort nativement la plupart des cameras), est tout d'abord converti au format Chrominance/luminance (YUV). Cela permet notamment de séparer la matrice originelle en 2 matrices indépendantes, et cela est souhaitable après DCT par la suite. 
+L'image, au format RGB (que sort nativement la plupart des cameras), est tout d'abord convertie au format chrominance/luminance (YUV). 
 
-Ensuite l'image est découpé en **macroblocs** de 16px x 16 px pour l'instant. Cela permet de faciliter le traitement et de paralléliser les taches. C'est que nous allons nous différencier des autres algorithmes, en rendant cette taille de macroblocs **variable** en fonction du contenu du macrobloc. Si un macrobloc présente un taux de contraste élevé, on réduit sa taille, alors que si c'est un aplat de couleur on l'augmente. Cela permettra à priori d'augmenter le taux de compression. 
+Ensuite l'image est découpée en **macroblocs** de 16x16 pixels. En réalité, comme une image RGB contient 3 canaux de couleur, les macroblocs sont en fait de taille 16x16x3, mais, par abus de langage, et par souci de simplicité, nous dirons simplement qu'ils ont une taille de 16x16. Cette taille de macroblocs n'est pas arbitraire. En effet, nous avons déterminé **empiriquement** que, pour notre prototype, **et pour des images pré-existantes en 480p (720 x 480 pixels) ou alors générées aléatoirement**, les macroblocs 16x16 étaient ceux qui produisaient les meilleurs taux de compression parmi les tailles standards de macroblocs, à savoir 8x8, 16x16 et 32x32 pixels. Cette décomposition en macroblocs permet de faciliter le traitement de l'image et de paralléliser les taches. Nous nous différencierons des autres algorithmes existants en rendant cette taille de macroblocs **variable** en fonction du contenu du macrobloc. Par exemple, si un macrobloc présente un taux de contraste élevé, on réduit sa taille, alors que si c'est un aplat de couleur, on l'augmente. Cela permettra (a priori) d'améliorer le taux de compression.
 
-Après cet étape, on effectue divers transformations des matrices macroblocs afin de les compresser: 
+Après cette étape, on applique diverses transformations **à chacune de ces matrices-macroblocs** afin de les compresser : 
 
-* Une Transformation en Cosinus Direct ou DCT  
+* Une Transformation en Cosinus Discrète, ou **DCT**, qui est une transformation linéaire et **réversible** qui va permettre de **concentrer** les données du macrobloc YUV dans la diagonale de l'image de sortie (la diagonale "nord-ouest / sud-est"). Ainsi, en-dehors de cette zone, les composantes de l'image (après application de la DCT)  seront relativement faibles en valeur absolue, ce qui sera très pratique lors des étapes suivantes.
 
-La partie suivante concerne la mise en format des données. On utilise pour cela un arbre binaire de Huffman qui permet à la fois de compresser et de formater les données selon une trame précise. On appellera la trame à transmettre un **Bitstream**. 
+* On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur 16x16 = 256. Ce découpage va se faire selon les 2x16-1 = 31 diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici extrêmement commode, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, partout ailleurs, elles seront moindres.
 
-[Jean-no]
+  ![zigzag](..\Rapports et CR\RAPPOR~1.ASS\ZIGZAG~1.PNG)
 
 ![arbre](rapport d'avancement.assets/arbre.png)
+
+* On effectue maintenant l'étape de seuillage, aussi appelée **quantization**. Cette opération consiste à ramener à zéro tous les éléments des 3 listes issues de la linéarisation en zigzag qui sont inférieures **(en valeur absolue)** à un certain seuil, appelé *threshold*. Comme énoncé précédemment, la plupart des valeurs de ces 3 listes seront relatievement faibles, donc appliquer ce seuillage va nous permettre d'avoir en sortie 3 listes avec beaucoup de zéros.
+
+* On passe ensuite à l'étape de la **RLE** (Run-Length Encoding). --> TO DO
+
+La partie suivante concerne le formatage des données. On utilise pour cela un arbre binaire de Huffman qui permet à la fois de compresser et de formater les données selon une trame précise. On appellera la trame à transmettre un **Bitstream**.
+
+![arbre](..\Rapports et CR\RAPPOR~1.ASS\ARBRE-~1.PNG)
 
 ```
 Encoded string : 10101001100110000110011011011011100100110101000010100010010111110101111100000101011001110101110000001001001101011111111010111010100111110011000101111101111010101100101110110011001001001101111000011111001000010
 String decoded back : le chic de l'ensta bretagne sur la compression vide
 ```
 
-L'arbre se base sur la récurrence des caractères afin de les ordonner et d'adresser à chaque caractère un mot binaire. Il suffit de remplacer "caractère" par "valeur" au sein d'une matrice pour ordonner la donnée. 
+L'arbre se base sur la récurrence des caractères afin de les ordonner et d'adresser à chaque caractère un mot binaire. Les caractères correspondent ici en fait à un tuple RLE. **Plus un caractère apparaîtra souvent dans la frame RLE, moins le mot binaire qui lui est associé aura une taille élevée.**
 
 ### Implémentation de l'algorithme sur FPGA
 
