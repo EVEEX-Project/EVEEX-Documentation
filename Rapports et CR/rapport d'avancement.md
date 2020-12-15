@@ -4,9 +4,13 @@ Membres du groupe : Guillaume Leinen, Jean-Noël Clink, Hussein Saad, Alexandre 
 
 Encadrants : Pascal Cotret, Jean-Christophe Le Lann, Joël Champeau
 
+Code disponible sur github ==> https://github.com/EVEEX-Project
+
+Eportfolio Mahara disponible => https://mahara.ensta-bretagne.fr/view/groupviews.php?group=348
+
 ## Abstract
 
-Most of the world's bandwidth is nowadays used for the exchange of multimedia content, especially video streaming. With more than 2 billion users every month on Youtube alone [5 - abstract], video streaming has not only become a taken-for-granted technology, but one that consumes a lot of resources both in terms of energy and storage.
+Most of the world's bandwidth is nowadays used for the exchange of multimedia content, especially video streaming. With more than 2 billion users every month on Youtube alone [1], video streaming has not only become a taken-for-granted technology, but one that consumes a lot of resources both in terms of energy and storage.
 
 To reduce these excessive consumptions a solution is video compression. While business consortia compete for royalties on their proprietary compression algorithms such as MPEG-1 or x264, we want to offer a viable and open source alternative.
 
@@ -20,7 +24,7 @@ The objective at the end of this school year is to obtain a marketable product f
 
 ## Résumé
 
-La majeure partie de la bande passante mondiale est aujourd'hui utilisée pour l'échange de contenu multimédia, en particulier le streaming vidéo. Avec plus de 2 milliards d'utilisateurs chaque mois sur Youtube seulement  [5 - abstract], le streaming vidéo est devenu une technologie considérée comme prise pour acquise, mais qui consomme beaucoup de ressources tant en termes d'énergie que de stockage.
+La majeure partie de la bande passante mondiale est aujourd'hui utilisée pour l'échange de contenu multimédia, en particulier le streaming vidéo. Avec plus de 2 milliards d'utilisateurs chaque mois sur Youtube seulement  [1], le streaming vidéo est devenu une technologie considérée comme prise pour acquise, mais qui consomme beaucoup de ressources tant en termes d'énergie que de stockage.
 
 Pour réduire ces consommations excessives, une solution est la compression vidéo. Alors que les consortiums d'entreprises se font concurrence pour les redevances sur leurs algorithmes de compression propriétaires tels que MPEG-1 ou x264, nous voulons offrir une alternative viable et open source.
 
@@ -48,13 +52,13 @@ L'objectif à la fin de cette année scolaire est d'obtenir un produit commercia
 
 ## Introduction
 
-​	Aujourd'hui, le contenu vidéo, en particulier le *streaming* , représente 61% de la bande passante mondiale [1]. Cependant si les derniers algorithmes présentes des performances très convaincantes, force est de constater que les codecs anciens comme le MPEG-4 (mp4) sont encore très largement utilisés. Il n'existe pas aujourd'hui de codec *open-source* doté de performances en accord avec les besoins d’aujourd’hui que ce soit au niveau de la qualité d'image ou de la bande-passante nécessaire. Car en effet, et cela est peu connu, les codecs largement utilisés comme le H.265 ou le MP4 sont en source fermée (closed-source), et demande des royalties pour une utilisation commerciale par une entreprise. 
+​	Aujourd'hui, le contenu vidéo, en particulier le *streaming* , représente 61% de la bande passante mondiale [2]. Cependant si les derniers algorithmes présentes des performances très convaincantes, force est de constater que les codecs anciens comme le MPEG-4 (mp4) sont encore très largement utilisés. Il n'existe pas aujourd'hui de codec *open-source* doté de performances en accord avec les besoins d’aujourd’hui que ce soit au niveau de la qualité d'image ou de la bande-passante nécessaire. Car en effet, et cela est peu connu, les codecs largement utilisés comme le H.265 ou le MP4 sont en source fermée (closed-source), et demande des royalties pour une utilisation commerciale par une entreprise. 
 
 ![HEVC-License-Price-List](rapport d'avancement.assets/HEVC-License-Price-List.png)
 
 <center> <i> Figure 1: Carte des tarifs pour utiliser HVEC (h.265). Cela peut représenter un coût conséquent pour les entreprises </i></center>
 
-​	Parallèlement à ça, il existe depuis plusieurs d'années une technologie de circuits imprimés appelé Field programmable Gate Array (ou FPGA). Une puce FPGA est un circuit imprimé **reconfigurable** fonctionnant à base de portes logiques (par opposition au processeur qui ne peut être reprogrammé). Cette technologie prend son envol à partir des années 90, mais c'est aujourd'hui que les entreprises, et plus particulièrement les géants du silicium (intel, AMD) s’intéresse de près à cette technologie. En effet, elle dispose de plusieurs avantages qui en font une technologie de rupture dans certains domaines d'applications: 
+​	Parallèlement à ça, il existe depuis plusieurs d'années une technologie de circuits imprimés appelé Field programmable Gate Array (ou FPGA). Une puce FPGA est un circuit imprimé **reconfigurable** fonctionnant à base de portes logiques (par opposition au processeur qui ne peut être reprogrammé). Cette technologie prend son envol à partir des années 90, mais c'est aujourd'hui que les entreprises, et plus particulièrement les géants du silicium (intel, AMD) s’intéresse de près à cette technologie [3]. En effet, elle dispose de plusieurs avantages qui en font une technologie de rupture dans certains domaines d'applications [4]: 
 
 - Le caractère reconfigurable permet un prototypage de circuit intégré final, tout en ne passant pas par une couche d'émulation logicielle coûteuse et peu performante. 
 - Son architecture en portes logiques permet un grand parallélisme dans les calculs, ce qui permet d’accélérer considérablement certaines taches parallélisables (compression/décompression de fichier, calculs 3D, deep-learning, réseau de neurones, etc... ). 
@@ -251,12 +255,12 @@ Au niveau du FPGA, les choses ont évolués récemment.
 
 Nous étions partis pour développer entièrement en langage HDL l'algorithme, en passant pour les fonctions compliqués par un outil de *High Level Synthesis* ou HLS. Cependant nous nous sommes rendu compte qu'il serait compliqué de continuer ainsi et cela pour de multiples raisons: 
 
-* La HLS permet en théorie de transformer un code écrit en c en un code HDL comme le VHDL ou le Verilog. Le problème de la HLS est qu'elle induit de l’opacité dans le code machine finale (on ne contrôle pas la génération de code). Aussi la syntaxe c nécessaire à son interprétation par le logiciel de HLS est extrêmement contraignante (impossible de faire des mallocs, typage limité aux types primaires,etc...[4]). 
+* La HLS permet en théorie de transformer un code écrit en c en un code HDL comme le VHDL ou le Verilog. Le problème de la HLS est qu'elle induit de l’opacité dans le code machine finale (on ne contrôle pas la génération de code). Aussi la syntaxe c nécessaire à son interprétation par le logiciel de HLS est extrêmement contraignante (impossible de faire des mallocs, typage limité aux types primaires,etc...[5]). 
 * les langages HDl comme le VHDL sont extrêmement durs à appréhender, la courbe d'apprentissage est très abrupte (la syntaxe est très différente, c'est très bas niveau, les types limités à des mots binaires, etc...). il est assez déraisonnable d'apprendre la programmation machine en HDL en seulement quelques mois 
 * l'interface de développement Xilinx Vivado, si elle permet quelques fonctionnalités intéressantes notamment pour l'analyse de code et l'optimisation, est très lourde à installer (80 go sur le disque dur) et très difficile à prendre en main (environ 2 semaines pour comprendre le fonctionnement du framework et les principales fonctionnalités). On voudrait privilégier un IDE plus simple.
 * enfin, la gestion des I/O ainsi que de la RAM demande dans la grande majorité des cas de faire appel à des bibliothèques de xilinx, qui sont gratuites pour certaines (et très chères pour d'autres []), et qui sont surtout *closed-sourced*. 
 
-Sur conseil de nos encadrants, nous nous sommes donc intéresser à une solution alternative proposé par Florent Kermarrec, ENSTA promotion 2008 et sa société "Enjoy Digital" spécialisé dans la fabrication de solutions FPGA sur-mesures. Cette personne à développer un outil appeler **"LITEX"**. 
+Sur conseil de nos encadrants, nous nous sommes donc intéresser à une solution alternative proposé par Florent Kermarrec, ENSTA promotion 2008 et sa société "Enjoy Digital" spécialisé dans la fabrication de solutions FPGA sur-mesures. Cette personne à développer un outil appeler **"LITEX"**. [6] 
 
 ```
                                       +---------------+
@@ -319,7 +323,7 @@ Néanmoins avec l'introduction de LiteX, mélangeant code et matériel, cette s�
 
 Concernant les sprints eux-mêmes, nous nous sommes orientés sur des sprints de **2 semaines**, avec un objectif de release (programme, documentation, fonction supplémentaire) **tout les 3 sprints**. nous évaluons chaque tache par un **système de points** prenant en compte la difficulté de la tache, la longueur prévue, ou le nombre de personnes impliqués dans celle-ci. 
 
-Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela nous nous sommes orientés sur un outil simple qui s'intègre à Github : ***ZenHub*** 
+Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela nous nous sommes orientés sur un outil simple qui s'intègre à Github : ***ZenHub*** [7] 
 
 ![zenhubmp](rapport d'avancement.assets/zenhubmp.png)
 
@@ -367,7 +371,7 @@ Une autre amélioration serait d'avoir des macroblocs qui sont dynamiques: Pour 
 <center> <i> figure 18 : Découpage en macroblocs dynamiques.</i></center>
 
 
-Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LITEX** pour la création du SOC avec un architecture RISC V, avec l'avantage que c'est open-source ce qui est le but de notre projet. Comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV. Parallelement à ça, nous essayerons d'accelerer certaines fonctionnalités clés du programme par l'ajout de code écrit directement en verilog. Certaines fonctions comme le codage Huffman ou la RLE existe deja comme des IP propriétaires de Xilinx [6] et il devrait etre possible avec la documentation fourni de copier le fonctionement de ces IP. 
+Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LITEX** pour la création du SOC avec un architecture RISC V, avec l'avantage que c'est open-source ce qui est le but de notre projet. Comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV. Parallelement à ça, nous essayerons d'accelerer certaines fonctionnalités clés du programme par l'ajout de code écrit directement en verilog. Certaines fonctions comme le codage Huffman ou la RLE existe deja comme des IP propriétaires de Xilinx [8] et il devrait etre possible avec la documentation fourni de copier le fonctionement de ces IP. 
 
 ![LiteX_framework](rapport d'avancement.assets/LiteX_framework-1608039573819.png)
 
@@ -386,10 +390,18 @@ L'optimisation des fonctions critiques sera clé dans l'interet de l'implémenta
 
 ## Bibliographie
 
-[1] https://fr.statista.com/infographie/21207/repartition-du-trafic-internet-mondial-par-usage/
+[1] Ines, S., 2020. *Youtube En Chiffres 2020*. [online] Agence des medias sociaux. Available at:  <https://www.agencedesmediassociaux.com/youtube-chiffres-2020/>  [Accessed 15 December 2020].
 
-[2] https://www.tomshardware.fr/amd-envisage-dacquerir-xilinx-inventeur-du-fpga-pour-30-milliards-de-dollars/
+[2] Gaudiaut, T., 23 mars 2020. Le streaming vidéo représente 61 % du trafic Internet. [online] Statista. Available at: https://fr.statista.com/infographie/21207/repartition-du-trafic-internet-mondial-par-usage/ [Accessed 15 octobre 2020].
 
-[4] pdf xilinx sur la HLS 
+[3] Bouvet, R., 12 octobre 2020. AMD envisage d'acquerir xilinx, inventeur du FPGA, pour 30 milliards de dollars. [online] Tom's Hardware. Available at:  https://www.tomshardware.fr/amd-envisage-dacquerir-xilinx-inventeur-du-fpga-pour-30-milliards-de-dollars/ [Accessed 15 octobre 2020].
 
-[5 - abstract] https://www.agencedesmediassociaux.com/youtube-chiffres-2020/ [6-Points à venir] These-2017-MATHSTIC-Informatique-ZERMANI_Sara%20.pdf
+[4]Moore, A., 2017. *Fpgas For Dummies*. 2nd ed. [ebook] Intel Altera. Available at:  <https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/misc/fpgas-for-dummies-ebook.pdf> [Accessed 31 September 2020].
+
+[5] 2014. *Vivado Design Suite Tutorial : High-Level Synthesis*. [ebook] Available at:  <https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_2/ug871-vivado-high-level-synthesis-tutorial.pdf> [Accessed 15 October 2020].
+
+[6] LiteX-hub - Collaborative FPGA projects around LiteX. Available at: https://github.com/litex-hub [Accessed 1 December 2020]. 
+
+[7] Zenhub.com - project Management in Github. Available at: https://www.zenhub.com/ [Accessed 15 october 2020]
+
+[8] Pilai, L., 2003. *Huffman Coding*. [pdf] Available at:  <https://www.xilinx.com/support/documentation/application_notes/xapp616.pdf> [Accessed 1 December 2020].
