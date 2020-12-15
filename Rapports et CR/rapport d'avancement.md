@@ -228,6 +228,14 @@ Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela no
 
 en gros parler de ce qu'il y a a faire, que ce soit au niveau riscv et litex, que au niveau software. 
 
+Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LITEX** pour la création du SOC avec un architecture RISC V et l'avantage c'est que c'est open-source qui est le but de notre projet.et comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV ,et on va générer un accélérateur matériel par synthèse de haut niveau (High Level Synthesis ou HLS). Nous allons aussi créer un CPU wrapper en python et l'appeler avec **LITEX** .
+
+![Diagramme Points à venir 1](C:\Users\saadhu\Desktop\EVEEX-Documentation-master\EVEEX-Documentation\Rapports et CR\img\Diagramme Points à venir 1.png )
+
+et c'est le flot de conception HLS
+
+![Flot de conception](C:\Users\saadhu\Desktop\EVEEX-Documentation-master\EVEEX-Documentation\Rapports et CR\img\Flot de conception.PNG )
+
 
 
 ## Annexes
