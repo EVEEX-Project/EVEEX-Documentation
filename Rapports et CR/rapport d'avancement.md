@@ -4,7 +4,7 @@ Membres du groupe : Guillaume Leinen, Jean-Noël Clink, Hussein Saad, Alexandre 
 
 Encadrants : Pascal Cotret, Jean-Christophe Le Lann, Joël Champeau
 
-Code disponible sur github ==> https://github.com/EVEEX-Project
+Code disponible sur GitHub ==> https://github.com/EVEEX-Project
 
 Eportfolio Mahara disponible => https://mahara.ensta-bretagne.fr/view/groupviews.php?group=348
 
@@ -220,7 +220,7 @@ En ce qui concerne les performances, pour une image typique en 480p, notre algor
 
 ![stats taux de compression](rapport d'avancement.assets/Screen stats taux de compression.PNG)
 
-<center> <i>Figure 8 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (DCT)</i></center>
+<center> <i>Figure 7 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (DCT)</i></center>
 
 
 
@@ -240,7 +240,7 @@ Nous avons également mis en place une alternative à la DCT, la **iDTT** (integ
 
 ![stats taux de compression iDTT](rapport d'avancement.assets/Screen stats taux de compression (iDTT).PNG)
 
-<center> <i>Figure 10 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (iDTT)</i></center>
+<center> <i>Figure 9 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (iDTT)</i></center>
 
 
 
@@ -309,7 +309,7 @@ Pour pallier le problème du branchement de la caméra (connecteur Pmod), notre 
 
 ![imageonline-co-emojiadded](rapport d'avancement.assets/imageonline-co-emojiadded.jpg)
 
-<center> <i> Figure 12 : Connecteurs P-mod conçu par M.Cotret </i></center>
+<center> <i> Figure 13 : Connecteurs P-mod conçu par M.Cotret </i></center>
 
 Concernant le code en lui-même, nous commençons à comprendre la démarche de création d'un SOC, par notamment la réalisation des tutoriels LiteX proposé par Enjoy Digital. 
 
@@ -334,7 +334,7 @@ Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela no
 
 ![zenhubmp](rapport d'avancement.assets/zenhubmp.png)
 
-<center><i>Figure 13 : Page d'accueil du site ZenHub</i></center>
+<center><i>Figure 14 : Page d'accueil du site ZenHub</i></center>
 
 Zenhub est un outil de suivi de projet qui est assez semblable à une solution comme Trello, mais néanmoins différente sur certains points-clés : 
 
@@ -345,51 +345,51 @@ Voici quelques exemples des statistiques (et panneaux) de Zenhub.
 
 ![zenhub_main](rapport d'avancement.assets/zenhub_main.png)
 
-<center> <i> Figure 14 : page principale </i></center>
+<center> <i> Figure 15 : Page principale </i></center>
 
-*Le premier panneau, et le principal, ressemble le plus à Trello. On sépare les issues en 2 catégories "à faire", sur le plus long terme dans le icebox et à court terme dans le backlog, puis une catégorie d'issues en cours "in progress". Une fois la tache réalisée elle part dans "Done" où l'on explique l'issue à tout le reste de l'équipe, et une fois cette étape faite, l'issue est "fermée". On peut trier les issues par différentes catégories, et les affecter à des "Milestones" (qui sont les sprints).*
+Le premier panneau (ainsi que le principal) ressemble le plus à Trello. On sépare les issues en 2 catégories "à faire", sur le plus long terme dans le Icebox et à court terme dans le Backlog, puis une catégorie d'issues en cours "in progress". Une fois la tache réalisée elle part dans "Done" où l'on explique l'issue à tout le reste de l'équipe, et une fois cette étape faite, l'issue est "fermée". On peut trier les issues par différentes catégories, et les affecter à des "Milestones" (qui sont les sprints).
 
 ![velocity](rapport d'avancement.assets/velocity.png)
 
-<center> <i> Figure 15 : Velocity tracking </i></center>
+<center> <i> Figure 16 : Velocity tracking </i></center>
 
-*Une des statistiques les plus intéressantes est le "velocity tracking". il permet via le systèmes de points de notation des issues de voir facilement l’étendu du travail réalisé au sein d'un sprint. Les sprints terminées sont grisés. On constate une périodicité due notamment à la release tout les 3 sprints. On rajoute des issues au fur et a mesure des idées de tout le monde (le sprint 7 est amené à grossir).*
+Une des statistiques les plus intéressantes est le "velocity tracking". Il permet, via le systèmes de points de notation des issues, de voir facilement l’étendue du travail réalisé au sein d'un sprint. Les sprints terminés sont grisés. On constate une périodicité, due notamment à la release tous les 3 sprints. On rajoute des issues au fur et a mesure des idées de tout le monde (le sprint 7 est amené à grossir).
 
 ![](rapport d'avancement.assets/cumulative.png)
 
-<center> <i> Figure 16 : Cumulative flow </i></center>
+<center> <i> Figure 17 : Cumulative flow </i></center>
 
-*Le cumulative flow permet une vue différente du précédent graphique, avec notamment le découpage du workflow visible.*
+Le cumulative flow permet une vue différente du précédent graphique, avec notamment le découpage du workflow visible.
 
 ![burndown](rapport d'avancement.assets/burndown-1608024815604.png)
 
-<center> <i> Figure 17 : Fonctionnement simplifié de l'encodeur </i></center>
+<center> <i> Figure 18 : Fonctionnement simplifié de l'encodeur </i></center>
 
-*le dernier diagramme utile est le "burndown report". Il permet d'observer la progression du travail au sein d'un sprint. Il n'est pas très exploitable dans notre cas car on travaille sur les créneaux de projet donc toute les semaines. En revanche pour une équipe qui bosse à plein temps sur le projet cela pourrait s’avérer très utile.* 
+Le dernier diagramme utile est le "burndown report". Il permet d'observer la progression du travail au sein d'un sprint. Il n'est pas très exploitable dans notre cas car on travaille sur les créneaux de projet (donc toute les semaines). En revanche, pour une équipe qui travaille à plein temps sur le projet, cela pourrait s’avérer très utile.
 
 ### Points à venir 
 
-En ce qui concerne l'algorithme de compression vidéo, plusieurs améliorations s'offrent à nous. La première, et certainement la plus importante, est de considérer le flux comme une vidéo et non pas comme une suite d'images comme le cas actuellement. En effet, pour l'instant nous implémentons la vidéo image après image, sans prendre en considération l'image qui précede ni celle qui suit. Ce n'est pas du tout optimal, puisque dans les vidéos il arrive souvent que sur un même plan par exemple, des macroblocs de la vidéo changent très peu voire pas du tout d'une image à l'autre. On peut donc envoyer une seule fois ce macrobloc et le réutiliser après. 
+En ce qui concerne l'algorithme de compression vidéo, plusieurs améliorations s'offrent à nous. La première, et certainement la plus importante, est de considérer le flux comme une vidéo et non pas comme une suite d'images (comme c'est le cas actuellement). En effet, pour l'instant nous implémentons la vidéo image après image, sans prendre en considération l'image qui précede ni celle qui suit. Ce n'est pas du tout optimal, puisque dans les vidéos il arrive souvent que, sur un même plan par exemple, des macroblocs de la vidéo changent très peu (voire pas du tout) d'une image à l'autre. On peut donc envoyer une seule fois ce macrobloc et le réutiliser après. 
 
 Une autre amélioration serait d'avoir des macroblocs qui soient dynamiques : pour une zone avec très peu de nuances, on utiliserait des macroblocs plus grands, et pour une zone avec plus de détail, on considèrerait des macroblocs plus petits. Ces deux propositions amélioreraient le taux de compression, mais elles alourdiraient la complexité en temps. 
 
 ![](rapport d'avancement.assets/macrobloc_dynamique.jpg)
 
-<center> <i>Figure 14 : Exemple d'un découpage en macroblocs dynamiques (à droite), comparé à un découpage en macroblocs de taille fixe (à gauche)</i></center>
+<center> <i>Figure 19 : Exemple d'un découpage en macroblocs dynamiques (à droite), comparé à un découpage en macroblocs de taille fixe (à gauche)</i></center>
 
 
 Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LITEX** pour la création du SOC avec un architecture RISC V, avec l'avantage que c'est open-source ce qui est le but de notre projet. Comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV. Parallelement à ça, nous essayerons d'accelerer certaines fonctionnalités clés du programme par l'ajout de code écrit directement en verilog. Certaines fonctions comme le codage Huffman ou la RLE existe deja comme des IP propriétaires de Xilinx [8] et il devrait etre possible avec la documentation fourni de copier le fonctionement de ces IP. 
 
 ![LiteX_framework](rapport d'avancement.assets/LiteX_framework-1608039573819.png)
 
-<center><i>figure 19 : framework de travail sur LiteX</i></center>
+<center><i>Figure 20 : Framework de travail sur LiteX</i></center>
 
-L'optimisation des fonctions critiques sera clé dans l'interet de l'implémentation FPGA. Sinon cela revient juste à éxecuter du code c sur une autre architecture que le x64 (ça fonctionnerait comme ARM ou x86). Il serait interessant, pour un potentiel autre projet, de prévoir la mise en place de cete algorithme sur smartphone afin de créer un facetime "made in Ensta". 
+L'optimisation des fonctions critiques sera clé dans l'intérêt de l'implémentation FPGA. Sinon, cela revient juste à éxecuter du code C sur une autre architecture que le x64 (ça fonctionnerait comme ARM ou x86). Il serait interessant, pour un potentiel autre projet, de prévoir la mise en place de cet algorithme sur smartphone afin de créer un facetime "made in ENSTA Bretagne". 
 
 <div style="page-break-after: always; break-after: page;"></div>
 ## Annexes
 
-1. diagramme en blocs complet de la version actuelle de l'algorithme EVEEX 
+1. Diagramme en blocs complet de la version actuelle de l'algorithme EVEEX 
 
    ![](rapport d'avancement.assets/Diagramme_algo_-_PNG.png)
 
@@ -403,7 +403,7 @@ L'optimisation des fonctions critiques sera clé dans l'interet de l'implémenta
 
 [3] Bouvet, R., 12 octobre 2020. AMD envisage d'acquerir xilinx, inventeur du FPGA, pour 30 milliards de dollars. [online] Tom's Hardware. Available at:  https://www.tomshardware.fr/amd-envisage-dacquerir-xilinx-inventeur-du-fpga-pour-30-milliards-de-dollars/ [Accessed 15 octobre 2020].
 
-[4]Moore, A., 2017. *Fpgas For Dummies*. 2nd ed. [ebook] Intel Altera. Available at:  <https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/misc/fpgas-for-dummies-ebook.pdf> [Accessed 31 September 2020].
+[4]Moore, A., 2017. *Fpgas For Dummies*. 2nd ed. [eBook] Intel Altera. Available at:  <https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/misc/fpgas-for-dummies-ebook.pdf> [Accessed 31 September 2020].
 
 [5]Chireux, N., 1999. Compression d'images fixes. [cours] Available at: https://www.chireux.fr/mp/cours/Compression%20JPEG.pdf [Accessed 31 September 2020]
 
