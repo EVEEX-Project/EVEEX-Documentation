@@ -94,7 +94,7 @@ On rajoute à ces exigences les fonctions définissant les relations entre l'alg
 
 
 
-![pieuvre](/media/sytrics/Storage/git/EVEEX-Documentation/Rapports et CR/Rapport d'avancement  projet Encode Vidéo Ensta-Bretagne Experimental (EVEEX).assets/pieuvre.png)
+![pieuvre](rapport d'avancement.assets/pieuvre.png)
 
 <center> <i> Figure 2: diagramme "Pieuvre" du projet EVEEX</i></center>
 
