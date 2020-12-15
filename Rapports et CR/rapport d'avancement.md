@@ -414,3 +414,23 @@ L'optimisation des fonctions critiques sera clé dans l'intérêt de l'implémen
 [8] Zenhub.com - project Management in Github. Available at: https://www.zenhub.com/ [Accessed 15 october 2020]
 
 [9] Pilai, L., 2003. *Huffman Coding*. [pdf] Available at:  <https://www.xilinx.com/support/documentation/application_notes/xapp616.pdf> [Accessed 1 December 2020].
+
+## Glossaire
+
+**Flux-Vidéo:** Processus d'envoi, réception et lecture en continu de la vidéo.
+
+**Open-Source:** Tout logiciel dont les codes sont ouverts gratuitement pour l'utilisation ou la duplication, et qui permet de favoriser le libre échange des savoirs informatiques.
+
+**RGB:** Rouge, Vert, Bleu. C'est un système de codage informatique des couleurs. Chaque pixel possède une valeur de rouge, une de vert et une de bleu. 
+
+**FPGA:** Une puce FPGA est un circuit imprimé reconfigurable fonctionnant à base de portes logiques.
+
+**Macrobloc:** (ou Macroblock) Une partie de l'image de taille 16x16 pixels. 
+
+**Bitstream:** Flux de donnée en binaire. 
+
+**VHDL:** Langage de description de matériel destiné à représenter le comportement ainsi que l'architecture d'un système électronique numérique.
+
+**IDE:** Environnement de Développement.
+
+**Frames:** Images qui composent une vidéo. On parle de FPS (Frame per Seconds) pour mesurer la fréquence d'affichage. 
