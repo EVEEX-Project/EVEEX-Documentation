@@ -6,9 +6,11 @@ Encadrants : Pascal Cotret, Jean-Christophe Le Lann, Joël Champeau
 
 ## Abstract - résumé
 
+[Alexandre]
+
 ## Sommaire 
 
-
+[Guillaume]
 
 ## Remerciements 
 
@@ -105,6 +107,8 @@ Après cet étape, on effectue divers transformations des matrices macroblocs af
 
 La partie suivante concerne la mise en format des données. On utilise pour cela un arbre binaire de Huffman qui permet à la fois de compresser et de formater les données selon une trame précise. On appellera la trame à transmettre un **Bitstream**. 
 
+[Jean-no]
+
 ![arbre](/media/sytrics/Storage/git/EVEEX-Documentation/Rapports et CR/Rapport d'avancement  projet Encode Vidéo Ensta-Bretagne Experimental (EVEEX).assets/arbre-1607441786592.png)
 
 ```
@@ -175,11 +179,19 @@ Concernant le code en lui-même, nous commençons à comprendre la démarche de 
 
 Nous avons bien entendu respecter les principes de la méthode Agile pour 
 
+[Guillaume]
 
+## Points à venir 
+
+[Hugo pour le software - Hussein au niveau LiteX ]
+
+en gros parler de ce qu'il y a a faire, que ce soit au niveau riscv et litex, que au niveau software. 
 
 
 
 ## Annexes
+
+[Jean-no]
 
 ## Bibliographie
 
