@@ -158,6 +158,8 @@ La partie suivante concerne le formatage des données. On utilise pour cela un *
 
 ![arbre](rapport d'avancement.assets/arbre-1607441786592.png)
 
+<center> <i> Figure 5 : découpage d'un message en arbre binaire par fréquence d'apparition </i></center>
+
 ```
 Encoded string : 10101001100110000110011011011011100100110101000010100010010111110101111100000101011001110101110000001001001101011111111010111010100111110011000101111101111010101100101110110011001001001101111000011111001000010
 String decoded back : le chic de l'ensta bretagne sur la compression vide
@@ -187,7 +189,7 @@ L'envoi du bitstream total se fera en **4 étapes** :
 
 ![partie réseau](rapport d'avancement.assets/Diagramme algo - Partie réseau - PNG.png)
 
-<center> <i> Figure 5 : Fonctionnement simplifié de la partie réseau </i></center>
+<center> <i> Figure 6 : Fonctionnement simplifié de la partie réseau </i></center>
 
 
 
@@ -197,7 +199,7 @@ Maintenant que le serveur a reçu tout le bitstream associé à l'image compress
 
 ![décodeur](rapport d'avancement.assets/Diagramme algo - Décodeur - PNG.png)
 
-<center> <i> Figure 6 : Fonctionnement simplifié du décodeur </i></center>
+<center> <i> Figure 7 : Fonctionnement simplifié du décodeur </i></center>
 
 
 
@@ -209,13 +211,13 @@ En ce qui concerne les performances, pour une image typique en 480p, notre algor
 
 ![stats taux de compression](rapport d'avancement.assets/Screen stats taux de compression.PNG)
 
-<center> <i>Figure 7 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (DCT)</i></center>
+<center> <i>Figure 8 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (DCT)</i></center>
 
 
 
 ![screen stats temps d'exécution](rapport d'avancement.assets/Screens stats temps d'exécution.PNG)
 
-<center> <i> Figure 8 : Exemple typique de statistiques concernant les temps d'exécution de chaque étape de notre algorithme, pour une image en 480p (DCT) </i></center>
+<center> <i> Figure 9 : Exemple typique de statistiques concernant les temps d'exécution de chaque étape de notre algorithme, pour une image en 480p (DCT) </i></center>
 
 
 
@@ -229,13 +231,13 @@ Nous avons également mis en place une alternative à la DCT, la **iDTT** (integ
 
 ![stats taux de compression iDTT](rapport d'avancement.assets/Screen stats taux de compression (iDTT).PNG)
 
-<center> <i>Figure 9 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (iDTT)</i></center>
+<center> <i>Figure 10 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (iDTT)</i></center>
 
 
 
 ![stats temps d'exécution iDTT](rapport d'avancement.assets/Screens stats temps d'exécution (iDTT).PNG)
 
-<center> <i> Figure 10 : Exemple typique de statistiques concernant les temps d'exécution de chaque étape de notre algorithme, pour une image en 480p (iDTT) </i></center>
+<center> <i> Figure 11 : Exemple typique de statistiques concernant les temps d'exécution de chaque étape de notre algorithme, pour une image en 480p (iDTT) </i></center>
 
 
 
@@ -276,15 +278,13 @@ Sur conseil de nos encadrants, nous nous sommes donc intéresser à une solution
                                          file    file
 ```
 
-<center> <i> Figure 9: Design flow de LiteX présent sur le github de Enjoy Digital </i></center>
+<center> <i> Figure 12: Design flow de LiteX présent sur le github de Enjoy Digital </i></center>
 
 ​	LiteX est un framework de développement fpga basé sur le langage **Migen**, lui-même reprenant la syntaxe et le fonctionnement de python. LiteX permet de développer des Firmwares FPGA aussi bien en bas-niveau avec un syntaxe python, qu'en haut niveau via la création d'un SOC d'architecture RiscV, capable notamment d’accueillir un kernel linux et d’exécuter du code c de manière normale (sans les inconvénients de la HLS). Il permet aussi de gérer nativement les principales entrées/sorties (ethernet, vga, usb) ainsi que le RAM, et ce par un code complètement open-source. 
 
 ​	Toutes ces caractéristiques le rendent idéal pour notre algorithme. L’intérêt d'un tel système est aussi la possibilité, afin d'améliorer les performances de l'algorithme, de migrer certaines parties du code en VHDL afin de l’exécuter de la manière la plus optimisé possible. 
 
-​	L'objectif pour nous est ainsi de compiler notre code c pour l'architecture RiscV (qui est open-source), de créer une architecture processeur "sur-mesure" grâce à LiteX, et d'optimiser les phPoints à venir ases critiques de l'algorithme afin d'exploiter le parallélisme du FPGA. 
-
-
+​	L'objectif pour nous est ainsi de compiler notre code c pour l'architecture RiscV (qui est open-source), de créer une architecture processeur "sur-mesure" grâce à LiteX, et d'optimiser les fonctions critiques de l'algorithme afin d'exploiter le parallélisme du FPGA. 
 
 ​	Concernant l'état du projet en lui-même. nous développons sur une carte Digilent Nexys4 DDR, donc nous utilisons la toolchain vivado. Pour l'acquisition vidéo nous avons opté pour des caméras OV7670. Elles filment en 480p et on l'avantage d’être très peu chère (1.5 € l'unité), ce qui est pratique quand on débute dans le domaine (nous avons déja brûlé une camera). 
 
@@ -297,6 +297,8 @@ Nous avons adapté un code existant en vhdl afin d'afficher sur un écran en VGA
 Pour pallier le problème du branchement de la camera (connecteur Pmod), notre encadrant Pascal Cotret nous a conçu un adaptateur maison. 
 
 ![imageonline-co-emojiadded](rapport d'avancement.assets/imageonline-co-emojiadded.jpg)
+
+<center> <i> Figure 12 : Connecteurs P-mod conçu par M.Cotret </i></center>
 
 Concernant le code en lui-même, nous commençons à comprendre la démarche de création d'un SOC, par notamment la réalisation des tutoriels LiteX proposé par Enjoy Digital. 
 
@@ -321,7 +323,7 @@ Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela no
 
 ![zenhubmp](rapport d'avancement.assets/zenhubmp.png)
 
-<center><i>Figure 12 : page d'accueil du site Zenhub</i></center>
+<center><i>Figure 13 : page d'accueil du site Zenhub</i></center>
 
 Zenhub est un outil de suivi de projet qui est assez semblable à une solution comme Trello, mais néanmoins différente sur certains points clés: 
 
@@ -332,17 +334,25 @@ Voici quelques exemples des statistiques et panneau de Zenhub.
 
 ![zenhub_main](rapport d'avancement.assets/zenhub_main.png)
 
+<center> <i> Figure 14 : page principale </i></center>
+
 *Le premier panneau, et le principal, ressemble le plus à Trello. On sépare les issues en 2 catégories "à faire", sur le plus long terme dans le icebox et à court terme dans le backlog, puis une catégorie d'issues en cours "in progress". Une fois la tache réalisée elle part dans "Done" où l'on explique l'issue à tout le reste de l'équipe, et une fois cette étape faite, l'issue est "fermée". On peut trier les issues par différentes catégories, et les affecter à des "Milestones" (qui sont les sprints).*
 
 ![velocity](rapport d'avancement.assets/velocity.png)
+
+<center> <i> Figure 15 : Velocity tracking </i></center>
 
 *Une des statistiques les plus intéressantes est le "velocity tracking". il permet via le systèmes de points de notation des issues de voir facilement l’étendu du travail réalisé au sein d'un sprint. Les sprints terminées sont grisés. On constate une périodicité due notamment à la release tout les 3 sprints. On rajoute des issues au fur et a mesure des idées de tout le monde (le sprint 7 est amené à grossir).*
 
 ![](rapport d'avancement.assets/cumulative.png)
 
+<center> <i> Figure 16 : Cumulative flow </i></center>
+
 *Le cumulative flow permet une vue différente du précédent graphique, avec notamment le découpage du workflow visible.*
 
 ![burndown](rapport d'avancement.assets/burndown-1608024815604.png)
+
+<center> <i> Figure 17 : Fonctionnement simplifié de l'encodeur </i></center>
 
 *le dernier diagramme utile est le "burndown report". Il permet d'observer la progression du travail au sein d'un sprint. Il n'est pas très exploitable dans notre cas car on travaille sur les créneaux de projet donc toute les semaines. En revanche pour une équipe qui bosse à plein temps sur le projet cela pourrait s’avérer très utile.* 
 
@@ -354,18 +364,16 @@ Une autre amélioration serait d'avoir des macroblocs qui sont dynamiques: Pour 
 
 ![](rapport d'avancement.assets/macrobloc_dynamique.jpg)
 
-<center> <i> Découpage en macroblocs dynamiques.</i></center>
+<center> <i> figure 18 : Découpage en macroblocs dynamiques.</i></center>
 
 
-Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LITEX** pour la création du SOC avec un architecture RISC V et l'avantage c'est que c'est open-source qui est le but de notre projet.et comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV ,et on va générer un accélérateur matériel par synthèse de haut niveau (High Level Synthesis ou HLS). Nous allons aussi créer un CPU wrapper en python et l'appeler avec **LITEX** .
+Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LITEX** pour la création du SOC avec un architecture RISC V, avec l'avantage que c'est open-source ce qui est le but de notre projet. Comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV. Parallelement à ça, nous essayerons d'accelerer certaines fonctionnalités clés du programme par l'ajout de code écrit directement en verilog. Certaines fonctions comme le codage Huffman ou la RLE existe deja comme des IP propriétaires de Xilinx [6] et il devrait etre possible avec la documentation fourni de copier le fonctionement de ces IP. 
 
-![Diagramme Points à venir 1](rapport d'avancement.assets/Diagramme Points à venir 1.png)
+![LiteX_framework](rapport d'avancement.assets/LiteX_framework-1608039573819.png)
 
-et c'est le flot de conception HLS [6]
+<center><i>figure 19 : framework de travail sur LiteX</i></center>
 
-![Flot de conception](rapport d'avancement.assets/Flot de conception.PNG)
-
-Dans notre travail, nous allons nous appuyer sur l'outil Vivado HLS de Xilinx, pour l'implémentation d'un accélérateur FPGA sur SoC. Parmi les améliorations les plus récentes dans le monde FPGA, nous trouvons les appareils SoC. FPGA (système sur puce-FPGA). Un SoC FPGA intègre un cœur de processeur dur et une logique programmable sur le même circuit. Intégration de fonctionnalités de gestion de haut niveau des processeurs et des opérations en temps réel.
+L'optimisation des fonctions critiques sera clé dans l'interet de l'implémentation FPGA. Sinon cela revient juste à éxecuter du code c sur une autre architecture que le x64 (ça fonctionnerait comme ARM ou x86). Il serait interessant, pour un potentiel autre projet, de prévoir la mise en place de cete algorithme sur smartphone afin de créer un facetime "made in Ensta". 
 
 <div style="page-break-after: always; break-after: page;"></div>
 ## Annexes
