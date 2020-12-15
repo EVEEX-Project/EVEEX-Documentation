@@ -198,7 +198,7 @@ L'envoi du bitstream total se fera en **4 étapes** :
 
 ![partie réseau](rapport d'avancement.assets/Diagramme algo - Partie réseau - PNG.png)
 
-<center> <i>Figure 5 : Fonctionnement simplifié de la partie réseau</i></center>
+<center> <i>Figure 6 : Fonctionnement simplifié de la partie réseau</i></center>
 
 
 
@@ -208,7 +208,7 @@ Maintenant que le serveur a reçu tout le bitstream associé à l'image compress
 
 ![décodeur](rapport d'avancement.assets/Diagramme algo - Décodeur - PNG.png)
 
-<center> <i>Figure 6 : Fonctionnement simplifié du décodeur</i></center>
+<center> <i>Figure 7 : Fonctionnement simplifié du décodeur</i></center>
 
 
 
@@ -220,13 +220,13 @@ En ce qui concerne les performances, pour une image typique en 480p, notre algor
 
 ![stats taux de compression](rapport d'avancement.assets/Screen stats taux de compression.PNG)
 
-<center> <i>Figure 7 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (DCT)</i></center>
+<center> <i>Figure 8 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (DCT)</i></center>
 
 
 
 ![screen stats temps d'exécution](rapport d'avancement.assets/Screens stats temps d'exécution.PNG)
 
-<center> <i>Figure 8 : Exemple typique de statistiques concernant les temps d'exécution de chaque étape de notre algorithme, pour une image en 480p (DCT)</i></center>
+<center> <i>Figure 9 : Exemple typique de statistiques concernant les temps d'exécution de chaque étape de notre algorithme, pour une image en 480p (DCT)</i></center>
 
 
 
@@ -240,13 +240,13 @@ Nous avons également mis en place une alternative à la DCT, la **iDTT** (integ
 
 ![stats taux de compression iDTT](rapport d'avancement.assets/Screen stats taux de compression (iDTT).PNG)
 
-<center> <i>Figure 9 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (iDTT)</i></center>
+<center> <i>Figure 10 : Exemple typique de statistiques concernant le taux de compression d'une image en 480p (iDTT)</i></center>
 
 
 
 ![stats temps d'exécution iDTT](rapport d'avancement.assets/Screens stats temps d'exécution (iDTT).PNG)
 
-<center> <i>Figure 10 : Exemple typique de statistiques concernant les temps d'exécution de chaque étape de notre algorithme, pour une image en 480p (iDTT)</i></center>
+<center> <i>Figure 11 : Exemple typique de statistiques concernant les temps d'exécution de chaque étape de notre algorithme, pour une image en 480p (iDTT)</i></center>
 
 
 
@@ -405,7 +405,7 @@ L'optimisation des fonctions critiques sera clé dans l'intérêt de l'implémen
 
 [4]Moore, A., 2017. *Fpgas For Dummies*. 2nd ed. [eBook] Intel Altera. Available at:  <https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/misc/fpgas-for-dummies-ebook.pdf> [Accessed 31 September 2020].
 
-[5]Chireux, N., 1999. Compression d'images fixes. [cours] Available at: https://www.chireux.fr/mp/cours/Compression%20JPEG.pdf [Accessed 31 September 2020]
+[5]Chireux, N., 1999. Compression d'images fixes. p.5/24 [cours] Available at: https://www.chireux.fr/mp/cours/Compression%20JPEG.pdf [Accessed 31 September 2020]
 
 [6] 2014. *Vivado Design Suite Tutorial : High-Level Synthesis*. [ebook] Available at:  <https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_2/ug871-vivado-high-level-synthesis-tutorial.pdf> [Accessed 15 October 2020].
 
