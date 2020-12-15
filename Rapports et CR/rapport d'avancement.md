@@ -131,9 +131,7 @@ Après cette étape, on applique diverses transformations **à chacune de ces ma
 
 * On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur 16x16 = 256. Ce découpage va se faire selon les 2x16-1 = 31 diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici extrêmement commode, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, partout ailleurs, elles seront moindres.
 
-  ![zigzag](..\Rapports et CR\RAPPOR~1.ASS\ZIGZAG~1.PNG)
-
-![arbre](rapport d'avancement.assets/arbre.png)
+  ![Zigzag linearization](rapport d'avancement.assets/Zigzag linearization.png)
 
 * On effectue maintenant l'étape de seuillage, aussi appelée **quantization**. Cette opération consiste à ramener à zéro tous les éléments des 3 listes issues de la linéarisation en zigzag qui sont inférieures **(en valeur absolue)** à un certain seuil, appelé *threshold*. Comme énoncé précédemment, la plupart des valeurs de ces 3 listes seront relatievement faibles, donc appliquer ce seuillage va nous permettre d'avoir en sortie 3 listes avec beaucoup de zéros.
 
@@ -141,7 +139,7 @@ Après cette étape, on applique diverses transformations **à chacune de ces ma
 
 La partie suivante concerne le formatage des données. On utilise pour cela un arbre binaire de Huffman qui permet à la fois de compresser et de formater les données selon une trame précise. On appellera la trame à transmettre un **Bitstream**.
 
-![arbre](..\Rapports et CR\RAPPOR~1.ASS\ARBRE-~1.PNG)
+![arbre-1607441786592](rapport d'avancement.assets/arbre-1607441786592.png)
 
 ```
 Encoded string : 10101001100110000110011011011011100100110101000010100010010111110101111100000101011001110101110000001001001101011111111010111010100111110011000101111101111010101100101110110011001001001101111000011111001000010
