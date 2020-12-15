@@ -95,7 +95,7 @@ static void Point_draw (const void *_self) {
 /* Override d'une méthode de classe parente */
 static void Point_puto(const void * _self, FILE * fp) {
     const struct Point *self = _self;
-    printf(fp, "Point (x, y): (%d, %d)\n", self->x, self->y);
+    fprintf(fp, "Point (x, y): (%d, %d)\n", self->x, self->y);
 }
 ```
 
@@ -275,6 +275,91 @@ delete(pE);
 delete(dict);
 ```
 
+### Les pixels
+
+Le pixel est une couche d'abstraction supplémentaire d'une image. Toujours à 4 composantes : RGB ou YUV avec une dernière couche de transparence. Leur utilisation est assez directe. Les méthodes présentées ci-dessous sont équivalentes pour RGB et YUV :
+
+* `new(RGBPixel(), int r, int g, int b, int a)` : permet de créer un `Pixel` en définissant ses 3 composantes rgb
+
+On peut alors créer un pixel et le manipuler :
+
+```c
+void *rgb = new(RGBPixel(), 15, 255, 16);
+void *yuv = new(YUVPixel(), 252, 15, 15);
+
+puto(rgb, stdout);
+puto(yuv, stdout);
+
+((struct RGBPixel *) rgb)->r = 5;
+puto(rgb, stdout);
+
+delete(rgb);
+delete(yuv);
+
+```
+
+
+
+### Les images
+
+La classe image est une couche d'abstraction de la bibliothèque [stb_image](https://github.com/nothings/stb). Elle permet de créer et de manipuler avec aisance une image en C en s'occupant tout seul de la partie gestion de la mémoire. Il s'agit d'une structure assez employée en C mais adaptée ici à l'utilisation des classes pour le projet.
+
+Voici les méthodes associées à cette classe : 
+
+* `new(Image(), int width, int height, int channels, int init_with_zeros)` : permet de créer une instance d'image de taille `width` x `height` avec un nombre de canaux `channels` (1 pour du noir et blanc, 3 pour du RGB, 4 avec de la transparence) et permet d'initialiser la mémoire allouée avec des zéros (ou non)
+* `loadImg(const char *filename)` : permet de charger une image sur le disque et retourne un objet `Image` avec les données de ce fichier
+* `saveImg(const struct Image *self, const char *filename)` : permet de sauvegarder une image sur le disque à partir des données contenues dans l'image `self`
+* `toGray(const struct Image *self)` : retourne une nouvelle image qui est une copie en noir et blanc de l'image `self`
+* `toSepia(const struct Image *self)` : retourne une nouvelle image qui est une copie avec le filtre sepia de l'image `self`
+
+Avec ces quelques méthodes on peut créer un dictionnaire et le manipuler. Voici un exemple succin de son utilisation :
+
+```c
+struct Image *img, *gray, *sepia;
+
+img = (struct Image *) loadImg("assets/image_res_low.jpg");
+printf("Image loaded: ");
+puto(img, stdout);
+
+gray = (struct Image *) toGray(img);
+sepia = (struct Image *) toSepia(img);
+
+saveImg(gray, "assets/gray_res.jpg");
+printf("Saving gray img to disk\n");
+
+saveImg(sepia, "assets/sepia_res.jpg");
+printf("Saving sepia img to disk\n");
+
+delete(gray);
+delete(sepia);
+delete(img);
+```
+
+
+
+### Les Bitstreams
+
+Le `Bitstream` est une structure de données qui nous utilisons pour communiquer sur le réseau. Ainsi le client enverra un `Bitstream` de données au serveur. Pour l'instant son implémentation reste naïve :
+
+* `new(Bitstream(), int frameid, enum MessageTypes type, int size, char *data)` : permet de créer un Bitstream de type `type` associé à la frame n°`frame_id` avec une taille de donnée de `size` et enfin avec les données `data`
+
+On peut alors créer et manipuler des Bitstreams :
+
+```c
+int frameid = 5;
+enum MessageTypes type = HEADER_MSG;
+char msg[] = "Hello world !!!!";
+unsigned long size = strlen(msg);
+
+void *stream = new(Bitstream(), frameid, type, size, msg);
+
+puto(stream, stdout);
+
+delete(stream);
+```
+
+
+
 ## Points d'amélioration
 
 > A considérer comme des points optionnels de travail
@@ -283,4 +368,6 @@ delete(dict);
 * Implémenter une fonction de retrait d'objet du dictionnaire
 * Implémenter une fonction permettant de récupérer les clés/valeurs présentes dans un dictionnaire
 * Implémenter une fonction permettant de dire si un objet est déjà présent dans une liste
+* Implémenter les fonctions manquantes au `Bitstream`
+* Intégrer les `Pixel` aux `Image` pour ajouter une nouvelle couche d'abstraction
 
