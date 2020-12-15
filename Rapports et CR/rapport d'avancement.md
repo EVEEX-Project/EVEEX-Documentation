@@ -357,25 +357,17 @@ Une autre amélioration serait d'avoir des macroblocs qui sont dynamiques: Pour 
 <center> <i> Découpage en macroblocs dynamiques.</i></center>
 
 
-
-en gros parler de ce qu'il y a a faire, que ce soit au niveau riscv et litex, que au niveau software. 
-
-<<<<<<< Updated upstream
 Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LITEX** pour la création du SOC avec un architecture RISC V et l'avantage c'est que c'est open-source qui est le but de notre projet.et comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV ,et on va générer un accélérateur matériel par synthèse de haut niveau (High Level Synthesis ou HLS). Nous allons aussi créer un CPU wrapper en python et l'appeler avec **LITEX** .
 
-![Diagramme Points à venir 1](C:\Users\saadhu\Desktop\EVEEX-Documentation-master\EVEEX-Documentation\Rapports et CR\img\Diagramme Points à venir 1.png )
+![Diagramme Points à venir 1](rapport d'avancement.assets/Diagramme Points à venir 1.png)
 
 et c'est le flot de conception HLS [6]
 
-![Flot de conception](C:\Users\saadhu\Desktop\EVEEX-Documentation-master\EVEEX-Documentation\Rapports et CR\img\Flot de conception.PNG )
+![Flot de conception](rapport d'avancement.assets/Flot de conception.PNG)
 
 Dans notre travail, nous allons nous appuyer sur l'outil Vivado HLS de Xilinx, pour l'implémentation d'un accélérateur FPGA sur SoC. Parmi les améliorations les plus récentes dans le monde FPGA, nous trouvons les appareils SoC. FPGA (système sur puce-FPGA). Un SoC FPGA intègre un cœur de processeur dur et une logique programmable sur le même circuit. Intégration de fonctionnalités de gestion de haut niveau des processeurs et des opérations en temps réel.
 
-
-=======
 <div style="page-break-after: always; break-after: page;"></div>
->>>>>>> Stashed changes
-
 ## Annexes
 
 1. diagramme en blocs complet de la version actuelle de l'algorithme EVEEX 
