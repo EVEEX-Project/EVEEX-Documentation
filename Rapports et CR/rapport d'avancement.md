@@ -278,7 +278,7 @@ Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **L
 
 ![Diagramme Points à venir 1](C:\Users\saadhu\Desktop\EVEEX-Documentation-master\EVEEX-Documentation\Rapports et CR\img\Diagramme Points à venir 1.png )
 
-et c'est le flot de conception HLS
+et c'est le flot de conception HLS [6]
 
 ![Flot de conception](C:\Users\saadhu\Desktop\EVEEX-Documentation-master\EVEEX-Documentation\Rapports et CR\img\Flot de conception.PNG )
 
@@ -305,4 +305,4 @@ Dans notre travail, nous allons nous appuyer sur l'outil Vivado HLS de Xilinx, p
 
 [4] pdf xilinx sur la HLS 
 
-[5 - abstract] https://www.agencedesmediassociaux.com/youtube-chiffres-2020/
+[5 - abstract] https://www.agencedesmediassociaux.com/youtube-chiffres-2020/ [6-Points à venir] These-2017-MATHSTIC-Informatique-ZERMANI_Sara%20.pdf
