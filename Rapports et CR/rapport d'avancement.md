@@ -8,7 +8,6 @@ Encadrants : Pascal Cotret, Jean-Christophe Le Lann, Joël Champeau
 
 Most of the world's bandwidth is nowadays used for the exchange of multimedia content, especially video streaming. With more than 2 billion users every month on Youtube alone [5 - abstract], video streaming has not only become a taken-for-granted technology, but one that consumes a lot of resources both in terms of energy and storage.
 
-<<<<<<< Updated upstream
 To reduce these excessive consumptions a solution is video compression. While business consortia compete for royalties on their proprietary compression algorithms such as MPEG-1 or x264, we want to offer a viable and open source alternative.
 
 During this school year, we are going to design an algorithm to compress a raw video stream to send it over a network or simply to store it in a file, and then a second algorithm to decompress this data. Once the algorithm is operational and mature, we will carry out a purely hardware implementation in order to optimise the computing time and energy consumption related to data compression.
@@ -33,6 +32,8 @@ Il est évident que pour réaliser ces étapes, nous ne pouvons pas nous appuyer
 
 L'objectif à la fin de cette année scolaire est d'obtenir un produit commercialisable pour la compression et la transmission de flux vidéo sur le réseau en utilisant une webcam et deux cartes FPGA, toutes bien sûr open source et disponibles sur github.
 
+<div style="page-break-after: always; break-after: page;"></div>
+
 ## Table des matières
 [TOC]
 
@@ -42,6 +43,8 @@ L'objectif à la fin de cette année scolaire est d'obtenir un produit commercia
 - Enjoy Digital, société créé par un Alumni Ensta-Bretagne, et son produit Litex qui nous sera très utile sur l'implémentation hardware. 
 - Le site FPGA4students pour ses tutoriels VHDL/Verilog.
 - Jean-Christophe Leinen pour ces conseils sur les méthodes Agiles.
+
+<div style="page-break-after: always; break-after: page;"></div>
 
 ## Introduction
 
@@ -62,6 +65,10 @@ En examinant ces avantages, on comprend vite l’intérêt d'une tel technologie
 ​	Afin de répondre à cette problématique nouvelle, L'ENSTA Bretagne voudrait développer un algorithme de compression vidéo, qui soit open-source et doté de performances convaincantes (définies par la suite), et par la suite d'implémenter cette algorithme sur une carte FPGA. Ce projet d'algorithme constitue notre travail et se nomme EVEEX (projet Encodage Vidéo Ensta-Bretagne Expérimental). 
 
 ​	Dans ce rapport, nous allons définir les exigences de fonctionnement d'un tel système, puis présenter notre travail actuel (et futur), que ce soit au niveau de l'algorithme, ou de son implémentation sur une carte FPGA. 
+
+<div style="page-break-after: always; break-after: page;"></div>
+
+## Stade d'avancement du projet 
 
 ### Définition des exigences  
 
@@ -258,7 +265,7 @@ En ce qui concerne l'algorithme de compréssion vidéo, plusieurs améliorations
 
 Une autre amélioration serait d'avoir des macroblocs qui sont dynamiques: Pour une zone avec très peu de nuance on utiliserait des macroblocs plus grands et pour une zone avec plus de détail des macroblocs plus petits. Ces deux propositions amélioreraient le taux de compression mais elles alourdiraient la complexité en temps. 
 
-![](/home/hugoq/EVEEX/EVEEX-Documentation/Rapports et CR/rapport d'avancement.assets/macrobloc_dynamique.jpg)
+![](rapport d'avancement.assets/macrobloc_dynamique.jpg)
 
 <center> <i> Découpage en macroblocs dynamiques.</i></center>
 
@@ -266,6 +273,7 @@ Une autre amélioration serait d'avoir des macroblocs qui sont dynamiques: Pour 
 
 en gros parler de ce qu'il y a a faire, que ce soit au niveau riscv et litex, que au niveau software. 
 
+<<<<<<< Updated upstream
 Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LITEX** pour la création du SOC avec un architecture RISC V et l'avantage c'est que c'est open-source qui est le but de notre projet.et comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV ,et on va générer un accélérateur matériel par synthèse de haut niveau (High Level Synthesis ou HLS). Nous allons aussi créer un CPU wrapper en python et l'appeler avec **LITEX** .
 
 ![Diagramme Points à venir 1](C:\Users\saadhu\Desktop\EVEEX-Documentation-master\EVEEX-Documentation\Rapports et CR\img\Diagramme Points à venir 1.png )
@@ -277,10 +285,17 @@ et c'est le flot de conception HLS
 Dans notre travail, nous allons nous appuyer sur l'outil Vivado HLS de Xilinx, pour l'implémentation d'un accélérateur FPGA sur SoC. Parmi les améliorations les plus récentes dans le monde FPGA, nous trouvons les appareils SoC. FPGA (système sur puce-FPGA). Un SoC FPGA intègre un cœur de processeur dur et une logique programmable sur le même circuit. Intégration de fonctionnalités de gestion de haut niveau des processeurs et des opérations en temps réel.
 
 
+=======
+<div style="page-break-after: always; break-after: page;"></div>
+>>>>>>> Stashed changes
 
 ## Annexes
 
-[Jean-no]
+1. diagramme en blocs complet de la version actuelle de l'algorithme EVEEX 
+
+   ![](rapport d'avancement.assets/Diagramme_algo_-_PNG.png)
+
+
 
 ## Bibliographie
 
