@@ -232,7 +232,15 @@ Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela no
 
 ### Points à venir 
 
-[Hugo pour le software - Hussein au niveau LiteX ]
+En ce qui concerne l'algorithme de compréssion vidéo, plusieurs améliorations s'offrent à nous: La première, et certainement la plus importante, est de considérer le flux comme une vidéo et non pas comme une suite d'image comme c'est à présent le cas. En effet, pour l'instant nous implémentons la vidéo image après image sans prendre en considération l'image qui précede ou celle qui suit. Ce n'est pas du tout optimal puisque dans les vidéos il arrive souvent que sur un même plan par exemple, des macroblocs de la vidéo changent très peu voir pas du tout d'une image à l'autre. On peut donc n'envoyer qu'une fois ce macroblock et le réutiliser après. 
+
+Une autre amélioration serait d'avoir des macroblocs qui sont dynamiques: Pour une zone avec très peu de nuance on utiliserait des macroblocs plus grands et pour une zone avec plus de détail des macroblocs plus petits. Ces deux propositions amélioreraient le taux de compression mais elles alourdiraient la complexité en temps. 
+
+![](/home/hugoq/EVEEX/EVEEX-Documentation/Rapports et CR/rapport d'avancement.assets/macrobloc_dynamique.jpg)
+
+<center> <i> Découpage en macroblocs dynamiques.</i></center>
+
+
 
 en gros parler de ce qu'il y a a faire, que ce soit au niveau riscv et litex, que au niveau software. 
 
