@@ -1,4 +1,4 @@
-# Rapport d'avancement : projet Encodage Vidéo Ensta Bretagne Expérimental (EVEEX)
+# Rapport d'avancement : projet Encodage Vidéo ENSTA Bretagne Expérimental (EVEEX)
 
 Membres du groupe : Guillaume Leinen, Jean-Noël Clink, Hussein Saad, Alexandre Froehlich, Hugo Questroy
 
@@ -24,7 +24,7 @@ The objective at the end of this school year is to obtain a marketable product f
 
 ## Résumé
 
-La majeure partie de la bande passante mondiale est aujourd'hui utilisée pour l'échange de contenu multimédia, en particulier le streaming vidéo. Avec plus de 2 milliards d'utilisateurs chaque mois sur Youtube seulement  [1], le streaming vidéo est devenu une technologie considérée comme prise pour acquise, mais qui consomme beaucoup de ressources tant en termes d'énergie que de stockage.
+La majeure partie de la bande passante mondiale est aujourd'hui utilisée pour l'échange de contenu multimédia, en particulier le streaming vidéo. Avec plus de 2 milliards d'utilisateurs chaque mois sur YouTube seulement  [1], le streaming vidéo est devenu une technologie considérée comme prise pour acquise, mais qui consomme beaucoup de ressources tant en termes d'énergie que de stockage.
 
 Pour réduire ces consommations excessives, une solution est la compression vidéo. Alors que les consortiums d'entreprises se font concurrence pour les redevances sur leurs algorithmes de compression propriétaires tels que MPEG-1 ou x264, nous voulons offrir une alternative viable et open source.
 
@@ -32,7 +32,7 @@ Au cours de cette année scolaire, nous allons concevoir un algorithme pour comp
 
 Nous utiliserons plusieurs langages de programmation pour construire différents prototypes de façon incrémentale. Nous allons commencer par Python pour créer un algorithme naïf que tout le monde peut comprendre, puis nous allons le traduire en C pour optimiser son exécution et surtout pour commencer à nous rapprocher d'une implémentation matérielle. Enfin, nous allons traduire ce dernier code en utilisant LiteX pour créer l'implémentation matérielle sur FPGA. 
 
-Il est évident que pour réaliser ces étapes, nous ne pouvons pas nous appuyer sur les bibliothèques logicielles existantes pour des raisons de portabilité du code vers différents langages puis vers différentes plates-formes.
+Il est évident que pour réaliser ces étapes, nous ne pouvons pas nous appuyer sur les bibliothèques logicielles existantes pour des raisons de portabilité du code vers différents langages puis vers différentes plateformes.
 
 L'objectif à la fin de cette année scolaire est d'obtenir un produit commercialisable pour la compression et la transmission de flux vidéo sur le réseau en utilisant une webcam et deux cartes FPGA, toutes bien sûr open source et disponibles sur GitHub.
 
@@ -43,15 +43,15 @@ L'objectif à la fin de cette année scolaire est d'obtenir un produit commercia
 
 ## Remerciements 
 
-- Nos encadrants Pascal Cotret, Jean-Christophe Le Lann et Joël Champeau, qui nous aident à définir les objectifs à atteindre, nous prettent le matériel nécessaire en particulier les cartes FPGA, ainsi qu'a résoudre des problèmes théoriques. 
+- Nos encadrants Pascal Cotret, Jean-Christophe Le Lann et Joël Champeau, qui nous aident à définir les objectifs à atteindre, nous prêtent le matériel nécessaire en particulier les cartes FPGA, ainsi qu'a résoudre des problèmes théoriques. 
 
-- Enjoy Digital, société créé par un Alumni Ensta-Bretagne, et son produit Litex qui nous sera très utile sur l'implémentation hardware. 
+- Enjoy Digital, société créée par un Alumni Ensta-Bretagne, et son produit Litex qui nous sera très utile sur l'implémentation hardware. 
 
 - Le site FPGA4students pour ses tutoriels VHDL/Verilog.
 
-- Jean-Christophe Leinen pour ces conseils sur les méthodes Agiles.
+- Jean-Christophe Leinen pour ses conseils sur les méthodes Agiles.
 
-- Aliexpress pour les cameras pas chères. 
+- Aliexpress pour les caméras pas chères.
 
   
 
@@ -59,21 +59,21 @@ L'objectif à la fin de cette année scolaire est d'obtenir un produit commercia
 
 ## Introduction
 
-​	Aujourd'hui, le contenu vidéo, en particulier le *streaming* , représente 61% de la bande passante mondiale [1]. Cependant si les derniers algorithmes présentent des performances très convaincantes, force est de constater que les codecs anciens comme le MPEG-4 (mp4) sont encore très largement utilisés. Il n'existe pas aujourd'hui de codec *open-source* doté de performances en accord avec les besoins d’aujourd’hui, que ce soit au niveau de la qualité d'image ou de la bande passante nécessaire. Car en effet, et cela est peu connu, les codecs largement utilisés comme le H.265 ou le MP4 sont en source fermée (closed-source), et demande des royalties pour une utilisation commerciale par une entreprise. 
+​	Aujourd'hui, le contenu vidéo, en particulier le *streaming* , représente 61% de la bande passante mondiale [1]. Cependant, si les derniers algorithmes présentent des performances très convaincantes, force est de constater que les codecs anciens comme le MPEG-4 (mp4) sont encore très largement utilisés. Il n'existe pas aujourd'hui de codec *open-source* doté de performances en accord avec les besoins d’aujourd’hui, que ce soit au niveau de la qualité d'image ou de la bande passante nécessaire. Car en effet, et cela est peu connu, les codecs largement utilisés comme le H.265 ou le MP4 sont en source fermée (closed-source), et demande des royalties pour une utilisation commerciale par une entreprise. 
 
 ![HEVC-License-Price-List](rapport d'avancement.assets/HEVC-License-Price-List.png)
 
 <center> <i>Figure 1 : Carte des tarifs pour utiliser HVEC (h.265). Cela peut représenter un coût conséquent pour les entreprises</i></center>
 
-​	Parallèlement à ça, il existe depuis plusieurs années une technologie de circuits imprimés appelé Field programmable Gate Array (ou **FPGA**). Une puce FPGA est un circuit imprimé **reconfigurable** fonctionnant à base de portes logiques (par opposition au processeur qui ne peut être reprogrammé). Cette technologie a pris son envol à partir des années 90, mais c'est aujourd'hui que les entreprises, et plus particulièrement les géants du silicium (Intel, AMD) s’intéresse de près à cette technologie. En effet, elle dispose de plusieurs avantages qui en font une **technologie de rupture** dans certains domaines d'applications: 
+​	Parallèlement à ça, il existe depuis plusieurs années une technologie de circuits imprimés appelé Field Programmable Gate Array (ou **FPGA**). Une puce FPGA est un circuit imprimé **reconfigurable** fonctionnant à base de portes logiques (par opposition au processeur qui ne peut être reprogrammé). Cette technologie a pris son envol à partir des années 90, mais c'est aujourd'hui que les entreprises, et plus particulièrement les géants du silicium (Intel, AMD) s’intéressent de près à cette technologie. En effet, les puces FPGA disposent de plusieurs avantages qui en font une **technologie de rupture** dans certains domaines d'applications : 
 
 - Le caractère reconfigurable permet un prototypage de circuit intégré final, tout en ne passant pas par une couche d'émulation logicielle coûteuse et peu performante. 
-- Son architecture en portes logiques permet un **grand parallélisme** dans les calculs, ce qui permet d’accélérer considérablement certaines taches parallélisables (compression/décompression de fichiers, calculs 3D, deep learning, réseau de neurones, etc ). 
-- Son implémentation "hardware" d'un algorithme (a contrario de l'utilisation d'un jeu d'instructions pour les processeurs) permet une optimisation poussée du produit, que ce soit en termes de performances, ou de consommation électrique, cette dernière représentant un enjeu important de l’électronique moderne. 
+- Son architecture en portes logiques permet un **grand parallélisme** dans les calculs, ce qui permet d’accélérer considérablement certaines tâches parallélisables (compression/décompression de fichiers, calculs 3D, deep learning, réseaux de neurones, etc). 
+- Son implémentation "hardware" d'un algorithme (a contrario de l'utilisation d'un jeu d'instructions pour les processeurs) permet une optimisation poussée du produit, que ce soit en termes de performances ou de consommation électrique, cette dernière représentant un enjeu important de l’électronique moderne. 
 
 **En examinant ces avantages, on comprend vite l’intérêt d'une telle technologie dans la compression et le traitement vidéo. **
 
-​	Afin de répondre à cette problématique nouvelle, l'ENSTA Bretagne voudrait développer un algorithme de compression vidéo, qui soit **open-source** et doté de performances convaincantes (définies par la suite), puis implémenter cet algorithme sur une carte FPGA. La réalisation et l'implémentation de cet algorithme constitue notre travail, et se nomme **EVEEX (projet Encodage Vidéo Ensta Bretagne Expérimental)**.
+​	Afin de répondre à cette problématique nouvelle, l'ENSTA Bretagne voudrait développer un algorithme de compression vidéo, qui soit **open-source** et doté de performances convaincantes (définies par la suite), puis implémenter cet algorithme sur une carte FPGA. La réalisation et l'implémentation de cet algorithme constitue notre travail, et se nomme **EVEEX (projet Encodage Vidéo ENSTA Bretagne Expérimental)**.
 
 ​	Dans ce rapport, nous allons définir les exigences de fonctionnement d'un tel système, puis présenter notre travail actuel (et futur), que ce soit au niveau de l'algorithme, ou de son implémentation sur une carte FPGA. 
 
@@ -83,30 +83,30 @@ L'objectif à la fin de cette année scolaire est d'obtenir un produit commercia
 
 ### Définition des exigences  
 
-Afin de définir clairement nos objectifs pour ce projet, il est primordial de définir les exigences, qu'elles soient fonctionnelles ou physiques (programmation). 
+Afin de définir clairement nos objectifs pour ce projet, il est primordial de définir les exigences, qu'elles soient fonctionnelles ou physiques (programmation).
 
-Nous l'avons abordée dans l'introduction, la problématique des codecs vidéos est **primordiale** dans la gestion de la bande passante globale et de l'impact énergétique d'Internet. Pour permettre une amélioration collaborative et un accès universel, il est donc primordial que le projet soit **open-source**. Cet algorithme doit permettre l'extraction d'un flux vidéo, provenant par exemple d'une camera, la compression de celui-ci, le formatage des données compressées, l'envoi de ces données à travers le réseau, le décodage des données reçues via le réseau, la décompression des données compressées ainsi que l'affichage de celles-ci. 
+Nous l'avons abordée dans l'introduction, la problématique des codecs vidéos est **primordiale** dans la gestion de la bande passante globale et de l'impact énergétique d'Internet. Pour permettre une amélioration collaborative et un accès universel, il est donc primordial que le projet soit **open-source**. Cet algorithme doit permettre l'extraction d'un flux vidéo, provenant par exemple d'une caméra, la compression de celui-ci, le formatage des données compressées, l'envoi de ces données à travers le réseau, le décodage des données reçues via le réseau, la décompression des données compressées ainsi que l'affichage de celles-ci.
 
 **Enfin, l'algorithme doit être développé dans un langage permettant une implémentation sur FPGA.** Nous verrons plus tard que le choix du language est un point crucial dans la réalisation du projet. 
 
 Nous avons donc défini un certain nombre d'exigences avec les performances attendues lorsqu'elles sont pertinentes, ainsi que notre certitude quand à la réalisation de ces exigences.  
 
-Les points de vocabulaires au niveau de exigences seront définis par la suite dans le rapport, dans un glossaire. 
+Les points de vocabulaire au niveau de exigences seront définis par la suite dans le rapport, dans un glossaire. 
 
 
 
 | Numéro identifiant l'exigence |                           Exigence                           |                    Performances attendues                    |  Certitude quant à la réalisation de cette exigence (en %)   |
 | :---------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-|               1               | Le projet doit-être intégralement open-source et accessible gratuitement. (exigence non fonctionnelle) |                             None                             | 100% => après analyse, il est probable que l'intégralité des solutions à incorporer soit open-source. En revanche, la chaîne de compilation sur FPGA dépend du fabricant de la carte choisi par un utilisateur. Si ces logiciels (Intel Quartus, Xilinx Vivado) sont gratuits, il ne sont en revanche pas open-source. Malgré tout il existe des solutions FPGA (carte + IDE) open-sources comme Lattice. |
-|              2.1              | L'algorithme doit pouvoir recevoir un flux photos et vidéo "brut" et le convertir en format exploitable |          Conversion d'un flux RGB en flux YUV/YCbCr          | 100%, la conversion étant un simple calcul matriciel, il est facile à implémenter dans un language haut-niveau (python), et possiblement implémentable de façon direct en HDL sur la carte FPGA. |
-|             2.2.1             |        l'algorithme doit compresser les données brut         | Dans un premier temps, performances analogues au MPEG-1 => 20:1 pour une photo, 100:1 pour vidéo | 50%, si le taux de compression image semble atteignable (à l'heure actuelle environ 10:1 en python), le taux vidéo va demander pas mal d'optimisation du code en langage c. |
-|             2.2.2             |    l'algorithme doit décompresser des données compressés     |            Identiques ou supérieurs à l'encodage             | 100%, le décodage d'un arbre du Huffmann est plus rapide que l'encodage. |
-|             2.2.3             | l'algorithme doit compresser les données d'une manière originale (pas une copie de MPEG) |                             None                             | 80%, Nous pensons incorporer une taille variable de macrobloc de traitement, ce qui nous différencie fondamentalement du MPEG |
-|             2.3.1             | l'algorithme doit pouvoir formater les données compresser afin qu'elle puissent être envoyé en réseau. |                             None                             | 100%, nous avons une bonne maîtrise du bitstream en python et l'implémentation c est en cours. |
-|             2.3.2             | l'algorithme doit pouvoir recevoir les données par le réseau et les comprendre |                             None                             |                 100% pour les mêmes raisons                  |
-|             2.4.1             | l'algorithme doit permettre un affichage d'une image décodé  |               affichage VGA sur la carte fpga                |   100% si on utilise Litex, et déjà réalisé en vhdl natif    |
-|              3.1              |   l'algorithme doit pouvoir s’exécuter sur une carte FPGA    |   identiques ou supérieurs à la version pc de l'algorithme   | 70%, avec l'utilisation d'un SOC riscV l'implémentation C devrait être jouable. Le principal point bloquant est la gestion de la mémoire sur la carte FPGA. |
-|              4.1              | l'algorithme implémenté sur fpga doit induire une faible consommation électrique | Inférieure à la consommation d'un PC exécutant l'algorithme. (<30W) | 100%, les fpga consomment nativement peu d'énergie (notre modèle s'alimente par port micro-usb) |
+|               1               | Le projet doit être intégralement open-source et accessible gratuitement (exigence non fonctionnelle) |                             None                             | 100% => après analyse, il est probable que l'intégralité des solutions à incorporer soit open-source. En revanche, la chaîne de compilation sur FPGA dépend du fabricant de la carte choisie par un utilisateur. Si ces logiciels (Intel Quartus, Xilinx Vivado) sont gratuits, il ne sont en revanche pas open-source. Malgré tout il existe des solutions FPGA (carte + IDE) open-source comme Lattice. |
+|              2.1              | L'algorithme doit pouvoir recevoir un flux photos et vidéo "brut" et le convertir en un format exploitable |          Conversion d'un flux RGB en flux YUV/YCbCr          | 100%, la conversion étant un simple calcul matriciel, il est facile à implémenter dans un language haut-niveau (Python), et possiblement implémentable de façon directe en HDL sur la carte FPGA. |
+|             2.2.1             |       L'algorithme doit compresser des données brutes        | Dans un premier temps, performances analogues au MPEG-1 => 20:1 pour une photo, 100:1 pour vidéo | 50%, si le taux de compression image semble atteignable (à l'heure actuelle environ 10:1 sur Python), le taux de compression vidéo va demander pas mal d'optimisations du code en langage C. |
+|             2.2.2             |    L'algorithme doit décompresser des données compressées    | Performances identiques ou supérieures à celles de l'encodage | 100%, le décodage d'un arbre du Huffman est plus rapide que l'encodage. |
+|             2.2.3             | L'algorithme doit compresser les données d'une manière originale (pas une copie de MPEG) |                             None                             | 80%, nous pensons incorporer une taille variable de macroblocs de traitement, ce qui nous différencie fondamentalement du MPEG |
+|             2.3.1             | L'algorithme doit pouvoir formater les données compressées afin qu'elles puissent être envoyées via un réseau. |                             None                             | 100%, nous avons une bonne maîtrise du bitstream sur Python et l'implémentation en langage C est en cours. |
+|             2.3.2             | L'algorithme doit pouvoir recevoir les données par le réseau et les comprendre |                             None                             |                 100%, pour les mêmes raisons                 |
+|             2.4.1             | L'algorithme doit permettre un affichage d'une image décodée |               Affichage VGA sur la carte FPGA                |   100% si on utilise Litex, et déjà réalisé en VHDL natif    |
+|              3.1              |   L'algorithme doit pouvoir s’exécuter sur une carte FPGA    |  Identiques ou supérieures à la version PC de l'algorithme   | 70%, avec l'utilisation d'un SOC RiscV l'implémentation C devrait être jouable. Le principal point bloquant est la gestion de la mémoire sur la carte FPGA. |
+|              4.1              | L'algorithme implémenté sur FPGA doit induire une faible consommation électrique | Inférieures à la consommation d'un PC exécutant l'algorithme. (<30W) | 100%, les FPGA consomment nativement peu d'énergie (notre modèle s'alimente par port micro-USB) |
 
 On rajoute à ces exigences les fonctions définissant les relations entre l'algorithme et les acteurs externes. Pour cela, la méthode du diagramme en pieuvre est utilisée. Elle permet d'illustrer clairement les fonctions accomplies par le système (ie l'algorithme EVEEX). 
 
@@ -135,7 +135,7 @@ La réalisation de l'algorithme constitue une part très importante du projet, p
 
 Pour cet algorithme de traitement des données, nous nous sommes basés sur le MJPEG, car il est relativement simple à appréhender. **L'objectif de notre algorithme est de compresser l'image de référence le plus possible (ie avoir le meilleur taux de compression), et de faire cela le plus rapidement et le plus efficacement possible.**
 
-Le fonctionnement *global* de l'algorithme est détaillé dans le diagramme en blocs fourni en annexe. Il est composé de 3 phases principales. Pour chacune de ces 3 étapes (encodage, passage réseau et décodage), nous ferons un *zoom* sur le diagramme que nous avons effectué (par souci de simplicité).
+Le fonctionnement global de l'algorithme est détaillé dans le diagramme en blocs fourni en annexe. Il est composé de 3 phases principales. Pour chacune de ces 3 étapes (encodage, passage réseau et décodage), nous ferons un *zoom* sur le diagramme que nous avons effectué (par souci de simplicité).
 
 L'image, au format RGB (que sort nativement la plupart des cameras), est tout d'abord **convertie au format chrominance/luminance (YUV)**. 
 
@@ -151,9 +151,9 @@ Après cette étape, on applique diverses transformations **à chacune de ces ma
   
   <center> <i>Figure 3 : Exemple de linéarisation en zigzag pour un macrobloc 6x6 (pour un seul canal de couleur)</i></center>
 
-* On effectue maintenant l'étape de seuillage, aussi appelée **quantization**. Cette opération consiste à ramener à zéro tous les éléments des 3 listes (issues de la linéarisation en zigzag) qui sont inférieurs **(en valeur absolue)** à un certain seuil, appelé *threshold* (ou *DEFAULT_QUANTIZATION_THREASHOLD* dans le code). Comme énoncé précédemment, la plupart des valeurs de ces 3 listes seront relativement faibles, donc appliquer ce seuillage va nous permettre d'avoir en sortie 3 listes avec **beaucoup de zéros**. Le seuil a ici été déterminé empiriquement, à partir d'une série de tests sur des images-macroblocs générées aléatoirement. **On a choisi *threshold* = 10, car il s'agissait de la valeur maximale qui permet quand même d'avoir une bonne qualité d'image en sortie.**
+* On effectue maintenant l'étape de seuillage, aussi appelée **quantization**. Cette opération consiste à ramener à zéro tous les éléments des 3 listes (issues de la linéarisation en zigzag) qui sont inférieurs **(en valeur absolue)** à un certain seuil, appelé *threshold* (ou *DEFAULT_QUANTIZATION_THREASHOLD* dans le code). Comme énoncé précédemment, la plupart des valeurs de ces 3 listes seront relativement faibles, donc appliquer ce seuillage va nous permettre d'avoir en sortie 3 listes avec **beaucoup de zéros**. Le seuil a ici été déterminé empiriquement, à partir d'une série de tests sur des images-macroblocs générées aléatoirement. **On a choisi *threshold* = 10, car il s'agissait de la valeur maximale qui permet quand même d'avoir une bonne qualité d'image en sortie.** Il est important de noter que cette étape de seuillage est **irréversible**. 
 
-* On passe ensuite à l'étape de la **RLE** (Run-Length Encoding). Cette étape consiste à regrouper de manière synthétique (dans des tuples, aussi appelés *tuples RLE*) les séries de zéros obtenus après l'étape de la quantization. Concrètement, si dans une liste seuillée on a 124 zéros puis un 5.21 (par exemple), d'abord 5.21 est arrondi à l'entier le plus proche (ici 5), puis cette série de 125 entiers sera stockée dans le tuple (124, 5). Plus généralement, si l'on a le tuple RLE "(U, V)", cela signifie que l'on a U zéros puis l'entier **non-nul** V. Ainsi, chaque macrobloc sera décrit de manière **extrêmement synthétique** par une liste de tuples RLE. **L'image finale, étant décomposée en une série de macroblocs, sera alors une liste de listes de tuples RLE.**
+* On passe ensuite à l'étape de la **RLE** (Run-Length Encoding). Cette étape consiste à regrouper de manière synthétique (dans des tuples, aussi appelés *tuples RLE*) les séries de zéros obtenues après l'étape de la quantization. Concrètement, si dans une liste seuillée on a 124 zéros puis un 5.21 (par exemple), d'abord 5.21 est arrondi à l'entier le plus proche (ici 5), puis cette série de 125 entiers sera stockée dans le tuple (124, 5). Plus généralement, si l'on a le tuple RLE "(U, V)", cela signifie que l'on a U zéros puis l'entier **non-nul** V. Ainsi, chaque macrobloc sera décrit de manière **extrêmement synthétique** par une liste de tuples RLE. **L'image finale, étant décomposée en une série de macroblocs, sera alors une liste de listes de tuples RLE.**
 
 
 
@@ -167,14 +167,14 @@ La partie suivante concerne le formatage des données. On utilise pour cela un *
 
 ![arbre](rapport d'avancement.assets/arbre-1607441786592.png)
 
-<center> <i> Figure 5 : découpage d'un message en arbre binaire par fréquence d'apparition </i></center>
+<center> <i> Figure 5 : Découpage d'un message en arbre binaire par fréquence d'apparition </i></center>
 
 ```
 Encoded string : 10101001100110000110011011011011100100110101000010100010010111110101111100000101011001110101110000001001001101011111111010111010100111110011000101111101111010101100101110110011001001001101111000011111001000010
 String decoded back : le chic de l'ensta bretagne sur la compression vide
 ```
 
-L'arbre se base sur la récurrence des caractères afin de les ordonner et d'adresser à chaque caractère un mot binaire. Les "caractères" correspondent ici en fait à un tuple RLE. **L'idée est que, plus un tuple RLE apparaîtra souvent dans la frame RLE, moins le mot binaire qui lui est associé aura une taille élevée.** Les correspondances tuple RLE / mot binaire sont indiquées dans un dictionnaire, appelé **dictionnaire de Huffman**.
+L'arbre se base sur la récurrence des caractères afin de les ordonner et d'adresser à chaque caractère un mot binaire. Les "caractères" correspondent ici en fait à des tuples RLE. **L'idée est que, plus un tuple RLE apparaîtra souvent dans la frame RLE, moins le mot binaire qui lui est associé aura une taille élevée.** Les correspondances tuple RLE / mot binaire sont indiquées dans un dictionnaire, appelé **dictionnaire de Huffman**.
 
 Après application de l'algorithme de Huffman **à la frame entière**, on se retrouve donc avec un dictionnaire de Huffman, ainsi qu'une frame RLE **prête à être encodée**. Le dictionnaire de Huffman est ensuite converti en bitstream (ici une chaîne de caractères de "0" et de "1"). 
 
@@ -190,9 +190,9 @@ L'envoi du bitstream total se fera en **4 étapes** :
 
 3) On envoie ensuite les paquets associés à chacun des macroblocs, qui seront également de taille limitée (<= bufsize). De même, chacun des paquets envoyés contiendra les métadonnées du paquet (frame_id, type_msg = BODY_MSG = 2, macroblock_number, index et packet_size) ainsi que la partie du bitstream associé à un macrobloc RLE, **encodé entre-temps depuis la frame RLE via l'algorithme de Huffman** (fonction d'encodage). Chacun de ces paquets forment le *corps* du bitstream, aussi appelé **body** dans le code.
 
-4) Enfin, on envoie le message de fin, aussi appelée la queue du message (ou **tail**), qui est là simplement pour signaler que l'on arrive à la toute fin du bitstream. Ce message de fin contient seulement frame_id et type_msg (HEADER_MSG, ie 3).
+4) Enfin, on envoie le message de fin, aussi appelée la queue du message (ou **tail**), qui est simplement là pour signaler que l'on arrive à la toute fin du bitstream. Ce message de fin contient seulement frame_id et type_msg (HEADER_MSG, ie 3).
 
-**Il est important de noter que, comme on veut également optimiser les performances temporelles de cet algorithme, il est primordial que l'on puisse convertir la frame RLE en bitstream ET envoyer ce dernier au serveur le plus rapidement possible.** Ainsi, nous avons jugé intéressant de générer le bitstream dans un buffer via un thread en parallèle. Le thread principal n'aura alors qu'à extraire les paquets à envoyer, sans avoir à perdre de temps à les convertir. De même, le thread "écrivain" n'aura pas à perdre de temps à attendre que le client envoie le paquet puis reçoive le message de retour du serveur (cf. diagramme).
+**Il est important de noter que, comme on veut également optimiser les performances temporelles de cet algorithme, il est primordial que l'on puisse convertir la frame RLE en bitstream ET envoyer ce dernier au serveur le plus rapidement possible.** Ainsi, nous avons jugé intéressant de générer le bitstream dans un buffer via un thread en parallèle. Le thread principal n'aura alors qu'à extraire les paquets à envoyer de ce buffer, sans avoir à perdre de temps à les convertir. De même, le thread "écrivain" n'aura pas à perdre de temps à attendre que le client envoie le paquet puis reçoive le message de retour du serveur (cf. diagramme).
 
 
 
@@ -202,7 +202,7 @@ L'envoi du bitstream total se fera en **4 étapes** :
 
 
 
-Maintenant que le serveur a reçu tout le bitstream associé à l'image compressée, on va pouvoir commencer l'étape de **décodage**, qui constitue la troisème et dernière étape de notre algorithme. **Il s'agit en fait de l'étape d'encodage, mais effectuée dans l'ordre inverse.** La seule étape qui ne réapparaît pas au décodage est la **quantization**, ce qui est logique puisqu'il s'agit d'une étape irréversible. En effet, si une valeur a été seuillée (ie ramenée à zéro), on n'a - à ce stade - aucun moyen de savoir quelle était sa valeur initiale avant le seuillage.
+Maintenant que le serveur a reçu l'entièreté du bitstream associé à l'image compressée, on va pouvoir commencer l'étape de **décodage**, qui constitue la troisème et dernière étape de notre algorithme. **Il s'agit en fait de l'étape d'encodage, mais effectuée dans l'ordre inverse.** La seule étape qui ne réapparaît pas au décodage est la **quantization**, ce qui est logique puisqu'il s'agit d'une étape irréversible. En effet, si une valeur a été seuillée (ie ramenée à zéro), on n'a - à ce stade - aucun moyen de savoir quelle était sa valeur initiale avant le seuillage.
 
 
 
@@ -212,9 +212,9 @@ Maintenant que le serveur a reçu tout le bitstream associé à l'image compress
 
 
 
-**L'entièreté des étapes mises bout à bout sera visualisable dans un fichier à part, fourni en annexe (comme il s'agit d'une image trop détaillée pour être visualisée sur un document PDF classique).**
+Puis, finalement, après avoir décodé l'image au format YUV, on la convertit au format RGB.
 
-En ce qui concerne les performances, pour une image typique en 480p, notre algorithme s'effectue en une vingtaine de secondes en moyenne, et a des taux de compression variant entre 10:1 et 5:1 en moyenne.
+En ce qui concerne les performances de cet algorithme, pour une image typique en 480p, notre algorithme s'effectue en une vingtaine de secondes en moyenne, et a des taux de compression variant entre 10:1 et 5:1 en moyenne. Ces taux de compression, *bien qu'améliorables*, sont toutefois assez satisfaisants, dans la mesure où les taux de compression d'algorithmes pré-existants (tels que le MPEG-2) varient typiquement entre 20:1 et 5:1 pour des images "classiques". Voici quelques statistiques de performances liées à notre algorithme :
 
 
 
@@ -234,7 +234,7 @@ En ce qui concerne les performances, pour une image typique en 480p, notre algor
 
 
 
-Nous avons également mis en place une alternative à la DCT, la **iDTT** (integer Discrete Tchebychev Transform). Cette transformation va considérer (en entrée ET en sortie) des tableaux d'entiers, et non de flottants, comme le fait la DCT. Par rapport à la DCT, cette transormation est un tout petit peu plus précise (ce qui se traduit concrètement par une qualité d'image un peu plus élevée), mais il s'avère que le temps de calcul est bien plus élevé que pour la DCT classique.
+Nous avons également mis en place une alternative à la DCT, la **iDTT** (integer Discrete Tchebychev Transform). Cette transformation va considérer (en entrée ET en sortie) des tableaux d'entiers, et non de flottants, comme le fait la DCT. Par rapport à la DCT, cette transormation est un tout petit peu plus précise (ce qui se traduit concrètement par une qualité d'image un peu plus élevée), mais il s'avère que le temps de calcul est bien plus élevé que pour la DCT classique. Voici quelques statistiques de performances liées à la version alternative de notre algorithme qui utilise la iDTT :
 
 
 
@@ -250,7 +250,7 @@ Nous avons également mis en place une alternative à la DCT, la **iDTT** (integ
 
 
 
-Nous avons implémenté cette méthode supplémentaire afin de sortir un peu des sentiers battus et de voir ce que l'on pouvait faire (ou optimiser) avec des méthodes entières (et non flottantes comme ce que l'on a décrit précédemment). **Comme les performances temporelles de la DCT surpassent largement celles de la iDTT, nous continuerons évidemment à nous focaliser principalement sur la DCT.**
+Nous avons implémenté cette méthode supplémentaire afin de sortir un peu des sentiers battus et de voir ce que l'on pouvait faire (ou optimiser) avec des méthodes entières (et non flottantes comme avec la DCT). **Comme les performances temporelles de la DCT surpassent largement celles de la iDTT, nous continuerons évidemment à nous focaliser principalement sur la DCT.**
 
 
 
@@ -260,12 +260,12 @@ Au niveau du FPGA, les choses ont récemment évolué.
 
 Nous étions partis pour développer l'algorithme entièrement en langage HDL, en passant pour les fonctions compliquées par un outil de *High Level Synthesis* (HLS). Cependant, nous nous sommes rendus compte qu'il serait compliqué de continuer ainsi, et cela pour de multiples raisons : 
 
-* La HLS permet en théorie de transformer un code écrit en c en un code HDL comme le VHDL ou le Verilog. Le problème de la HLS est qu'elle induit de l’opacité dans le code machine finale (on ne contrôle pas la génération de code). Aussi la syntaxe c nécessaire à son interprétation par le logiciel de HLS est extrêmement contraignante (impossible de faire des mallocs, typage limité aux types primaires,etc...[5]). 
-* les langages HDl comme le VHDL sont extrêmement durs à appréhender, la courbe d'apprentissage est très abrupte (la syntaxe est très différente, c'est très bas niveau, les types limités à des mots binaires, etc...). il est assez déraisonnable d'apprendre la programmation machine en HDL en seulement quelques mois 
-* l'interface de développement Xilinx Vivado, si elle permet quelques fonctionnalités intéressantes notamment pour l'analyse de code et l'optimisation, est très lourde à installer (80 go sur le disque dur) et très difficile à prendre en main (environ 2 semaines pour comprendre le fonctionnement du framework et les principales fonctionnalités). On voudrait privilégier un IDE plus simple.
-* enfin, la gestion des I/O ainsi que de la RAM demande dans la grande majorité des cas de faire appel à des bibliothèques de xilinx, qui sont gratuites pour certaines (et très chères pour d'autres []), et qui sont surtout *closed-sourced*. 
+* La HLS permet en théorie de transformer un code écrit en C en un code HDL comme le VHDL ou le Verilog. Le problème de la HLS est qu'elle induit de l’opacité dans le code machine final (on ne contrôle pas la génération de code). De plus, la syntaxe C nécessaire à son interprétation par le logiciel de HLS est extrêmement contraignante (impossible de faire des mallocs, typage limité aux types primaires, etc [5]). 
+* Les langages HDL comme le VHDL sont extrêmement durs à appréhender, la courbe d'apprentissage est très abrupte (la syntaxe est très différente, c'est très bas niveau, les types sont limités à des mots binaires, etc). Il est donc assez déraisonnable d'apprendre la programmation machine en HDL en seulement quelques mois.
+* L'interface de développement Xilinx Vivado, bien qu'elle permette quelques fonctionnalités intéressantes, notamment pour l'analyse de code et l'optimisation, est très lourde à installer (80 Go sur le disque dur) et est très difficile à prendre en main (environ 2 semaines pour comprendre le fonctionnement du framework et des principales fonctionnalités). On voudrait ainsi privilégier un IDE plus simple.
+* Enfin, la gestion des I/O ainsi que de la RAM demande dans la grande majorité des cas de faire appel à des bibliothèques de Xilinx, qui sont gratuites pour certaines (et très chères pour d'autres), et qui sont surtout *closed-sourced*. 
 
-Sur conseil de nos encadrants, nous nous sommes donc intéresser à une solution alternative proposé par Florent Kermarrec, ENSTA promotion 2008 et sa société "Enjoy Digital" spécialisé dans la fabrication de solutions FPGA sur-mesures. Cette personne à développer un outil appeler **"LITEX"**. [6] 
+Sur conseil de nos encadrants, nous nous sommes donc intéressés à une solution alternative proposée par Florent Kermarrec (ENSTA promotion 2008) et sa société "Enjoy Digital", spécialisée dans la fabrication de solutions FPGA sur mesure. Cette personne a développé un outil appeler **LiteX**. [6] 
 
 ```
                                       +---------------+
@@ -289,7 +289,7 @@ Sur conseil de nos encadrants, nous nous sommes donc intéresser à une solution
 
 <center> <i>Figure 11 : Design flow de LiteX présent sur le GitHub de Enjoy Digital</i></center>
 
-​	LiteX est un framework de développement FPGA basé sur le langage **Migen**, lui-même reprenant la syntaxe et le fonctionnement de Python. LiteX permet de développer des firmwares FPGA aussi bien en bas niveau avec une syntaxe Python, qu'en haut niveau via la création d'un SOC d'architecture RiscV, capable notamment d’accueillir un kernel Linux et d’exécuter du code C de manière normale (sans les inconvénients de la HLS). Il permet aussi de gérer nativement les principales entrées/sorties (Ethernet, VGA, USB) ainsi que le RAM, et ce par un code complètement open-source.
+​	LiteX est un framework de développement FPGA basé sur le langage **Migen**, lui-même reprenant la syntaxe et le fonctionnement de Python. LiteX permet de développer des firmwares FPGA, aussi bien en bas niveau avec une syntaxe Python qu'en haut niveau via la création d'un SOC d'architecture RiscV, capable notamment d’accueillir un kernel Linux et d’exécuter du code C de manière normale (sans les inconvénients de la HLS). Il permet aussi de gérer nativement les principales entrées/sorties (Ethernet, VGA, USB) ainsi que la RAM, et ce par un code complètement open-source.
 
 ​	**Toutes ces caractéristiques le rendent idéal pour notre algorithme.** L’intérêt d'un tel système est aussi la possibilité de migrer certaines parties du code en VHDL afin de l’exécuter de la manière la plus optimisée possible. 
 
@@ -297,21 +297,21 @@ Sur conseil de nos encadrants, nous nous sommes donc intéresser à une solution
 
 
 
-​	Concernant l'état du projet en lui-même, nous développons sur une carte Digilent Nexys4 DDR, donc nous utilisons la toolchain Vivado. Pour l'acquisition vidéo, nous avons opté pour des caméras OV7670. Elles filment en 480p et ont l'avantage d’être très peu chères (1.5€ l'unité), ce qui est pratique quand on débute dans le domaine (nous avons déja brûlé une camera). 
+​	Concernant l'état du projet en lui-même, nous développons sur une carte Digilent Nexys4 DDR, donc nous utilisons la toolchain Vivado. Pour l'acquisition vidéo, nous avons opté pour des caméras OV7670. Elles filment en 480p et ont l'avantage d’être très peu chères (1.50€ l'unité), ce qui est pratique quand on débute dans le domaine (nous avons déja brûlé une camera). 
 
 Nous avons adapté un code existant en VHDL afin d'afficher sur un écran en VGA le retour de la caméra 7670. La qualité d'image n'est pas la meilleure, mais elle devrait être suffisante pour exploiter l'algorithme.
 
 ![image0](rapport d'avancement.assets/qualité.jpg)
 
-<center> <i>Figure 12 : Rendu VGA de la camera OV7670 reliée à un FPGA Nexys4 (il n'y a pas de compression, l'image est affichée de manière directe). La colorimétrie est liée à l'absence de blindage des câbles reliant la camera à la carte</i></center>
+<center> <i>Figure 12 : Rendu VGA de la caméra OV7670 reliée à un FPGA Nexys4 (il n'y a pas de compression, l'image est affichée de manière directe). La colorimétrie est liée à l'absence de blindage des câbles reliant la caméra à la carte</i></center>
 
 Pour pallier le problème du branchement de la caméra (connecteur Pmod), notre encadrant Pascal Cotret nous a conçu un adaptateur maison. 
 
 ![imageonline-co-emojiadded](rapport d'avancement.assets/imageonline-co-emojiadded.jpg)
 
-<center> <i> Figure 13 : Connecteurs P-mod conçu par M.Cotret </i></center>
+<center> <i> Figure 13 : Connecteurs P-mod conçus par M.Cotret </i></center>
 
-Concernant le code en lui-même, nous commençons à comprendre la démarche de création d'un SOC, par notamment la réalisation des tutoriels LiteX proposé par Enjoy Digital. 
+Concernant le code en lui-même, nous commençons à comprendre la démarche de création d'un SOC,  notamment par la réalisation des tutoriels LiteX proposés par Enjoy Digital. 
 
 ### Déroulement Agile du projet 
 
@@ -330,7 +330,7 @@ Néanmoins, avec l'introduction de LiteX (mélangeant code et matériel), cette 
 
 Concernant les sprints eux-mêmes, nous nous sommes orientés sur des sprints de **2 semaines**, avec un objectif de release (programme, documentation, fonctions supplémentaires, etc) **tous les 3 sprints**. Nous évaluons chaque tâche par un **système de points**, prenant en compte : la difficulté de la tâche, la longueur prévue, ou le nombre de personnes impliquées dans celle-ci. 
 
-Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela nous nous sommes orientés sur un outil simple qui s'intègre à Github : ***ZenHub*** [7] 
+Un projet Agile implique un suivi organisé de ce qui a été fait. Pour cela, nous nous sommes orientés sur un outil simple qui s'intègre à Github : ***ZenHub*** [7] 
 
 ![zenhubmp](rapport d'avancement.assets/zenhubmp.png)
 
@@ -347,13 +347,13 @@ Voici quelques exemples des statistiques (et panneaux) de Zenhub.
 
 <center> <i> Figure 15 : Page principale </i></center>
 
-Le premier panneau (ainsi que le principal) ressemble le plus à Trello. On sépare les issues en 2 catégories "à faire", sur le plus long terme dans le Icebox et à court terme dans le Backlog, puis une catégorie d'issues en cours "in progress". Une fois la tache réalisée elle part dans "Done" où l'on explique l'issue à tout le reste de l'équipe, et une fois cette étape faite, l'issue est "fermée". On peut trier les issues par différentes catégories, et les affecter à des "Milestones" (qui sont les sprints).
+Le premier panneau (ainsi que le principal) ressemble le plus à Trello. On sépare les issues en 2 catégories "à faire", sur le plus long terme dans le Icebox et à court terme dans le Backlog, puis une catégorie d'issues en cours "In progress". Une fois la tâche réalisée, elle part dans "Done" où l'on explique l'issue à tout le reste de l'équipe, et une fois cette étape faite, l'issue est "fermée". On peut trier les issues par différentes catégories, et les affecter à des "Milestones" (qui sont ici les sprints).
 
 ![velocity](rapport d'avancement.assets/velocity.png)
 
 <center> <i> Figure 16 : Velocity tracking </i></center>
 
-Une des statistiques les plus intéressantes est le "velocity tracking". Il permet, via le systèmes de points de notation des issues, de voir facilement l’étendue du travail réalisé au sein d'un sprint. Les sprints terminés sont grisés. On constate une périodicité, due notamment à la release tous les 3 sprints. On rajoute des issues au fur et a mesure des idées de tout le monde (le sprint 7 est amené à grossir).
+Une des statistiques les plus intéressantes est le "Velocity tracking". Il permet, via le systèmes de points de notation des issues, de voir facilement l’étendue du travail réalisé au sein d'un sprint. Les sprints terminés sont grisés. On constate une périodicité, due notamment à la release tous les 3 sprints. On rajoute des issues au fur et a mesure des idées de tout le monde (le sprint 7 est amené à grossir).
 
 ![](rapport d'avancement.assets/cumulative.png)
 
@@ -363,7 +363,7 @@ Le cumulative flow permet une vue différente du précédent graphique, avec not
 
 ![burndown](rapport d'avancement.assets/burndown-1608024815604.png)
 
-<center> <i> Figure 18 : Fonctionnement simplifié de l'encodeur </i></center>
+<center> <i> Figure 18 : Burndown report </i></center>
 
 Le dernier diagramme utile est le "burndown report". Il permet d'observer la progression du travail au sein d'un sprint. Il n'est pas très exploitable dans notre cas car on travaille sur les créneaux de projet (donc toute les semaines). En revanche, pour une équipe qui travaille à plein temps sur le projet, cela pourrait s’avérer très utile.
 
@@ -378,13 +378,13 @@ Une autre amélioration serait d'avoir des macroblocs qui soient dynamiques : po
 <center> <i>Figure 19 : Exemple d'un découpage en macroblocs dynamiques (à droite), comparé à un découpage en macroblocs de taille fixe (à gauche)</i></center>
 
 
-Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LITEX** pour la création du SOC avec un architecture RISC V, avec l'avantage que c'est open-source ce qui est le but de notre projet. Comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV. Parallelement à ça, nous essayerons d'accelerer certaines fonctionnalités clés du programme par l'ajout de code écrit directement en verilog. Certaines fonctions comme le codage Huffman ou la RLE existe deja comme des IP propriétaires de Xilinx [8] et il devrait etre possible avec la documentation fourni de copier le fonctionement de ces IP. 
+Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LiteX** pour la création du SOC avec un architecture RiscV, avec l'avantage que c'est open-source, ce qui est le but de notre projet. Comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV. Parallelement à ça, nous essayerons d'accelerer certaines fonctionnalités clés du programme par l'ajout de code écrit directement en Verilog. Certaines fonctions, comme le codage Huffman ou la RLE, existent déjà comme des IP propriétaires de Xilinx [8] et il devrait être possible avec la documentation fournie de copier le fonctionement de ces IP.
 
 ![LiteX_framework](rapport d'avancement.assets/LiteX_framework-1608039573819.png)
 
 <center><i>Figure 20 : Framework de travail sur LiteX</i></center>
 
-L'optimisation des fonctions critiques sera clé dans l'intérêt de l'implémentation FPGA. Sinon, cela revient juste à éxecuter du code C sur une autre architecture que le x64 (ça fonctionnerait comme ARM ou x86). Il serait interessant, pour un potentiel autre projet, de prévoir la mise en place de cet algorithme sur smartphone afin de créer un facetime "made in ENSTA Bretagne". 
+L'optimisation des fonctions critiques sera clé dans l'intérêt de l'implémentation FPGA. Sinon, cela revient juste à éxecuter du code C sur une autre architecture que le x64 (cela fonctionnerait comme ARM ou x86). Il serait intéressant, pour un potentiel autre projet, de prévoir la mise en place de cet algorithme sur smartphone afin de créer un facetime "made in ENSTA Bretagne".
 
 <div style="page-break-after: always; break-after: page;"></div>
 ## Annexes
@@ -425,15 +425,15 @@ L'optimisation des fonctions critiques sera clé dans l'intérêt de l'implémen
 
 **FPGA:** Une puce FPGA est un circuit imprimé reconfigurable fonctionnant à base de portes logiques.
 
-**Macrobloc:** (ou Macroblock) Une partie de l'image de taille 16x16 pixels. 
+**Macrobloc **(ou Macroblock) : Une partie de l'image de taille 16x16 pixels. 
 
-**Bitstream:** Flux de donnée en binaire. 
+**Bitstream:** Flux de données en binaire. 
 
 **VHDL:** Langage de description de matériel destiné à représenter le comportement ainsi que l'architecture d'un système électronique numérique.
 
 **IDE:** Environnement de Développement.
 
-**Frames:** Images qui composent une vidéo. On parle de FPS (Frame per Seconds) pour mesurer la fréquence d'affichage. 
+**Frames:** Images qui composent une vidéo. On parle de FPS (Frames Per Second) pour mesurer la fréquence d'affichage. 
 
 **HLS**: High Level Synthesis. Outil logiciel permettant de synthétiser du code haut niveau en un code de plus bas niveau. 
 
