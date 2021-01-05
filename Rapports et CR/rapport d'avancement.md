@@ -69,7 +69,7 @@ L'objectif à la fin de cette année scolaire est d'obtenir un produit commercia
 
 # Introduction
 
-​ Aujourd'hui, le contenu vidéo, en particulier le _streaming_ , représente 61% de la bande passante mondiale **[1]**. Cependant, si les derniers algorithmes présentent des performances très convaincantes, force est de constater que les codecs anciens comme le MPEG-4 (mp4) sont encore très largement utilisés. Il n'existe pas aujourd'hui de codec _open-source_ doté de performances en accord avec les besoins d’aujourd’hui, que ce soit au niveau de la qualité d'image ou de la bande passante nécessaire. Car en effet, et cela est peu connu, les codecs largement utilisés comme le H.265 ou le MP4 sont en source fermée (closed-source), et demande des royalties pour une utilisation commerciale par une entreprise.
+​ Aujourd'hui, le contenu vidéo, en particulier le _streaming_ , représente 61% de la bande passante mondiale **[2]**. Cependant, si les derniers algorithmes présentent des performances très convaincantes, force est de constater que les codecs anciens comme le MPEG-4 (mp4) sont encore très largement utilisés. Il n'existe pas aujourd'hui de codec _open-source_ doté de performances en accord avec les besoins d’aujourd’hui, que ce soit au niveau de la qualité d'image ou de la bande passante nécessaire. Car en effet, et cela est peu connu, les codecs largement utilisés comme le H.265 ou le MP4 sont en source fermée (closed-source), et demande des royalties pour une utilisation commerciale par une entreprise.
 
 ![Carte des tarifs pour utiliser HVEC (h.265). Cela peut représenter un coût conséquent pour les entreprises](rapport d'avancement.assets/HEVC-License-Price-List.png)
 
@@ -160,7 +160,11 @@ La partie suivante concerne le formatage des données. On utilise pour cela un *
 ![Découpage d'un message en arbre binaire par fréquence d'apparition](rapport d'avancement.assets/arbre-1607441786592.png)
 
 ```
-Encoded string : 10101001100110000110011011011011100100110101000010100010010111110101111100000101011001110101110000001001001101011111111010111010100111110011000101111101111010101100101110110011001001001101111000011111001000010
+Encoded string :
+101010011001100001100110110110111001001101010000101000100101111
+101011111000001010110011101011100000010010011010111111110101110
+101001111100110001011111011110101011001011101100110010010011011
+11000011111001000010
 String decoded back : le chic de l'ensta bretagne sur la compression vide
 ```
 
@@ -214,12 +218,12 @@ Au niveau du FPGA, les choses ont récemment évolué.
 
 Nous étions partis pour développer l'algorithme entièrement en langage HDL, en passant pour les fonctions compliquées par un outil de _High Level Synthesis_ (HLS). Cependant, nous nous sommes rendus compte qu'il serait compliqué de continuer ainsi, et cela pour de multiples raisons :
 
--   La HLS permet en théorie de transformer un code écrit en C en un code HDL comme le VHDL ou le Verilog. Le problème de la HLS est qu'elle induit de l’opacité dans le code machine final (on ne contrôle pas la génération de code). De plus, la syntaxe C nécessaire à son interprétation par le logiciel de HLS est extrêmement contraignante (impossible de faire des mallocs, typage limité aux types primaires, etc **[5]**).
+-   La HLS permet en théorie de transformer un code écrit en C en un code HDL comme le VHDL ou le Verilog. Le problème de la HLS est qu'elle induit de l’opacité dans le code machine final (on ne contrôle pas la génération de code). De plus, la syntaxe C nécessaire à son interprétation par le logiciel de HLS est extrêmement contraignante (impossible de faire des mallocs, typage limité aux types primaires, etc **[6]**).
 -   Les langages HDL comme le VHDL sont extrêmement durs à appréhender, la courbe d'apprentissage est très abrupte (la syntaxe est très différente, c'est très bas niveau, les types sont limités à des mots binaires, etc). Il est donc assez déraisonnable d'apprendre la programmation machine en HDL en seulement quelques mois.
 -   L'interface de développement Xilinx Vivado, bien qu'elle permette quelques fonctionnalités intéressantes, notamment pour l'analyse de code et l'optimisation, est très lourde à installer (80 Go sur le disque dur) et est très difficile à prendre en main (environ 2 semaines pour comprendre le fonctionnement du framework et des principales fonctionnalités). On voudrait ainsi privilégier un IDE plus simple.
 -   Enfin, la gestion des I/O ainsi que de la RAM demande dans la grande majorité des cas de faire appel à des bibliothèques de Xilinx, qui sont gratuites pour certaines (et très chères pour d'autres), et qui sont surtout _closed-sourced_.
 
-Sur conseil de nos encadrants, nous nous sommes donc intéressés à une solution alternative proposée par Florent Kermarrec (ENSTA promotion 2008) et sa société "Enjoy Digital", spécialisée dans la fabrication de solutions FPGA sur mesure. Cette personne a développé un outil appeler **LiteX**. **[6]**
+Sur conseil de nos encadrants, nous nous sommes donc intéressés à une solution alternative proposée par Florent Kermarrec (ENSTA promotion 2008) et sa société "Enjoy Digital", spécialisée dans la fabrication de solutions FPGA sur mesure. Cette personne a développé un outil appeler **LiteX**. **[7]**
 
 ```
                                       +---------------+
@@ -316,7 +320,7 @@ Une autre amélioration serait d'avoir des macroblocs qui soient dynamiques : po
 
 ![Exemple d'un découpage en macroblocs dynamiques (à droite), comparé à un découpage en macroblocs de taille fixe (à gauche)](rapport d'avancement.assets/macrobloc_dynamique.jpg)
 
-Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LiteX** pour la création du SOC avec un architecture RiscV, avec l'avantage que c'est open-source, ce qui est le but de notre projet. Comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV. Parallelement à ça, nous essayerons d'accelerer certaines fonctionnalités clés du programme par l'ajout de code écrit directement en Verilog. Certaines fonctions, comme le codage Huffman ou la RLE, existent déjà comme des IP propriétaires de Xilinx **[8]** et il devrait être possible avec la documentation fournie de copier le fonctionement de ces IP.
+Pour le deuxième semestre, nous allons adopter la solution d'utilisation du **LiteX** pour la création du SOC avec un architecture RiscV, avec l'avantage que c'est open-source, ce qui est le but de notre projet. Comme expliqué dans la diagramme, nous allons continuer de réaliser le code en c pour le compiler en utilisant l'architecture RiscV. Parallelement à ça, nous essayerons d'accelerer certaines fonctionnalités clés du programme par l'ajout de code écrit directement en Verilog. Certaines fonctions, comme le codage Huffman ou la RLE, existent déjà comme des IP propriétaires de Xilinx **[9]** et il devrait être possible avec la documentation fournie de copier le fonctionement de ces IP.
 
 ![Framework de travail sur LiteX](rapport d'avancement.assets/LiteX_framework-1608039573819.png)
 
@@ -328,25 +332,28 @@ L'optimisation des fonctions critiques sera clé dans l'intérêt de l'implémen
 
 ![Diagramme en blocs complet de la version actuelle de l'algorithme EVEEX](rapport d'avancement.assets/diag_algo.png)
 
+\pagebreak
+
 # Bibliographie
 
-[1] Ines, S., 2020. _Youtube En Chiffres 2020_. [online] Agence des medias sociaux. Available at: <https://www.agencedesmediassociaux.com/youtube-chiffres-2020/> [Accessed 15 December 2020].
+**[1]** Ines, S., 2020. _Youtube En Chiffres 2020_. [online] Agence des medias sociaux. Available at: [https://www.agencedesmediassociaux.com/youtube-chiffres-2020/](https://www.agencedesmediassociaux.com/youtube-chiffres-2020/) [Accessed 15 December 2020].
 
-[2] Gaudiaut, T., 23 mars 2020. Le streaming vidéo représente 61 % du trafic Internet. [online] Statista. Available at: https://fr.statista.com/infographie/21207/repartition-du-trafic-internet-mondial-par-usage/ [Accessed 15 octobre 2020].
+**[2]** Gaudiaut, T., 23 mars 2020. Le streaming vidéo représente 61 % du trafic Internet. [online] Statista. Available at: [https://fr.statista.com/infographie/21207/repartition-du-trafic-internet-mondial-par-usage/](https://fr.statista.com/infographie/21207/repartition-du-trafic-internet-mondial-par-usage/) [Accessed 15 octobre 2020].
 
-[3] Bouvet, R., 12 octobre 2020. AMD envisage d'acquerir xilinx, inventeur du FPGA, pour 30 milliards de dollars. [online] Tom's Hardware. Available at: https://www.tomshardware.fr/amd-envisage-dacquerir-xilinx-inventeur-du-fpga-pour-30-milliards-de-dollars/ [Accessed 15 octobre 2020].
+**[3]** Bouvet, R., 12 octobre 2020. AMD envisage d'acquerir xilinx, inventeur du FPGA, pour 30 milliards de dollars. [online] Tom's Hardware. Available at: [https://www.tomshardware.fr/amd-envisage-dacquerir-xilinx-inventeur-du-fpga-pour-30-milliards-de-dollars/](https://www.tomshardware.fr/amd-envisage-dacquerir-xilinx-inventeur-du-fpga-pour-30-milliards-de-dollars/) [Accessed 15 octobre 2020].
 
-[4]Moore, A., 2017. _Fpgas For Dummies_. 2nd ed. [eBook] Intel Altera. Available at: <https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/misc/fpgas-for-dummies-ebook.pdf> [Accessed 31 September 2020].
+**[4]** Moore, A., 2017. _Fpgas For Dummies_. 2nd ed. [eBook] Intel Altera. Available at: [https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/misc/fpgas-for-dummies-ebook.pdf](https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/misc/fpgas-for-dummies-ebook.pdf) [Accessed 31 September 2020].
 
-[5]Chireux, N., 1999. Compression d'images fixes. p.5/24 [cours] Available at: https://www.chireux.fr/mp/cours/Compression%20JPEG.pdf [Accessed 31 September 2020]
+**[5]** Chireux, N., 1999. Compression d'images fixes. p.5/24 [cours] Available at:  
+[https://www.chireux.fr/mp/cours/Compression%20JPEG.pdf](https://www.chireux.fr/mp/cours/Compression%20JPEG.pdf) [Accessed 31 September 2020]
 
-[6] 2014. _Vivado Design Suite Tutorial : High-Level Synthesis_. [ebook] Available at: <https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_2/ug871-vivado-high-level-synthesis-tutorial.pdf> [Accessed 15 October 2020].
+**[6]** 2014. _Vivado Design Suite Tutorial : High-Level Synthesis_. [ebook] Available at: [https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_2/ug871-vivado-high-level-synthesis-tutorial.pdf](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_2/ug871-vivado-high-level-synthesis-tutorial.pdf) [Accessed 15 October 2020].
 
-[7] LiteX-hub - Collaborative FPGA projects around LiteX. Available at: https://github.com/litex-hub [Accessed 1 December 2020].
+**[7]** LiteX-hub - Collaborative FPGA projects around LiteX. Available at: [https://github.com/litex-hub](https://github.com/litex-hub) [Accessed 1 December 2020].
 
-[8] Zenhub.com - project Management in Github. Available at: https://www.zenhub.com/ [Accessed 15 october 2020]
+**[8]** Zenhub.com - project Management in Github. Available at: [https://www.zenhub.com/](https://www.zenhub.com/) [Accessed 15 october 2020]
 
-[9] Pilai, L., 2003. _Huffman Coding_. [pdf] Available at: <https://www.xilinx.com/support/documentation/application_notes/xapp616.pdf> [Accessed 1 December 2020].
+**[9]** Pilai, L., 2003. _Huffman Coding_. [pdf] Available at: [https://www.xilinx.com/support/documentation/application_notes/xapp616.pdf](https://www.xilinx.com/support/documentation/application_notes/xapp616.pdf) [Accessed 1 December 2020].
 
 \pagebreak
 
