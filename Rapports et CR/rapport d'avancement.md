@@ -330,7 +330,7 @@ L'optimisation des fonctions critiques sera clé dans l'intérêt de l'implémen
 
 # Annexes
 
-![Diagramme en blocs complet de la version actuelle de l'algorithme EVEEX](rapport d'avancement.assets/diag_algo.png)
+![Diagramme en blocs complet de la version actuelle de l'algorithme EVEEX](rapport d'avancement.assets/diag_algo_full.png)
 
 \pagebreak
 

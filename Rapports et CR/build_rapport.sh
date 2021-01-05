@@ -9,3 +9,5 @@ pandoc -s "rapport d'avancement.md" \
 		--listings \
 		--number-sections \
 		-o rapport.pdf
+
+pdftk garde.pdf rapport.pdf cat output rapport_complet.pdf
