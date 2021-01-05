@@ -293,9 +293,7 @@ Sur conseil de nos encadrants, nous nous sommes donc intéressés à une solutio
 
 ​	**Toutes ces caractéristiques le rendent idéal pour notre algorithme.** L’intérêt d'un tel système est aussi la possibilité de migrer certaines parties du code en VHDL afin de l’exécuter de la manière la plus optimisée possible. 
 
-​	L'objectif pour nous est ainsi de compiler notre code C pour l'architecture RiscV (qui est open-source), de créer une architecture processeur "sur mesure" grâce à LiteX, et d'optimiser les phPoints à venir ases critiques de l'algorithme afin d'exploiter le parallélisme du FPGA. 
-
-
+​	L'objectif pour nous est ainsi de compiler notre code C pour l'architecture RiscV (qui est open-source), de créer une architecture processeur "sur mesure" grâce à LiteX, et d'optimiser les points critiques de l'algorithme en les dévellopant directement en VHDL afin d'exploiter le parallélisme du FPGA. 
 
 ​	Concernant l'état du projet en lui-même, nous développons sur une carte Digilent Nexys4 DDR, donc nous utilisons la toolchain Vivado. Pour l'acquisition vidéo, nous avons opté pour des caméras OV7670. Elles filment en 480p et ont l'avantage d’être très peu chères (1.50€ l'unité), ce qui est pratique quand on débute dans le domaine (nous avons déja brûlé une camera). 
 
