@@ -1,0 +1,11 @@
+pandoc -s "rapport d'avancement.md" \
+		-f gfm \
+		--mathjax \
+		--standalone \
+		--toc \
+		--pdf-engine=xelatex \
+		--from markdown \
+		--template eisvogel.tex \
+		--listings \
+		--number-sections \
+		-o rapport.pdf
