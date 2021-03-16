@@ -1,0 +1,275 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  french,
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={"Rapport final : EVEEX"},
+  pdfauthor={; ; ; ; },
+  pdflang={fr},
+  pdfkeywords={encodage, python, C, FPGA, video, codec, x264},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{french}
+\else
+  \usepackage[main=french]{babel}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+\fi
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{"Rapport final : EVEEX"}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{"Encodage Vidéo ENSTA Bretagne Expérimental"}
+\author{A. Froehlich \and G. Leinen \and J.N. Clink \and H. Saad \and H. Questroy}
+\date{"05-01-2021"}
+
+\begin{document}
+\maketitle
+
+\hypertarget{header-n2}{%
+\section{Informations}\label{header-n2}}
+
+Membres du groupe : Guillaume Leinen, Jean-Noël Clink, Hussein Saad,
+Alexandre Froehlich, Hugo Questroy
+
+Encadrants : Pascal Cotret, Jean-Christophe Le Lann, Joël Champeau
+
+Code disponible sur GitHub ==\textgreater{}
+\url{https://github.com/EVEEX-Project}
+
+Eportfolio Mahara disponible =\textgreater{}
+\url{https://mahara.ensta-bretagne.fr/view/groupviews.php?group=348}
+
+\hypertarget{header-n7}{%
+\section{Abstract}\label{header-n7}}
+
+\hypertarget{header-n9}{%
+\section{Résumé}\label{header-n9}}
+
+\textbackslash pagebreak
+
+\hypertarget{header-n11}{%
+\section{Remerciements}\label{header-n11}}
+
+\begin{itemize}
+\item
+  Nos encadrants \textbf{Pascal Cotret}, \textbf{Jean-Christophe Le
+  Lann} et \textbf{Joël Champeau}, qui nous aident à définir les
+  objectifs à atteindre, nous prêtent le matériel nécessaire en
+  particulier les cartes FPGA, ainsi qu'a résoudre des problèmes
+  théoriques.
+\item
+  \textbf{Enjoy Digital}, société créée par un Alumni Ensta-Bretagne, et
+  son produit Litex qui nous sera très utile sur l'implémentation
+  hardware.
+\item
+  Le site \textbf{FPGA4students} pour ses tutoriels VHDL/Verilog.
+\item
+  \textbf{Jean-Christophe Leinen} pour ses conseils sur les méthodes
+  Agiles.
+\end{itemize}
+
+\textbackslash pagebreak
+
+\hypertarget{header-n22}{%
+\section{Introduction}\label{header-n22}}
+
+Dans son rapport annuel sur l'usage d'internet, cisco met en exergue
+l'importance du traffic vidéo dans l'internet mondial {[}1{]} : la part
+du streaming dans le débit mondial ne fait qu'augmenter, les définitions
+de lecture augmentent elles aussi, ainsi que la part de "live" très
+gourmands en bande passante.
+
+Dans cette perspective, il est clair que l'algorithme de compression
+utilisée pour compresser un flux vidéo brut à toute son importance, le
+moindre \% de bande passante économisée permettant de libérer plusieurs
+TB/s de bande passante. Ces codecs sont relativmeent peu connu du grand
+public, en voici quelques uns:
+
+\begin{itemize}
+\item
+  MPEG-4 (H.264) : il s'agit d'un des codecs les plus connu, car il
+  génère des fichiers d'extension .mp4 et est embarqué dans un grand
+  nombre d'appareils. Il est important de savoir que, comme le H.265, ce
+  codec est \textbf{protégé} par un brevet, et les services et
+  constructueurs souhaitant utilisé cet algorithme ou un connecteur basé
+  sur l'algorithme doivent reverser des royalties à MPEG-LA {[}2{]}
+  (\emph{La fabrication d'un connecteur display-port coutant 0.20\$ de
+  license au constructeur}), coalitions de plusieurs entreprises du
+  numériques comme sony, panasonic ou encore l'université de Columbia.
+\item
+  VPx : appartenant à l'origine à One-technologie, l'entreprise fut
+  racheté par google à la suite. Les codecs VP (dernière version VP9)
+  sont ouvert et sans royalties. Ce codec est plutot performant en terme
+  de compression mais son encodage est lent {[}3{]}, avec sur un core i7
+  d'intel en 720p une vitesse de compression proche de 2 images/s,
+  occasionnant des couts non négligable en puissance informatique pour
+  les entreprises productrices de contenu (comme Netflix).
+\item
+  H.265 : l'un des codecs les plus récents, il permet une réduction
+  significative de la bande passante necessaire, nottament pour le
+  streaming, mais est aussi lent à l'encodage, et demande des royalties.
+\end{itemize}
+
+Vous l'aurez constaté, les codecs les plus actuels sont souvent détenus
+par des entreprises du secteur. Pour limiter les coûts annexes pour les
+entreprises, un consortium s'est créé en 2015, a but non lucratif, afin
+de developper un codec libre de droit aussi efficace que les autres :
+l'\textbf{Aliance for Open-Media} {[}4{]}. On compte la plupart des
+acteurs du secteur dans ce consortium, nottament l'arrivée des acteurs
+du streaming comme Hulu ou Netflix. Leur création, le codec AV1, basé
+sur VP9, est donc libre de droit, et est nottament très employé dans le
+streaming vidéo. Il a l'avantage de proposer une compression 30\% plus
+forte que le H265 {[}5{]}, mais occasionne par les différentes
+bibliothèques utilisées une utilisation des ressources infiormatiques
+(puissance CPU) bien plus importante, aussi bien du coté encodeur que
+décodeur. La transition vers l'AV1 sur les grandes pateformes videos
+(Netflix, Youtube) n'est pas encore réalisé mais bien en cours de
+planification.
+
+\textbackslash pagebreak
+
+\hypertarget{header-n34}{%
+\section{\texorpdfstring{Présentation de la problématique
+}{Présentation de la problématique }}\label{header-n34}}
+
+\hypertarget{header-n37}{%
+\subsection{\texorpdfstring{Réalisation
+}{Réalisation }}\label{header-n37}}
+
+\hypertarget{header-n38}{%
+\subsection{\texorpdfstring{Difficultés rencontrées
+}{Difficultés rencontrées }}\label{header-n38}}
+
+\textbackslash pagebreak
+
+\hypertarget{header-n41}{%
+\section{Annexes}\label{header-n41}}
+
+\textbackslash pagebreak
+
+\hypertarget{header-n43}{%
+\section{Bibliographie}\label{header-n43}}
+
+\textbf{{[}1{]}}
+https://www.cisco.com/c/en/us/solutions/collateral/executive-perspectives/annual-internet-report/white-paper-c11-741490.html
+
+\textbf{{[}2{]}} mpeg-la royalties
+https://www.businesswire.com/news/home/20150305006071/en/MPEG-LA-Introduces-License-DisplayPort
+
+\textbf{{[}3{]}} encodage lent VP9
+https://groups.google.com/a/webmproject.org/g/codec-devel/c/P5je-wvcs60?pli=1
+
+\textbf{{[}4{]}} http://aomedia.org/about/
+
+\textbf{{[}5{]}}
+https://www.lesnumeriques.com/tv-televiseur/av1-nouveau-standard-video-adopte-a-unanimite-n73213.html
+
+\textbf{{[}6{]}} 2014. \emph{Vivado Design Suite Tutorial : High-Level
+Synthesis}. {[}ebook{]} Available at:
+\href{https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_2/ug871-vivado-high-level-synthesis-tutorial.pdf}{https://www.xilinx.com/support/documentation/sw\emph{manuals/xilinx2014}2/ug871-vivado-high-level-synthesis-tutorial.pdf}
+{[}Accessed 15 October 2020{]}.
+
+\textbf{{[}7{]}} LiteX-hub - Collaborative FPGA projects around LiteX.
+Available at: \url{https://github.com/litex-hub} {[}Accessed 1 December
+2020{]}.
+
+\textbf{{[}8{]}} Zenhub.com - project Management in Github. Available
+at: \url{https://www.zenhub.com/} {[}Accessed 15 october 2020{]}
+
+\textbf{{[}9{]}} Pilai, L., 2003. \emph{Huffman Coding}. {[}pdf{]}
+Available at:
+\url{https://www.xilinx.com/support/documentation/application_notes/xapp616.pdf}
+{[}Accessed 1 December 2020{]}.
+
+\textbackslash pagebreak
+
+\hypertarget{header-n54}{%
+\section{Glossaire}\label{header-n54}}
+
+\textbf{Flux-Vidéo:} Processus d'envoi, réception et lecture en continu
+de la vidéo.
+
+\textbf{Open-Source:} Tout logiciel dont les codes sont ouverts
+gratuitement pour l'utilisation ou la duplication, et qui permet de
+favoriser le libre échange des savoirs informatiques.
+
+\textbf{RGB:} Rouge, Vert, Bleu. C'est un système de codage informatique
+des couleurs. Chaque pixel possède une valeur de rouge, une de vert et
+une de bleu.
+
+\textbf{FPGA:} Une puce FPGA est un circuit imprimé reconfigurable
+fonctionnant à base de portes logiques.
+
+\textbf{Macrobloc }(ou Macroblock) : Une partie de l'image de taille
+16x16 pixels.
+
+\textbf{Bitstream:} Flux de données en binaire.
+
+\textbf{VHDL:} Langage de description de matériel destiné à représenter
+le comportement ainsi que l'architecture d'un système électronique
+numérique.
+
+\textbf{IDE:} Environnement de Développement.
+
+\textbf{Frames:} Images qui composent une vidéo. On parle de FPS (Frames
+Per Second) pour mesurer la fréquence d'affichage.
+
+\textbf{HLS}: High Level Synthesis. Outil logiciel permettant de
+synthétiser du code haut niveau en un code de plus bas niveau.
+
+\textbf{SoC}: System on Chip. Puce de sillicium intégrant plusieurs
+composants, comme de la mémoire, un processeur, et un composant de
+gestion d'entrées/sorties.
+
+\end{document}
