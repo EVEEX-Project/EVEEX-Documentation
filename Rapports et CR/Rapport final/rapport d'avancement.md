@@ -190,13 +190,57 @@ Le code fonctionnant, passons à quelques statistiques et performances sur l'alg
 
 ### Bas niveau : code en C 
 
+A la suite du python, nous voulions améliorer les performances de l'algorithme. Notre choix c'est donc vite porté sur un language plus bas niveau comme le c, avec absence d'interpreteur. Cependant le code C présente quelques problèmes : 
+
+* l'allocation en mémoire n'est pas automatique (faite via malloc() ) 
+* les types sont peu nombreux et la création de classes (struct) difficile
+
+Néanmoins, nous étions confiant sur la possibilité de réaliser le code, d'autant plus que nous disposions d'un guide pour faire de la programmation orienté objet en c. Nous avons donc commencé la construction du code. 
+
+Le temps passa et très vite le code devenu incontrôlable. La quantité de type non natifs produits devenait relativement important, le code augmentait très vite en volume et la structure de programmation devenu obfusqué et incompréhensible. On dépasse maintenant les 7000 lignes de code... 
+
+Ce code ne fait pas rien, la plupart des fonctions de l'encodeur sont implémentés. Le problème réside dans la liaison entre ces blocs de traitements (par exemple la liaison encodeur/huffman). De plus, le grand nombre de types et d'objets créés augmentait les fuites de mémoires et il fallu passer plus de 2 semaines pour boucher toutes les fuites par Valgrind. 
+
+Quelques performances en C : 
+
+
+
 ### langages alternatif : Golang (Go) 
 
-### la problématique du VHDL
+Devant l'échec du code en C, nous nous sommes orientés vers un langage plus facile à écrire, tout en disposant de performances équivalentes au c. Nous nous sommes donc orienté sur un langage poussé par Google et adopté par beaucoup d'entreprises du numériques : Go 
 
+Voici un aperçu des qualités et défauts du langage : 
 
+**Avantages:** 
+
+- la syntaxe est plus facile à lire que le c, notamment la gestion des array (slice) et la définition de méthode de "struct" se rapprochant de la POO
+- Garbage collector intégré au langage (le go donne la localisation d'une erreur et est beaucoup plus verbeux sur le debug que le c et GCC) 
+- Outils de profiling du code intégré et bibliothèque de tests unitaires intégré. 
+- Beaucoup de garde fou : il n'y a pas de runtime error, juste des compilations d'erreurs 
+- Cross-compilation existante pour le langage. 
+
+**inconvénients:**
+
+- Taille du binaire conséquente (un hello world de 2Mo ça fait mal) 
+- **cross-compilation impossible en riscV32 bits**, ainsi que la HLS via vivado. 
+
+Concernant la programmation en GO, l'encodeur fonctionne entièrement, cependant par faute de temps, le décodeur ainsi que le socket de transmission réseau ne fonctionne pas encore (70%). 
+
+Le Go possède comme indiqué précédemment un outil de profiling très évolué, donc voyons ensemble les conclusions que l'on peut en tirer : 
+
+On constate que la fonction de calcul du cosinus (qui intervient dans le calcul d'une DCT) consomme énormément de ressources, nous avons donc eu l'idée de passer par un développement de Taylor (rang 2). 
+
+Là, on constate qu'on accélère considérablement le calcul du cosinus , ce qui nous prouve l'utilité du développement de Taylor.  
+
+### La problématique du VHDL
+
+Dans nos plans initiaux, nous cherchions a 
 
 ## Implémentation sur l'embarqué 
+
+### Alternative 1 : RISCV
+
+### Alternative 2 : ARM 
 
 
 
@@ -220,13 +264,13 @@ Afin de planifier l'activité ainsi que de garder une trace de ce qui a été fa
 
 Sur ce service, les taches sont regroupés en Issues comme lorsque l'on remonte un bug à un développeur, la différence étant qu'on peut facilement pipeliné la réalisation des issues, et les regroupés en différentes catégories notamment des milestones, qui correspondent au sprint (*Les sprints sont arrivés en tant que tel mais vers la fin du projet*). De plus, ce formalisme permet d'extraire quantité d'informations et de statistiques de performance dont voici la principale : 
 
-Le "Velocity tracking" permet, via un système de points de notation des issues, de voir facilement l’étendue du travail réalisé au sein d'un sprint. Les sprints terminés sont grisés. On constate une périodicité, due notamment à la release tous les 3 sprints. On rajoute des issues au fur et a mesure des idées de tout le monde. 
+Le **"Velocity tracking"** permet, via un système de points de notation des issues, de voir facilement l’étendue du travail réalisé au sein d'un sprint. Les sprints terminés sont grisés. On constate une périodicité, due notamment à la release tous les 3 sprints. On rajoute des issues au fur et a mesure des idées de tout le monde. 
 
 Nous nous sommes servis des descriptions des issues pour conserver les user-stories. entre autre, les points intéressants pour une user-story furent les suivants : 
 
-* difficultés rencontrés : quelles ont été les sources de difficulté dans le travail du ou des personnes réalisant l'issue. Cela permet de rafraîchir l'affectation des taches en fonctions des compétences de chacun et de la confiance en la réalisation de la tache. 
-* travail réalisé : L'issue a tel été réalisé en partie ? en totalité ? 
-* perspectives futures : ce qui va découler de la réalisation de la tache. 
+* **difficultés rencontrés** : quelles ont été les sources de difficulté dans le travail du ou des personnes réalisant l'issue. Cela permet de rafraîchir l'affectation des taches en fonctions des compétences de chacun et de la confiance en la réalisation de la tache. 
+* **travail réalisé** : L'issue a tel été réalisé en partie ? en totalité ? 
+* **perspectives futures** : ce qui va découler de la réalisation de la tache. 
 
 Nous complétions ces user-stories sous forme écrite par 15 minutes de démonstration en fin de chaque journée pour pouvoir montrer à tout le monde le travail réalisé. 
 
@@ -234,7 +278,9 @@ Pour un aperçu plus convivial et plus chronologique du déroulé du projet, un 
 
 # Conclusion 
 
-La démarche agile a été plus que nécessaire dans ce projet. En effet nous avons rencontrés plusieurs branches qui se sont avérés mortes ou sans issues a court terme. La démarche agile nous a permis de rebondir 
+La démarche agile a été plus que nécessaire dans ce projet. En effet nous avons rencontrés plusieurs branches qui se sont avérés mortes ou sans issues a court terme. La démarche agile nous a permis de rebondir notamment lors de la fin du code c ou de l'implémentation fpga. 
+
+Nous nous sommes aperçu que 
 
 
 
