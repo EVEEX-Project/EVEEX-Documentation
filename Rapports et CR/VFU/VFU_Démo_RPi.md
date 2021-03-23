@@ -10,7 +10,7 @@ Langage : PYTHON
 
 Matériel : PC / RASPBERRY PI
 
-Étape de code testée : L'ensemble du prototype Python (adapté dans les 2 programmes *main_RPi_émettrice.py* et *main_PC_récepteur.py*)
+Étape de code testée : L'ensemble du prototype Python (adapté dans les 2 programmes *main_RPi_emettrice.py* et *main_PC_recepteur.py*)
 
 ## Manipulation 
 
@@ -38,16 +38,16 @@ d'arrêter le flux vidéo de la PiCamera (et donc par la même occasion les 2 pr
 
 ## Résultats
 
-Tout d'abord, nous avons ici décidé de travailler avec des frames de taille 96x96 pixels, afin de ne pas surcharger le programme Python (qui, rappelons-le, n'a pas des performances temporelles remarquables).
+Nous avons ici décidé de travailler avec des frames de taille 96x96 pixels (générées par la PiCamera), afin de ne pas surcharger le programme Python (qui, rappelons-le, n'a pas des performances temporelles remarquables).
 
-**==> La démonstration fonctionne parfaitement ! Bien que le framerate soit faible (car sur le prototype Python), les images générées en entrée et les images décodées en sortie sont *synchronisées* !**
+**==> Tout d'abord, la démonstration fonctionne parfaitement ! Bien que le framerate soit faible (car on travaille avec le prototype Python), les images générées en entrée et les images décodées en sortie sont *synchronisées* !**
 
 Comme le taux de compression pour chaque frame est difficilement obtenable (bien que ce soit possible), et qu'il n'est (**dans ce cas précis**) pas nécessairement très intéressant, nous avons choisi de nous concentrer sur l'extraction du nombre moyen de **FPS** (Frames Per Second) seulement. En effet, le taux de compression moyen est ici "inintéressant" pour 2 raisons majeures :
 
 - il ne varie pas du taux de compression d'une image de taille 96x96, car on a ici simplement appliqué l'algorithme de compression d'une image à chacune des frames, ce qui n'est **pas** ce qu'un algorithme de compression vidéo idéal effectue dans la réalité (lien entre les frames, détection de mouvement, etc)
 - le taux de compression d'une image de taille 96x96 est déjà connu (ou en tout cas facilement obtenable via nos différents programmes principaux)
 
-Pour différentes tailles de macroblocs (respectivement 8x8, 16x16 et 32x32), nous obtenons alors les résultats suivants :
+Pour différentes tailles de macroblocs (respectivement 8x8, 16x16 et 32x32), on obtient alors les résultats suivants :
 
 Pour des macroblocs 8x8 (**pour une même démonstration**) :
 
