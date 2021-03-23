@@ -265,7 +265,7 @@ Maintenant, on constate qu'on accélère considérablement le calcul d'encodage 
 
 Dans nos plans initiaux, nous cherchions à implémenter le code de manière matérielle au sein d'une puce FPGA. Cela suppose d'utiliser un HDL ou *Hardware Description Langage* . Les plus connus sont **Verilog** et **VHDL**, mais il en existe d'autres en python, ruby, etc... 
 
-Avant de pouvoir développer et surtout tester sur une carte directement, il nous faut installer la *Toolchain* de développement. Les cartes dont nous disposons sont des FPGA artix-7 construit par la société Digilent, les cartes NEXYS4 DDR. 
+Avant de pouvoir développer et surtout tester sur une carte directement, il nous faut installer la *Toolchain* de développement de Xilinx appelé Vivado (l'installation est compliqué et lourde, en particulier sur Linux où tout se fait en mode bash). Les cartes dont nous disposons sont des FPGA artix-7 construit par la société Digilent, les cartes NEXYS4 DDR. 
 
 ![Carte FPGA Nexys4 DDR et ses entrées sorties](rapport.assets/nexys4ddr.png)
 
@@ -273,15 +273,25 @@ Ces cartes possèdent une DDR (Double Data Rate) embarqué, ainsi que la plupart
 
 Les premières manipulations se déroulent sans soucis, nous parvenons à afficher un aperçu de la caméra sur un écran VGA, et tout ça par du code VHDL. Cependant les choses se sont très vite compliqués quand il a fallu s'attaquer à la RAM. 
 
-Sur un FPGA, on dispose de BRAM intégrés au chip qui sont facile a utilisé mais de taille réduite (sur nos designs nous n'arrivions pas a dépasser 32 Mo de BRAM), cependant nos estimations en termes d'usage mémoire d'EVEEX dépassaient la quantité de BRAM utilisable sur un design. La DDR à l'avantage d’être sur une puce a part et d’être beaucoup plus grande (128Mo), cependant il est nécessaire de développer un contrôleur pour cette RAM qui, de l'avis même des encadrants, dépasse nos capacités de développement en école d'ingénieur. Il a donc fallu passer par une solution alternative. 
+Sur un FPGA, on dispose de BRAM intégrés au chip qui sont facile a utilisé mais de taille réduite (sur nos designs nous n'arrivions pas a dépasser 32 Mo de BRAM), cependant nos estimations en termes d'usage mémoire d'EVEEX dépassaient la quantité de BRAM utilisable sur un design. La DDR à l'avantage d’être sur une puce a part et d’être beaucoup plus grande (128Mo), cependant il est nécessaire de développer un contrôleur pour cette RAM qui, de l'avis même des encadrants, dépasse nos capacités de développement en école d'ingénieur. Il faudra donc passer par une alternative. 
 
 La première solution envisagée fut d'utiliser Vivado HLS, l'outil de Xilinx pour la synthèse de code. Il permet moyennant un formalisme dans le code de traduire du code C vers du HDL comme vhdl. 
+
+De manière générale, nous avions, au début du projet, une vision restreinte du VHDL comme un langage très bas niveau et compliqué à rédiger. En fait il s'avère (à la suite du cours d'architecture des ordinateurs) que le VHDL admet un peu d'abstraction et peut permettre la création de structure complexes relativement facilement. 
+
+Maintenant que les langages ont été explicités ainsi que l'avancé dans le développement, nous allons voir comment nous avons pu intégrer l'algorithme dans des plateformes embarqués, en commençant par le FPGA. 
 
  
 
 ## Implémentation sur l'embarqué 
 
 ### Alternative 1 : FPGA
+
+La première solution envisagée fut d'utiliser Vivado HLS, l'outil de Xilinx pour la synthèse de code. Il permet moyennant un formalisme dans le code de traduire du code c vers du HDL comme vhdl. Si cet outil peut être très puissant, le formalisme qu'il impose pour le code c est très contraignant et rend quasi impossible l'adaptation du code c déjà compliqué vers du HDL. En particulier, l'impossibilité de modifier la taille en mémoire d'une variable ou d'une instance de struct (allocation en mémoire statique) complique vraiment les choses surtout par rapport au code de Huffman. 
+
+Nous nous sommes donc orienté vers un nouvel outil, développé par un Alumni ENSTA Bretagne (Florent Kermarrec), un outil permettant une intégration de code plus facile avec le matériel, LiteX. 
+
+LiteX permet de prendre la main du développeur dans tout le processus de dépendance au matériel. il gère les entrées/sorties ainsi que la RAM sur un grand nombre de carte, y compris la Nexys4 DDR. Il permet aussi de synthétiser du code HDL depuis un langage dérivé de python appelé *Migen*. Le but était de se servir de Litex pour intégrer un SOC (System On Chip) d'architecture RISCV afin de contrôler l’exécution du code (on utilisera pour cela un OS linux miniature appelé Buildroot), et les processus parallélisables comme la DCT seront eux implémentés directement en materiel pour permettre un grand parallelisme et une plus grande rapidité. 
 
 ### Alternative 2 : ARM 
 
