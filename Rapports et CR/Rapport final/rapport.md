@@ -184,7 +184,7 @@ Le développement en python de l'algorithme était relativement simple, et ce m�
 
 Nous avons fait le choix de proposer un "package" de cet algorithme en python, afin de pouvoir l'importer facilement sur une machine ainsi que toute les bibliothèques nécessaire a son exécution. 
 
-Le code fonctionnant, passons à quelques statistiques et performances sur l'algorithme. 
+Le code fonctionnant, passons à quelques statistiques et performances sur l'algorithme : 
 
 
 
@@ -234,7 +234,23 @@ Là, on constate qu'on accélère considérablement le calcul du cosinus , ce qu
 
 ### La problématique du VHDL
 
-Dans nos plans initiaux, nous cherchions a 
+Dans nos plans initiaux, nous cherchions à implémenter le code de manière matérielle au sein d'une puce FPGA. Cela suppose d'utiliser un HDL ou *Hardware Description Langage* . Les plus connus sont Verilog et VHDL, mais il en existe d'autres en python, ruby, etc... 
+
+Avant de pouvoir développer et surtout tester sur une carte directement, il nous faut installer la *Toolchain* de développement. Les cartes dont nous disposons sont des FPGA artix-7 construit par la société Digilent, les cartes NEXYS4 DDR. 
+
+![nexys4ddr](rapport.assets/nexys4ddr.png)
+
+<center><i>Figure : Carte FPGA Nexys4 DDR et ses entrées sorties</i></center>
+
+Ces cartes possèdent une DDR embarqué, ainsi que la plupart des entrées sorties nécessaires à l'élaboration d'un prototype (ethernet, vga, p-mod pour la camera). Pour capturer l'image, nous avons à notre disposition des camera OV7670, capturant une image 480p et ayant l'avantage d’être très bas coût (2 euros l'unité), ce qui est utile pour en acheter plusieurs (l'une d'elles a d'ailleurs succombé à nos manipulations... ). 
+
+Les premières manips se déroulent sans soucis, nous parvenons à afficher un aperçu de la caméra sur un écran VGA, et tout ça par du code VHDL. Cependant les choses se sont très vite compliqués quand il a fallu s'attaquer à la RAM. 
+
+Sur un FPGA, on dispose de BRAM intégrés au chip qui sont facile a utilisé mais de taille réduite (sur nos designs nous n'arrivions pas a dépasser 32 Mo de BRAM), cependant nos estimations en termes d'usage mémoire d'EVEEX dépassaient la quantité de BRAM utilisable sur un design. La DDR à l'avantage d’être sur une puce a part et d’être beaucoup plus grande (128Mo), cependant il est nécessaire de développer un contrôleur pour cette RAM qui, de l'avis même des encadrants, dépasse nos capacités de développement en école d'ingénieur. Il a donc fallu passer par une solution alternative. 
+
+La première solution envisagée fut d'utiliser Vivado HLS, l'outil de Xilinx pour la synthèse de code. Il permet moyennant un formalisme dans le code de traduire du code c vers du HDL comme vhdl. 
+
+ 
 
 ## Implémentation sur l'embarqué 
 
