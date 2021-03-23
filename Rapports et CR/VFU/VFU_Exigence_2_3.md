@@ -24,7 +24,7 @@ Dans le main, Le bitstream est créé et est envoyé par paquet via un socket. I
 
 **Entrée:**
 
-![](/home/hugoq/EVEEX/EVEEX-Documentation/Rapports et CR/VFU/assets/Ferrari.jpg)
+![](assets/Ferrari.jpg)
 
 
 
