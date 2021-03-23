@@ -38,9 +38,28 @@ header-right: "\\thetitle"
 
 # Abstract
 
+Most of the world's bandwidth is now used for multimedia content exchange, especially video streaming. With more than 2 billion users each month on YouTube alone, video streaming has become a technology that is taken for granted, but consumes a lot of resources both in terms of energy and storage.To reduce this excessive power-consumpion, one solution is video compression. While corporate consortia compete for royalties on their proprietary compression algorithms such as MPEG or x264, we want to offer a viable, open source alternative.
 
+During this school year, we designed an algorithm to compress a raw video stream,send it over a network or simply store it in a file, and then a second algorithm to decompress that data. Once the algorithm was operational and mature, we sought to implement it on hardware in order to optimize the computation time and energy consumption associated with data compression.
+
+We use several programming languages to build different prototypes in an incremental way. We started with Python to create an algorithm that was easy to understand, then we settle on a C version to optimize its execution, however development difficulties led us to move to another language, Golang. These algorithms have been implemented on Raspberry pi, however we have to wait for an update of the Golang compiler to support 32 bits riscv before seeing an efficient FPGA implementation.
+
+It is obvious that to achieve these steps, we could not rely on too many existing software libraries for reasons of portability of the code to different languages and then to different platforms.
+At the moment, the algorithm is able, based on python language and on a raspberry pi, to encode, send via the network and decode images or a video stream in a synchronized way (decoding *on the fly*). 
 
 # Résumé
+
+La majeure partie de la bande passante mondiale est aujourd’hui utilisée pour l’échange de contenu multimédia, en particulier le streaming vidéo. Avec plus de 2 milliards d’utilisateurs chaque mois sur YouTube seulement, le streaming vidéo est devenu une technologie considérée comme acquise, mais qui consomme beaucoup de ressources tant en matière d’énergie que de stockage.
+
+Pour réduire ces consommations excessives, une solution est la compression vidéo. Alors que les consortiums d’entreprises se font concurrence pour les redevances sur leurs algorithmes de compression propriétaires tels que MPEG-1 ou x264, nous voulons offrir une alternative viable et open source.
+
+Au cours de cette année scolaire, nous avons conçu un algorithme pour compresser un flux vidéo brut afin de l’envoyer sur un réseau ou simplement de le stocker dans un fichier, puis un second algorithme pour décompresser ces données. Une fois que l’algorithme était opérationnel et mature, nous avons cherché à l’implémenter sur le matériel afin d’optimiser le temps de calcul et la consommation d’énergie liés à la compression des données.
+
+Nous utilisons plusieurs langages de programmation pour construire différents prototypes de façon incrémentale. Nous avons commencé par Python pour créer un algorithme qui facile à comprendre, puis nous sommes passé sur une version en C pour optimiser son exécution, cependant des difficultés de développement nous ont amené à nous diriger vers un autre langage, le Golang. Ces algorithmes ont été implémentés sur des Raspberry pi, il faut cependant attendre une mise a jour du compilateur Golang pour supporter le riscv 32 bits avant de voir une implémentation FPGA efficace.
+
+Il est évident que pour réaliser ces étapes, nous ne pouvait pas nous appuyer sur trop de bibliothèques  logicielles existantes pour des raisons de portabilité du code vers différents langages puis vers différentes plateformes.
+
+A l’heure actuelle, l’algorithme est capable, sur base de langage python et sur une Raspberry pi, d’encoder, envoyer via le réseau et de décoder des images ou un flux vidéo de manière synchroniser (décodage *on the fly*). 
 
 \pagebreak
 
@@ -135,50 +154,31 @@ Le fonctionnement global de l'algorithme est détaillé dans le diagramme en blo
 
 L'image, au format RGB (que sort nativement la plupart des cameras), est tout d'abord **convertie au format chrominance/luminance (YUV)**. Ce choix est motivé par le fait qu'au format YUV, l'essentiel de l'information de l'image se trouve dans la luminance. Les chrominances pourront alors être approximées pour gagner en espace mémoire, on parlera ici de **compression avec pertes**.
 
-Ensuite, l'image est découpée en **macroblocs** de $16 \times 16$ pixels. En réalité, comme une image RGB contient 3 canaux de couleur, les macroblocs sont en fait de taille $16\times 16\times 3$, mais, par abus de langage, et par souci de simplicité, nous dirons simplement qu'ils ont une taille de $16 \times 16$ (ou $N \times N$ dans le cas général). Cette taille de macrobloc n'est pas arbitraire. En effet, nous avons déterminé **empiriquement** que, pour notre prototype, **et pour des images pré-existantes en 480p (720x480 pixels) ou alors générées aléatoirement**, les macroblocs $16 \times 16$ étaient ceux qui produisaient les meilleurs taux de compression parmi les tailles standards de macroblocs, à savoir $8 \times 8$, $16 \times 16$ et $32 \times 32$ pixels (cf. les deux figures suivantes).
+![mire TV en format RGB](rapport.assets/mireTV_version_rgb.jpg)
 
-Par ailleurs, en ce qui concerne les 2 figures suivantes :
+![mire TV en format YUV](../VFU/assets/version_yuv.jpg)
 
--   **huff_ratio** correspond à la taille des données compressées de Huffman (cf. figure 5 pour plus de détails) divisée par la taille originale de l'image (en bits), i.e. img_width x img_height x 3 x 8
--   **dict_ratio** correspond à la taille du dictionnaire de Huffman compressé divisée par la taille originale de l'image (en bits)
--   **metadata_ratio** correspond à la taille de toutes les métadonnées du bitstream  associé à l'image (cf. un peu plus loin pour plus de détails) divisée par la taille originale de l'image (en bits)
--   **compression_rate** désigne le taux de compression de l'image, c'est-à-dire la taille du bitstream **total** de l'image divisée par la taille originale de l'image (en bits)
--   **execution_time** correspond au temps mis par notre programme principal (cf. *main.py*) pour effectuer l'entièreté des étapes de notre algorithme
-
-![stats_dct_images_aleatoires](./rapport.assets/stats_DCT_images_générées_aléatoirement_Récapitulatif.png)
-
-<center> Figure 1 : Statistiques obtenues (via le prototype Python) sur des images générées aléatoirement, en fonction de taille des macroblocs </center>
-
-![stats_dct_images_pre-existantes](./rapport.assets/stats_DCT_images_pré-existantes_Récapitulatif.png)
-
-<center> Figure 2 : Statistiques obtenues (via le prototype Python) sur 5 images pré-existantes en 480p, en fonction de taille des macroblocs </center>
-
-On remarque assez clairement sur ces 2 dernières figures que macroblock_size = 16 correspond (pour les images pré-existantes, donc pour les images les plus "représentatives") au taux de compression minimal, donc au cas optimal.
-
-Cette décomposition en macroblocs permet de faciliter le traitement de l'image et de **paralléliser les tâches**. De plus, nous avions l'idée de nous différencier des autres algorithmes existants en rendant cette taille de macroblocs **variable** en fonction du contenu du macrobloc. Par exemple, si un macrobloc présente un taux de contraste élevé, on réduit sa taille, alors que si c'est un aplat de couleur, on l'augmente. Cela permettra, *a priori*, d'améliorer le taux de compression.
+Ensuite, l'image est découpée en **macroblocs** de $16 \times 16$ pixels. En réalité, comme une image RGB contient 3 canaux de couleur, les macroblocs sont en fait de taille $16\times 16\times 3$, mais, par abus de langage, et par souci de simplicité, nous dirons simplement qu'ils ont une taille de $16 \times 16$ (ou $N \times N$ dans le cas général). Cette taille de macrobloc n'est pas arbitraire. En effet, nous avons déterminé **empiriquement** que, pour notre prototype, **et pour des images pré-existantes en 480p (720x480 pixels) ou alors générées aléatoirement**, les macroblocs $16 \times 16$ étaient ceux qui produisaient les meilleurs taux de compression parmi les tailles standards de macroblocs, à savoir $8 \times 8$, $16 \times 16$ et $32 \times 32$ pixels, pour un temps donné. ![Décomposition en macroblocs de 16x16 pixels](rapport.assets/macrobloc.png)
 
 Après cette étape, on applique diverses transformations **à chacune de ces matrices-macroblocs YUV** afin de les compresser. Ces transformations font partie de **l'étape d'encodage**.
 
 -   Une Transformation en Cosinus Discrète, ou **DCT** **[5]**, qui est une transformation (matricielle) linéaire et **réversible** qui va permettre de **concentrer** les données du macrobloc YUV dans la diagonale principale de l'image de sortie (la diagonale "nord-ouest / sud-est"). Ainsi, en-dehors de cette zone, les composantes de l'image (après application de la DCT) seront relativement faibles en valeur absolue, ce qui sera **très pratique** lors des étapes suivantes.
 
-*   On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT ainsi généré. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur $16 \times 16 = 256$. **On passe donc d'une matrice à 2 dimensions à une liste en une seule dimension.** Ce découpage va se faire selon les $2\times16-1 = 31$ diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici **extrêmement commode**, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, partout ailleurs, ces valeurs seront moindres.
+* On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT ainsi généré. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur $16 \times 16 = 256$. **On passe donc d'une matrice à 2 dimensions à une liste en une seule dimension.** Ce découpage va se faire selon les $2\times16-1 = 31$ diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici **extrêmement commode**, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, partout ailleurs, ces valeurs seront moindres.
 
-![zigzag_linearization](./rapport.assets/zigzag_linearization.png)
+  ![Linéarisation Zig zag](../rapport d'avancement.assets/Zigzag linearization.png)
 
-<center> Figure 3 : Exemple de linéarisation en zigzag pour un macrobloc 6x6 (pour un seul canal de couleur) </center>
+* On effectue maintenant l'étape de seuillage, aussi appelée **quantization**. Cette opération consiste à ramener à zéro tous les éléments des 3 listes (issues de la linéarisation en zigzag) qui sont inférieurs **en valeur absolue** à un certain seuil, appelé _threshold_ (ou _DEFAULT_QUANTIZATION_THREASHOLD_ dans le code). Comme énoncé précédemment, la plupart des valeurs de ces 3 listes seront relativement faibles, donc appliquer ce seuillage va nous permettre d'avoir en sortie 3 listes avec **beaucoup de zéros**. Le seuil a ici été déterminé empiriquement, à partir d'une série de tests sur des images-macroblocs générées aléatoirement. **On a choisi `threshold = 10`, car il s'agissait de la valeur maximale qui permet subjectivement d'avoir une bonne qualité d'image en sortie.** Il est important de noter que cette étape de seuillage est **irréversible**, on parle ici d'une étape de traitement avec pertes car on perd de l'information dans les détails.
 
-*   On effectue maintenant l'étape de seuillage, aussi appelée **quantization**. Cette opération consiste à ramener à zéro tous les éléments des 3 listes (issues de la linéarisation en zigzag) qui sont inférieurs **en valeur absolue** à un certain seuil, appelé _threshold_ (ou _DEFAULT_QUANTIZATION_THRESHOLD_ dans le code). Comme énoncé précédemment, la plupart des valeurs de ces 3 listes seront relativement faibles, donc appliquer ce seuillage va nous permettre d'avoir en sortie 3 listes avec **beaucoup de zéros**. Le seuil a ici été déterminé empiriquement, à partir d'une série de tests sur des images-macroblocs générées aléatoirement. **On a choisi `threshold = 10` car il s'agissait de la valeur maximale qui permet quand même d'avoir (subjectivement) une bonne qualité d'image en sortie.** Il est important de noter que cette étape de seuillage est **irréversible**, on parle ici d'une étape de traitement avec pertes car on perd de l'information dans les détails.
 *   On passe ensuite à l'étape de la **RLE** (Run-Length Encoding). Cette étape consiste à regrouper de manière synthétique (dans des tuples, aussi appelés _tuples RLE_) les séries de zéros obtenues après l'étape de la quantization. Concrètement, si dans une liste seuillée on a 124 zéros puis un 5.21 (par exemple), d'abord 5.21 est arrondi à l'entier le plus proche (ici 5), puis cette série de 125 entiers sera stockée dans le tuple (124, 5). Plus généralement, si l'on a le tuple RLE $(U, V)$, cela signifie que l'on a $U$ zéros puis l'entier **non-nul** $V$. Ainsi, chaque macrobloc sera décrit de manière **extrêmement synthétique** par une liste de tuples RLE. **L'image finale, étant décomposée en une série de macroblocs, sera alors une liste de listes de tuples RLE.**
 
-![diag_encodeur](./rapport.assets/diag_algo_encodeur.png)
-
-<center> Figure 4 : Fonctionnement simplifié de l'encodeur </center>
+![Encodeur EVEEX](../rapport d'avancement.assets/Diagramme_algo_encodeur.png)
 
 La partie suivante concerne le formatage des données. On utilise pour cela un **encodage de Huffman** qui permet à la fois de compresser et de formater les données en utilisant un arbre binaire afin d'obtenir un encodage plus petit que l'encodage naïf, mais surtout un **encodage non ambigu**. On appellera la trame à transmettre un **bitstream**.
 
-![arbre_huffman](./rapport.assets/arbre_huffman.png)
+L'arbre se base sur la récurrence des caractères dans une phrase afin de les ordonner par fréquence et d'adresser à chaque caractère un mot binaire. Les "caractères" correspondent ici en fait à des tuples RLE. **L'idée est que, plus un tuple RLE apparaîtra souvent dans la frame RLE, moins le mot binaire qui lui est associé aura une taille élevée.** Les correspondances tuple RLE / mot binaire sont indiquées dans un dictionnaire, appelé **dictionnaire d'encodage de Huffman**.
 
-<center> Figure 5 : Découpage d'un message en arbre binaire par fréquence d'apparition) </center>
+![Arbre binaire d'un chaine de caractère](rapport.assets/arbre.png)
 
 ```
 Encoded string :
@@ -189,9 +189,7 @@ Encoded string :
 String decoded back : le chic de l'ensta bretagne sur la compression vide
 ```
 
-L'arbre se base sur la récurrence des caractères dans une phrase afin de les ordonner par fréquence et d'adresser à chaque caractère un mot binaire. Les "caractères" correspondent ici en fait à des tuples RLE. **L'idée est que, plus un tuple RLE apparaîtra souvent dans la frame RLE, moins le mot binaire qui lui est associé aura une taille élevée.** Les correspondances tuple RLE / mot binaire sont indiquées dans un dictionnaire, appelé **dictionnaire d'encodage de Huffman**.
-
-Après application de l'algorithme de Huffman **à la frame entière**, on se retrouve donc avec un dictionnaire de Huffman, ainsi qu'une frame RLE **prête à être encodée**. Le dictionnaire de Huffman est ensuite converti en bitstream (ici une chaîne de caractères de "0" et de "1").
+Après application de l'algorithme de Huffman **à la frame entière**, on se retrouve donc avec un dictionnaire de Huffman, ainsi qu'une frame RLE **prête à être encodée**. Le dictionnaire de Huffman est ensuite converti en bitstream (ici une chaîne de caractères de $0$ et de $1$).
 
 La raison pour laquelle on utilise un bitstream, **envoyé d'un client à un serveur**, est parce que l'on veut simuler le transfert de données compressées d'un ordinateur à un autre, qui correspondront idéalement à un flux vidéo compressé.
 
@@ -207,11 +205,10 @@ L'envoi du bitstream total se fera en **4 étapes** :
 
 4. Enfin, on envoie le message de fin, aussi appelée la queue du message (ou **tail**), qui est simplement là pour signaler que l'on arrive à la toute fin du bitstream (associé à une frame). Ce message de fin contient seulement `frame_id` et `type_msg` (`HEADER_MSG`, ie 3).
 
+
+![Processus de formatage réseau](rapport.assets/Diagramme algo - Partie réseau - PNG.png)
+
 **Il est important de noter que, comme on veut également optimiser les performances temporelles de cet algorithme, il est primordial que l'on puisse convertir la frame RLE en bitstream ET envoyer ce dernier au serveur le plus rapidement possible.** Ainsi, nous avons jugé intéressant de générer le bitstream dans un buffer via un thread en parallèle du thread d'encodage. Le thread principal n'aura alors qu'à extraire les paquets à envoyer de ce buffer, sans avoir à perdre de temps à les convertir. De même, le thread "écrivain" n'aura pas à perdre de temps à attendre que le client envoie le paquet puis reçoive le message de retour du serveur (cf. diagramme).
-
-![diag_algo_reseau](./rapport.assets/diag_algo_reseau.png)
-
-<center> Figure 6 : Fonctionnement simplifié de la partie réseau </center>
 
 Maintenant que le serveur a reçu le bitstream complet associé à l'image compressée, on va pouvoir commencer l'étape de **décodage**, qui constitue la troisième et dernière grande étape de notre algorithme. **Il s'agit en fait de l'étape d'encodage, mais effectuée dans l'ordre inverse (cf. diagramme du décodeur).** La seule étape qui ne réapparaît pas au décodage est la **quantization**, ce qui est logique puisqu'il s'agit d'une étape irréversible. En effet, si une valeur a été seuillée (i.e. ramenée à zéro), on n'a, à ce stade, aucun moyen de savoir quelle était sa valeur initiale avant le seuillage.
 
@@ -223,23 +220,16 @@ Puis, finalement, après avoir décodé l'image au format YUV, on la convertit a
 
 En ce qui concerne les performances de cet algorithme, pour une image typique en **480p**, notre algorithme s'effectue en **une vingtaine de secondes en moyenne**, et a des taux de compression variant entre **10:1** et **5:1** en moyenne. Ces taux de compression, _bien qu'améliorables_, sont toutefois assez satisfaisants, dans la mesure où les taux de compression d'algorithmes pré-existants (tels que le MPEG-2) varient typiquement entre **20:1** et **5:1** pour des images "classiques". En outre, voici quelques statistiques de performances liées à notre algorithme :
 
-![stats_DCT_comp_rate_480p](/rapport.assets/screen_stats_taux_compression_DCT.PNG)
+![Décodeur EVEEX](../rapport d'avancement.assets/Diagramme algo - Décodeur - PNG.png)
 
-<center> Figure 8 : Exemple typique de statistiques concernant le taux de compression d’une image en 480p (DCT) </center>
+Puis, finalement, après avoir décodé l'image au format YUV, on la convertit au format RGB.
 
-![stats_DCT_exec_time_480p](./rapport.assets/screen_stats_temps_exec_DCT.PNG)
-
-<center> Figure 9 : Exemple typique de statistiques concernant les temps d’exécution de chaque étape de notre algorithme, pour une image en 480p (DCT) </center>
+En ce qui concerne les performances de cet algorithme, pour une image typique en 480p, notre algorithme s'effectue en **une vingtaine de secondes en moyenne**, et a des taux de compression variant entre **10:1** et **5:1** en moyenne. Ces taux de compression, _bien qu'améliorables_, sont toutefois assez satisfaisants, dans la mesure où les taux de compression d'algorithmes pré-existants (tels que le MPEG-2) varient typiquement entre **20:1** et **5:1** pour des images "classiques". Voici quelques statistiques de performances liées à notre algorithme
+>   insérer une image
 
 Nous avons également mis en place une alternative à la DCT, la **iDTT** (integer Discrete Tchebychev Transform). Cette transformation va considérer (en entrée ET en sortie) des tableaux d'entiers, et non de flottants, comme le fait la DCT. Par rapport à la DCT, cette transformation est un tout petit peu plus précise (ce qui se traduit concrètement par une qualité d'image un peu plus élevée), mais il s'avère que le temps de calcul est bien plus élevé que pour la DCT classique. Voici quelques statistiques de performances liées à la version alternative de notre algorithme qui utilise la iDTT :
 
-![stats_iDTT_comp_rate_480p](./rapport.assets/screen_stats_taux_compression_iDTT.PNG)
-
-<center> Figure 10 : Exemple typique de statistiques concernant le taux de compression d’une image en 480p (iDTT) </center>
-
-![stats_iDTT_exec_time_480p](./rapport.assets/screen_stats_temps_exec_iDTT.PNG)
-
-<center> Figure 11 : Exemple typique de statistiques concernant les temps d’exécution de chaque étape de notre algorithme, pour une image en 480p (iDTT) </center>
+>   insérer une image
 
 Nous avons implémenté cette méthode supplémentaire afin de sortir un peu des sentiers battus et de voir ce que l'on pouvait faire (ou optimiser) avec des méthodes entières (et non flottantes comme avec la DCT). **Comme les performances temporelles de la DCT surpassent largement celles de la iDTT, nous continuerons évidemment à nous focaliser principalement sur la DCT.**
 
@@ -251,24 +241,32 @@ Le développement de cet algorithme s'est effectué en 3 phases : langage de hau
 
 La première étape consiste en un développement orienté objet, dans un langage de haut niveau. Nous avons choisi **Python** car nous avions tous de bonnes compétences et connaissances dans ce langage. La programmation objet nous a été utile pour appréhender les types et structures non-natives nécessaires au fonctionnement de plusieurs blocs, notamment l'encodage de Huffman. Un autre avantage de Python réside dans **l'affectation en mémoire des variables dynamique** et automatique. 
 
-Le développement en Python de l'algorithme était relativement simple (**par rapport aux prototypes C et Golang !**), et ce même en utilisant peu de bibliothèques externes. En effet, nous voulions garder une maîtrise sur le code, et éviter un effet "boîte noire". Les principales difficultés ont été les suivantes : 
+Le développement en Python de l'algorithme était relativement simple (**par rapport aux prototypes C et Golang**), et ce même en utilisant peu de bibliothèques externes. En effet, nous voulions garder une maîtrise sur le code, et éviter un effet "boîte noire". Les principales difficultés ont été les suivantes : 
 
 - La conversion de RGB vers YUV a nécessité quelques recherches : les matrices de passages que nous trouvions avaient des coefficients différents et nous obtenions des résultats colorimétriquement problématiques. Nous avons néanmoins fini par trouver une source convenable, et nous sommes passés à la suite. 
 - Les définitions de la DCT (transformée en cosinus discrète) en **deux dimensions** ainsi que son opérateur inverse n'ont pas été simples à dénicher. De même pour sa forme compacte (ie son expression sous la forme d'un produit matriciel "simple" avec un opérateur orthogonal).
 - Relier les 3 parties majeures du code (i.e. l'encodeur, la partie réseau et le décodeur) a été **extrêmement chronophage**, notamment pour des raisons de débuggage (extrême).
 - Initialement, notre prototype Python n'exécutait l'algorithme de compression/décompression que sur **un seul** macrobloc. La généralisation du code pour la décomposition d'une image (presque) quelconque en macroblocs s'est avérée plus ardue que prévue, **bien que réalisée rapidement**.
 
-Nous avons fait le choix de proposer un "package" de cet algorithme en Python, afin de pouvoir l'importer facilement sur une machine ainsi que toutes les bibliothèques nécessaires à son exécution. Vous pourrez d'ailleurs retrouver ce package ici :
-
->   insérer le lien vers Pypi
-
 Le prototype Python est fonctionnel et a été obtenu relativement rapidement : en effet, il a été finalisé vers fin novembre. Précédemment, nous avions fait des tests de performances de compression sur "seulement" 5 images (en 480p). Nous avons donc voulu généraliser cette étude à plus d'images, et nous obtenons les résultats suivants (avec des images de taille inférieure par souci de temps d'exécution) :
 
-![stats_DCT_37_images](./rapport.assets/GrapheStatsDCT_avec_37_images.png)
+Nous avons fait le choix de proposer un "package" de cet algorithme en python, afin de pouvoir l'importer facilement sur une machine ainsi que toute les bibliothèques nécessaire a son exécution. Vous pourrez d'ailleurs retrouver ce package ici : https://test.pypi.org/project/EVEEX/
 
-<center> Figure 12 : Statistiques obtenues pour 37 images de taille 96x64, avec les écarts-types associés </center>
+Le prototype python est fonctionnel et a été obtenu relativement rapidement. Voici quelques statistiques sur la performance atteinte par l'algorithme : 
 
-L'avantage du code qui a servi à générer ce dernier graphe est qu'il est **généralisable à un nombre arbitraire d'images**.
+![Statistiques obtenues (via le prototype Python) sur 5 images pré-existantes en 480p, en fonction de taille des macroblocs ](./rapport.assets/stats_DCT_images_générées_aléatoirement_Récapitulatif.png)
+
+![Statistiques obtenues (via le prototype Python) sur 5 images pré-existantes en 480p, en fonction de taille des macroblocs ](./rapport.assets/stats_DCT_images_pré-existantes_Récapitulatif.png)
+
+-   **huff_ratio** correspond à la taille des données compressées de Huffman (cf. figure 5 pour plus de détails) divisée par la taille originale de l'image (en bits), i.e. img_width x img_height x 3 x 8
+-   **dict_ratio** correspond à la taille du dictionnaire de Huffman compressé divisée par la taille originale de l'image (en bits)
+-   **metadata_ratio** correspond à la taille de toutes les métadonnées du bitstream  associé à l'image (cf. un peu plus loin pour plus de détails) divisée par la taille originale de l'image (en bits)
+-   **compression_rate** désigne le taux de compression de l'image, c'est-à-dire la taille du bitstream **total** de l'image divisée par la taille originale de l'image (en bits)
+-   **execution_time** correspond au temps mis par notre programme principal (cf. *main.py*) pour effectuer l'entièreté des étapes de notre algorithme
+
+On remarque assez clairement sur ces 2 dernières figures que macroblock_size = 16 correspond (pour les images pré-existantes, donc pour les images les plus "représentatives") au taux de compression minimal, donc au cas optimal.
+
+Cette décomposition en macroblocs permet de faciliter le traitement de l'image et de **paralléliser les tâches**. De plus, nous avions l'idée de nous différencier des autres algorithmes existants en rendant cette taille de macroblocs **variable** en fonction du contenu du macrobloc. Par exemple, si un macrobloc présente un taux de contraste élevé, on réduit sa taille, alors que si c'est un aplat de couleur, on l'augmente. Cela permettra, *a priori*, d'améliorer le taux de compression.
 
 ### Bas niveau : code en C 
 
@@ -287,9 +285,9 @@ Voici les performances que l'on a obtenues pour le prototype partiel en C :
 
 ![Temps d'encodage d'une image 720p avec des blocs de $16\times 16$ pixels](./rapport.assets/c_perf)
 
-<center> Figure 13 : Performances du prototype C sur 5 images en 480p </center>
+Les temps de chargement d'image sont presque $100$ fois plus rapide que par rapport au python. Cependant **les performances atteintes sont très loin de celles attendues**. Cela peut s'expliquer notamment par le fait que nous avons tenté de reproduire un système de POO très **gourmand** en appels système et en création de variables en mémoire. Nous avons essayé d'imiter le fonctionnement de python, cependant derrière python il existe une équipe de développeurs compétents et avec de l'expérience en C que nous n'avons pas. Ce fut l'une des raisons pour laquelle nous avons **changé de langage**.
 
-Les temps de chargement d'image sont presque $100$ fois plus rapide que par rapport à Python. Cependant, **les performances atteintes sont très loin de celles attendues**. Cela peut s'expliquer notamment par le fait que nous avons tenté de reproduire un système de POO **très gourmand** en appels système, et donc en création de variables en mémoire. Ce fut l'une des raisons pour laquelle nous avons **changé de langage**.
+
 
 ### Langage moderne : Golang (Go)
 
@@ -317,7 +315,7 @@ Le Golang possède, comme indiqué précédemment, un outil de profiling très �
 
 >   insérer image des perfs de l'algo
 
-<center> Figure 14 : À compléter </center>
+
 
 On constate que la fonction de calcul du cosinus (qui intervient dans le calcul d'une DCT) consomme énormément de ressources et de temps, nous avons donc eu l'idée de passer par un développement de Taylor (d'ordre 2), que nous appellerons le `FastCos`. 
 
@@ -330,8 +328,6 @@ Dans nos plans initiaux, nous cherchions à implémenter le code de manière mat
 Avant de pouvoir développer (et surtout tester) sur une carte directement, il nous faut installer la *Toolchain* de développement de Xilinx appelée Vivado (l'installation est compliquée et lourde, en particulier sur Linux où tout se fait en mode bash). Les cartes dont nous disposons sont des FPGA artix-7 construits par la société Digilent, les cartes NEXYS4 DDR. 
 
 ![Carte FPGA Nexys4 DDR et ses entrées sorties](rapport.assets/nexys4ddr.png)
-
-<center> Figure 15 : À compléter </center>
 
 Ces cartes possèdent une DDR (Double Data Rate) embarquée, ainsi que la plupart des entrées/sorties nécessaires à l'élaboration d'un prototype (Éthernet, VGA, P-mod pour la camera). Pour capturer l'image, nous avons à notre disposition des camera **OV7670**, capturant une image 480p et ayant l'avantage d’être très bas coût (2 euros l'unité), ce qui est utile pour en acheter plusieurs (l'une d'elles a d'ailleurs succombé à nos manipulations).
 
@@ -357,15 +353,11 @@ Nous nous sommes donc orientés vers un nouvel outil, développé par un Alumni 
 
 ![conception d'une application materielle par LiteX](rapport.assets/typicalLitex.png)
 
-<center> Figure 16 : À compléter </center>
-
-LiteX permet de prendre la main du développeur dans tout le processus de dépendance au matériel. Il gère les entrées/sorties ainsi que la RAM sur un grand nombre de cartes, y compris la Nexys4 DDR. Il permet aussi de synthétiser du code HDL depuis un langage dérivé de Python, appelé *Migen*. Le but était de se servir de Litex pour intégrer un SOC (System On Chip) d'architecture RISC-V afin de contrôler l’exécution du code (on utilisera pour cela un OS Linux miniature appelé Buildroot), et les processus parallélisables comme la DCT seront eux implémentés directement en matériel pour permettre un grand parallélisme et une plus grande rapidité. Tout l'outil est en Python et permet une grosse génération de code (l'ouverture d'un SOC prend une centaine de lignes sur Litex, et génère plus de 6000 lignes de VHDL).
+LiteX permet de prendre la main du développeur dans tout le processus de dépendance au matériel. il gère les entrées/sorties ainsi que la RAM sur un grand nombre de carte, y compris la Nexys4 DDR. Il permet aussi de synthétiser du code HDL depuis un langage dérivé de python appelé *Migen*. Le but était de se servir de Litex pour intégrer un SOC (System On Chip) d'architecture RISCV afin de contrôler l’exécution du code (on utilisera pour cela un OS linux miniature appelé Buildroot), et les processus parallélisables comme la DCT seront eux implémentés directement en matériel pour permettre un grand parallélisme et une plus grande rapidité. Tout l'outil est en python et permet une grosse génération de code (l'ouverture d'un SOC prend une centaine de lignes sur Litex, et génère plus de 6000 lignes de VHDL). 
 
 Au niveau des codes en eux-mêmes, comme expliqué plus haut, nous avons compris trop tard la manière de coder en VHDL, et nous n'avons sur FPGA que des démonstrations de création de SOC RISC-V avec insertion d'un noyau Buildroot et d'affichage d’aperçu caméra à fournir. 
 
 ![ouverture réussi d'un terminal sur la carte fpga avec un kernel buildroot, les commandes bash linux les plus courantes sont présentes](rapport.assets/buildroot.png)
-
-<center> Figure 17 : À compléter </center>
 
 Le noyau Buildroot est par ailleurs entièrement paramétrable, on peut donc sélectionner uniquement les paquets nécessaires à notre algorithme afin de réduire la taille du kernel (notre kernel de test faisait 7Mo). Ici c'est un SOC VexriscV 32 bits (donc d'architecture RISC-V) qui est istancié. 
 
@@ -373,15 +365,42 @@ Le principal problème que nous avons rencontré par rapport à l'intégration d
 
 ### Alternative 2 : ARM 
 
-Suite à la complexité du développement FPGA, nous avons choisi de nous orienter vers une architecture embarquée plus conventionnelle. L'ARM est présent sur beaucoup de systèmes, y compris un très présent dans le milieu de l'enseignement, la **Raspberry Pi**.
+Suite à la complexité du développement FPGA, nous avons choisi de nous orienté vers une architecture embarquée plus conventionnelle. L'ARM est présent sur beaucoup de systèmes, y compris un très présent dans le milieu de l'enseignement, la **Raspberry-pi**. 
 
 Pour pouvoir exécuter le code compilé (C ou Golang) il est nécessaire de **cross-compiler** : en effet, par défaut, le compilateur (GCC par exemple), qui se charge de traduire les lignes du code source vers des instructions machines (donc dépendante de l'architecture du processeur), traduit dans le système d'instructions du système sur lequel il est exécuté (ici un PC). Il faut donc préciser au compilateur que l'on désire exécuter le binaire dans un système d'instructions particulier, ou en télécharger un autre si nécessaire. Ici il faut préciser à GCC ou au compilateur Golang que l'on souhaite un binaire en architecture ARM.
 
 ![cross-compilation vers une architecture ARM](rapport.assets/cross-compile.png)
 
-<center> Figure 18 : À compléter </center>
+Notre protocole d'intégration matérielle est donc le suivant : on exécute le code (python) sur 2 Raspberry-pi : 
+
+* La carte émettrice dispose d'une caméra Pi-camera (la gestion d'une camera comme l'OV 7670 est plutôt hardu par les GPIO (General Purpose Input Output) des cartes Raspberry pour des gestions de débit insuffisant). La capture d'image est effectué en continu par un script python utilisant OpenCV
+* La carte réceptrice est relié quand à elle a un écran externe par une connectique Hdmi. L'affichage se fait part l'utilisation de matplotlib
+
+Ces 2 cartes sont dans le même sous-réseau et communiquent entre-elles par l'intermédiaire d'un socket TCP.
+
+Pour les langages compilés, la cross-compilation marche parfaitement et d'une manière général, tout ce qui fonctionne pour notre algorithme dans les différents langages sur PC fonctionne aussi sur ARM une fois la cross-compilation effectuer (la carte dispose d'un OS type Debian)
 
 ### Alternative 3: RISCV 
+
+Une dernière option est encore envisageable pour une intégration matérielle. Comme l'intégration d'un SOC riscV 64 bits n'était pas possible, il suffit de s'en procurer un directement en tant que carte électronique. 
+
+Les possibilités de cartes sont nombreuses mais en voici 2 : 
+
+* l'option la plus optimale aurait été une carte Beagle-V: 
+
+  ![Carte beagleV disposant d'un SOC d'architecture RISCV](rapport.assets/beagle.png)
+
+  Cette carte dispose de grosses performances pour sa taille avec un processeur dual-core 64 bits cadencé à 1 Ghz et 8go de RAM. Cependant elle n'est pas encore en vente, dans quelques mois le labo STICC de l'ENSTA Bretagne devrait pouvoir en avoir une, il sera donc fort intéressant de poursuivre le projet sur cette carte puisqu'elle dispose de tout ce dont on a besoin et a le mérite, contrairement aux cartes ARM comme les Raspberry pi, d’être intégralement Open-source. 
+
+* La deuxième option est plus raisonnable, il s'agit du kit de développement maixduino.
+
+  ![maixduino](rapport.assets/maixduino.webp)
+
+  Cette carte est beaucoup plus raisonnable en terme de performances, ne dispose pas de sortie vidéo et est plutôt destiné a l'IOT (Internet Of Things), cependant nous en avons à disposition et elle a le mérite d’être 64 bits. Nous sommes donc partis sur cette option. 
+
+  [suite a venir avec manip]
+
+  
 
 ## Déroulement agile du projet 
 
@@ -405,11 +424,9 @@ Sur ce service, les tâches sont regroupées en **issues**, comme lorsque l'on r
 
 ![Diagramme de Velocity provenant de Zenhub](rapport.assets/velocity-1616484911049.png)
 
-<center> Figure 19 : Velocity tracking </center>
+Le **"Velocity tracking"** permet, via un système de points de notation des issues, de voir facilement l’étendue du travail réalisé au sein d'un sprint. Les sprints terminés sont grisés. Au sprint 5 nous avons accueilli Hussein dans l'équipe, ce qui explique la rapide montée en travail effectué par l'équipe. Cela peut aussi être expliqué par une évaluation plus précise et réaliste de la pondération des taches. 
 
-Le **"velocity tracking"** permet, via un système de points de notation des issues, de voir facilement l’étendue du travail réalisé au sein d'un sprint. Les sprints terminés sont grisés. Au sprint 5, nous avons acceuilli Hussein dans l'équipe, ce qui explique la rapide montée en travail effectué par l'équipe. Cela peut aussi être expliqué par une évaluation plus précise et réaliste de la pondération des tâches. 
-
-Nous nous sommes servis des descriptions des issues pour conserver les user-stories. Entre autres, les points intéressants pour une user-story furent les suivants : 
+Nous nous sommes servis des descriptions des issues pour conserver les user-stories. Entre autres, les points intéressants pour une user-stories furent les suivants : 
 
 * **difficultés rencontrées** : quelles ont été les sources de difficulté dans le travail du ou des personnes réalisant l'issue ? Cela permet de rafraîchir l'affectation des tâches en fonctions des compétences de chacun et de la confiance en la réalisation de la tache. 
 * **travail réalisé** : L'issue a-t-elle été réalisée en partie ? en totalité ? 
@@ -429,7 +446,7 @@ Premièrement, le **développement en C reste très compliqué**, notamment dans
 
 Enfin, nous n'avons pas saisi au départ les possibilités du FPGA en matière de programmation "objet". Nous avons pu constater pendant le cours de 2ème année de M. Le Lann sur le VHDL à quel point le langage dispose d'une certaine "abstraction" sur les types, et il est possible que si devions commencer le projet maintenant, nous aurions cherché à développer au moins une partie du code en FPGA natif. Concernant LiteX, l'approche est très séduisante. En effet, la programmation en Migen est plus rapide à développer d'une manière générale, et permet de synthétiser beaucoup de code à partir de quelques fichiers Python. 
 
-Toutefois, nous avons pu nous concentrer sur la **maîtrise de l'algorithme** et les **possibilités d'intégration future** au sein du matériel.
+Toutefois, nous avons pu nous concentrer sur la **maîtrise de l'algorithme** et les **possibilités d'intégration future** au sein du matériel. [suite]
 
 \pagebreak
 
@@ -662,4 +679,5 @@ Sortie après décodage du bitstream :
 
 **HLS **: High Level Synthesis. Outil logiciel permettant de synthétiser du code haut niveau en un code de plus bas niveau.
 
-**SoC **: System on Chip. Puce de silicium intégrant plusieurs composants, comme de la mémoire, un processeur, et un composant de gestion d'entrées/sorties.
+**SoC**: System on Chip. Puce de sillicium intégrant plusieurs composants, comme de la mémoire, un processeur, et un composant de gestion d'entrées/sorties.
+
