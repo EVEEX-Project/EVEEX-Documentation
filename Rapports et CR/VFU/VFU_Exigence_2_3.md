@@ -10,7 +10,7 @@ langage : C / PYTHON / GOLANG
 
 matériel : PC 
 
-étape de code testé : L'algorithme doit pouvoir formater les données compresser afin qu'elle puissent être envoyé en réseau. L'algorithme doit pouvoir recevoir les données par le réseau et les comprendre.
+étape de code testé : L'algorithme doit pouvoir formater les données compressées afin qu'elles puissent être envoyées en réseau. L'algorithme doit pouvoir recevoir les données par le réseau et les comprendre.
 
 ## Manipulation Effectuée
 
@@ -25,6 +25,29 @@ Dans le main, Le bitstream est créé et est envoyé par paquet via un socket. I
 **Entrée:**
 
 ![](/home/hugoq/EVEEX/EVEEX-Documentation/Rapports et CR/VFU/assets/Ferrari.jpg)
+
+
+
+**Envoi du bitstream par réseau:**
+
+```
+[12:06:29][DEB] Serveur> Serveur prêt, en attente de requêtes ...
+
+[12:06:29][DEB] Client> Connexion établie avec le serveur.
+[12:06:29][DEB] Serveur> Client connecté, adresse IP 127.0.0.1, port 39470.
+
+
+[12:06:35][DEB] Les messages entre le client et le serveur n'ont ici pas été affichés pour plus de lisibilité.
+
+
+[12:06:35][DEB] Thread d'écriture dans le buffer du bitstream supprimé.
+
+[12:06:35][DEB] Serveur> Client déconnecté.
+[12:06:35][DEB] Thread d'écoute du serveur supprimé.
+[12:06:35][DEB] Serveur supprimé.
+
+[12:06:36][DEB] Transmission réseau réussie : TRUE
+```
 
 **Sortie après décodage du bitstream:**
 
