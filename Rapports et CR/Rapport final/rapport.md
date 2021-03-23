@@ -264,7 +264,9 @@ Afin de planifier l'activité ainsi que de garder une trace de ce qui a été fa
 
 Sur ce service, les taches sont regroupés en Issues comme lorsque l'on remonte un bug à un développeur, la différence étant qu'on peut facilement pipeliné la réalisation des issues, et les regroupés en différentes catégories notamment des milestones, qui correspondent au sprint (*Les sprints sont arrivés en tant que tel mais vers la fin du projet*). De plus, ce formalisme permet d'extraire quantité d'informations et de statistiques de performance dont voici la principale : 
 
-Le **"Velocity tracking"** permet, via un système de points de notation des issues, de voir facilement l’étendue du travail réalisé au sein d'un sprint. Les sprints terminés sont grisés. On constate une périodicité, due notamment à la release tous les 3 sprints. On rajoute des issues au fur et a mesure des idées de tout le monde. 
+![velocity](rapport.assets/velocity-1616484911049.png)
+
+Le **"Velocity tracking"** permet, via un système de points de notation des issues, de voir facilement l’étendue du travail réalisé au sein d'un sprint. Les sprints terminés sont grisés. Au sprint 5 nous avont acceuilli Hussein dans l'équipe, ce qui explique la rapide montée en travail effectué par l'équipe. Cela peut aussi etre expliqué par une évaluation plus précise et réaliste de la pondération des taches. 
 
 Nous nous sommes servis des descriptions des issues pour conserver les user-stories. entre autre, les points intéressants pour une user-story furent les suivants : 
 
@@ -274,15 +276,19 @@ Nous nous sommes servis des descriptions des issues pour conserver les user-stor
 
 Nous complétions ces user-stories sous forme écrite par 15 minutes de démonstration en fin de chaque journée pour pouvoir montrer à tout le monde le travail réalisé. 
 
-Pour un aperçu plus convivial et plus chronologique du déroulé du projet, un portfolio est disponible sur Mahara à l'adresse suivante : 
+Pour un aperçu plus convivial et plus chronologique du déroulé du projet, un portfolio est disponible sur Mahara à l'adresse suivante : https://mahara.ensta-bretagne.fr/view/groupviews.php?group=348
 
 # Conclusion 
 
 La démarche agile a été plus que nécessaire dans ce projet. En effet nous avons rencontrés plusieurs branches qui se sont avérés mortes ou sans issues a court terme. La démarche agile nous a permis de rebondir notamment lors de la fin du code c ou de l'implémentation fpga. 
 
-Nous nous sommes aperçu que 
+Nous nous sommes aperçu que nous disposions pas d'un recul suffisant en hardware pour travailler sur une implémentation FPGA de manière efficace au début du projet. Il s'est avéré que la quasi-totalité des cours qui nous aurait été utile pendant le projet nous ont été dispensé vers la fin du projet (Architecture des ordinateurs, TPI, conception logicielle). 
 
+Premièrement, le développement en C reste très compliqué notamment dans le traitement d'un algorithme complexe. Si il est très performant, l'allocation en mémoire rend compliqué l'implémentation de structures à taille variable, notamment le code de Huffmann (Variable Length Coding). La solution Go est aussi très attrayante sur le papier, notamment au regard du processus de développement. Cependant la non-compatibilité de la cross-compilation Go vers riscV 32 bits, découverte après coup, rend impossible l'implémentation sur un SOC à base de FPGA, comme on l'avait envisagé. il aurait de toute façon fallut des cartes FPGA puissantes pour placé le SOC avec sa mémoire, et profiter d'un gros parallélisme. 
 
+Enfin, nous n'avons pas saisi au départ les possibilités du FPGA en matière de programmation "objet". Nous avons pu constater pendant le cours de 2ème année de M.Le Lann sur le VHDL à quel point le langage dispose d'une certaine "abstraction" sur les types, et il est possible que si devions commencé le projet maintenant, nous aurions cherché à développer au moins une partie du code en FPGA natif. Concernant Litex, l'approche est très séduisante, la programmation Migen est plus performante d'une manière générale et permet de synthétiser beaucoup de code à partir de quelque fichiers pythons. 
+
+Toutefois, nous avons pu nous concentrer sur la maîtrise de l'algorithme et les possibilités d'intégration future au sein du matériel. 
 
 \pagebreak
 
