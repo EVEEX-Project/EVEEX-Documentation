@@ -238,11 +238,11 @@ Dans nos plans initiaux, nous cherchions a
 
 ## Implémentation sur l'embarqué 
 
-### Alternative 1 : RISCV
+### Alternative 1 : FPGA
 
 ### Alternative 2 : ARM 
 
-
+### Alternative 3: RISCV 
 
 ## Déroulement agile du projet 
 
