@@ -363,6 +363,187 @@ Toutefois, nous avons pu nous concentrer sur la **maîtrise de l'algorithme** et
 
 # Annexes
 
+## Fiches de Validation Fonctionnelle Usine (VFU)
+
+### Fiche n°1
+
+#### Informations
+
+>   Type de test : Exigence non fonctionnelle
+>
+>   Langage : **C / PYTHON / GOLANG**
+>
+>   Matériel : **PC / RASPBERRYPI / MAIXDUINO / FPGA** 
+>
+>   Étape de code testé : intégralité du code  
+
+#### Manipulation
+
+Revue des bibliothèques utilisées, en indiquant pour chacune d'elle où trouver la source, et ce dans chaque langage 
+
+#### Résultats
+
+Python : 
+
+* Colorama : sert juste à colorier la console sur Linux ET Windows. Code source ouvert et disponible https://github.com/tartley/colorama
+* Numpy : Bibliothèque de fonctions mathématiques (sin, cos, produit matriciel) et de type (Numpy array). Code source ouvert et disponible https://github.com/numpy/numpy
+* Matplotlib : Bibliothèque d'affichage. Code source ouvert et disponible https://github.com/matplotlib/matplotlib
+* sockets : fonctions de connexion réseau TCP. Code source ouvert et disponible https://github.com/python/cpython/blob/master/Lib/socket.py
+
+C : 
+
+* tout les includes sont issues directement du système Linux (sys, os, time, etc...) et sont donc open-source et disponibles via un `git clone` https://www.gnu.org/software/libc/libc.html
+
+Golang : 
+
+* `requirements` externes : 
+
+    ```go
+    github.com/gen2brain/shm v0.0.0-20200228170931-49f9650110c5 // indirect
+    github.com/gorilla/mux v1.8.0 // indirect
+    github.com/kbinani/screenshot v0.0.0-20191211154542-3a185f1ce18f // indirect
+    github.com/lxn/win v0.0.0-20210218163916-a377121e959e // indirect
+    github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
+    github.com/pion/webrtc/v2 v2.2.26 // indirect
+    github.com/poi5305/go-yuv2webRTC v2.1.18+incompatible
+    github.com/rs/zerolog v1.20.0
+    github.com/spf13/cobra v1.1.1g
+    ```
+
+    La liste des paquets nécessaires et externes au Golang est trouvable dans `go.mod` à la racine du code. 
+
+    Tout les paquets extérieurs sont bien disponibles sur GitHub et ouvert. 
+
+**Validation de l'exigence non fonctionnelle => 100 %** 
+
+### Fiche n°2.1
+
+>   Type de test : Exigence fonctionnelle
+>
+>   Langage : **C et Python et Golang**
+>
+>   Matériel : **Ordinateur personnel à architecture x86_64 / RaspberryPi à architecture ARM / SiSpeed Maixduino à architecture RISC-V / FPGA à architecture variable ** 
+>
+>   Étape de code testé : 
+>
+>   * conversion des données d'une images à partir d'un format existant (.png, .jpeg) vers un type de données exploitables par un algorithme
+>   * conversion à partir d'un format d'image courant (RGB) à un format moins entropique (YUV).   
+
+#### Manipulation
+
+##### Python
+
+![Logo du langage Python](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Python_logo_and_wordmark.svg/1280px-Python_logo_and_wordmark.svg.png)
+
+Test de la fonction `RGBtoYUV` sur un nuancier de couleur et vérification visuelle du respect de la colorimétrie. 
+
+>  *les coefficients étant identiques pour les 3 langages, une vérification dans un seul langage suffit*
+
+##### C
+
+![Logo du langage C](https://cdn.iconscout.com/icon/free/png-512/c-programming-569564.png)
+
+Test des fonctions `loadIMG`, `toYUVImage` sur une image de test : nuancier ou image généré via le fichier de génération d'images tests sur python
+
+##### Golang
+
+![Logo du langage Golang](https://www.vertica.com/wp-content/uploads/2019/07/Golang.png)
+
+Test de la fonction `toYUVImage` et tests unitaires sur les fonctions du type `Image` sur des images générés, notamment test de la fonction `LoadImageFromFile` afin d'obtenir un objet exploitable par les algorithmes
+
+#### Images de test 
+
+![Image de test issue de l'algorithme de génération d'images en python](../VFU/assets/image_res.png)
+
+![Nuancier de couleurs classique disponible sur internet](../VFU/assets/mireTV.jpg)
+
+### Fiche n°2.2
+
+>   Type de test : Exigence fonctionnelle
+>
+>   Langage : **C et Python et Golang**
+>
+>   Matériel : **PC** 
+>
+>   Étape de code testé : compression et décompression d'un format image vers un bitstream de taille inférieure, d'une manière différente au MJPEG
+
+#### Manipulation
+
+##### Python
+
+Test de la fonction `encode` grâce au CLI qui ressort un fichier texte contenant le bitstream. Ce bitstream est ensuite lu par le CLI grâce à la fonction `decode` et l'image de base est reconstituée.
+
+##### Résultats
+
+Entrée:
+
+![Image d'entrée dans l'algorithme](../VFU/assets/Ferrari.jpg)
+
+Création du bitstream.
+
+```python
+[DEB] Bitstream total : 19.31% --> taux de compression "5.18 : 1"
+```
+
+Le Bitstream est bien de taille inférieure à l'image originale. 
+
+Sortie après décodage du bitstream :
+
+![Image en sortie du décodage du bitstream par EVEEX](../VFU/assets/ferraritest.jpg)
+
+**La décompression est bien effectuée. Les pertes sont invisibles à l’œil nu.** 
+
+### Fiche n°2.3
+
+>   Type de test : Exigence fonctionnelle
+>
+>   Langage : **C et Python et Golang**
+>
+>   Matériel : **PC** 
+>
+>   Étape de code testé : L'algorithme doit pouvoir formater les données compressées afin qu'elles puissent être envoyées en réseau. L'algorithme doit pouvoir recevoir les données par le réseau et les comprendre.
+
+#### Manipulation
+
+##### Python
+
+Dans le main, Le bitstream est créé et est envoyé par paquet via un socket. Il est ensuite réceptionné et chaque paquet est décodé pour reconstruire l'image.
+
+#### Résultats
+
+**Entrée:**
+
+![Image en entrée de l'encodeur avant envoi par le réseau](../VFU/assets/Ferrari.jpg)
+
+
+
+**Envoi du bitstream par réseau:**
+
+```
+[12:06:29][DEB] Serveur> Serveur prêt, en attente de requêtes ...
+
+[12:06:29][DEB] Client> Connexion établie avec le serveur.
+[12:06:29][DEB] Serveur> Client connecté, adresse IP 127.0.0.1, port 39470.
+
+
+[12:06:35][DEB] Les messages entre le client et le serveur n'ont ici pas été affichés pour plus de lisibilité.
+
+
+[12:06:35][DEB] Thread d'écriture dans le buffer du bitstream supprimé.
+
+[12:06:35][DEB] Serveur> Client déconnecté.
+[12:06:35][DEB] Thread d'écoute du serveur supprimé.
+[12:06:35][DEB] Serveur supprimé.
+
+[12:06:36][DEB] Transmission réseau réussie : TRUE
+```
+
+Sortie après décodage du bitstream :
+
+![Image en sortie du décodage du bitstream envoyé par le réseau](../VFU/assets/ferraritest.jpg)
+
+**L'image est donc bien décodée sans perte flagrante d'information**. 
+
 \pagebreak
 
 # Bibliographie

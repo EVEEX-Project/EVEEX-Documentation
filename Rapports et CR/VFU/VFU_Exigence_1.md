@@ -1,10 +1,10 @@
-# Validation Fonctionnelle N°1 
+# Validation Fonctionnelle N°1
 
 ## Type de test 
 
 Exigence non fonctionnelle
 
-## fonctionnalité testée
+## Fonctionnalité Testée
 
 langage : **C / PYTHON / GOLANG**
 
@@ -12,7 +12,7 @@ matériel : **PC / RASPBERRYPI / MAIXDUINO / FPGA**
 
 étape de code testé : intégralité du code 
 
-## manip 
+## Manipulation
 
 Revue des bibliothèques utilisées, en indiquant pour chacune d'elle où trouver la source, et ce dans chaque langage 
 
