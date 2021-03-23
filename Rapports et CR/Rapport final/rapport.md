@@ -394,7 +394,7 @@ Les possibilités de cartes sont nombreuses mais en voici 2 :
 
 * La deuxième option est plus raisonnable, il s'agit du kit de développement maixduino.
 
-  ![maixduino](rapport.assets/maixduino.webp)
+  
 
   Cette carte est beaucoup plus raisonnable en terme de performances, ne dispose pas de sortie vidéo et est plutôt destiné a l'IOT (Internet Of Things), cependant nous en avons à disposition et elle a le mérite d’être 64 bits. Nous sommes donc partis sur cette option. 
 
