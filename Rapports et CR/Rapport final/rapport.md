@@ -13,15 +13,28 @@ header-right: "\\thetitle"
 #Config : https://github.com/Wandmalfarbe/pandoc-latex-template
 ---
 
-# Informations
+# Généralités
 
-Membres du groupe : Guillaume Leinen, Jean-Noël Clink, Hussein Saad, Alexandre Froehlich, Hugo Questroy
+**Membres du groupe** : 
 
-Encadrants : Pascal Cotret, Jean-Christophe Le Lann, Joël Champeau
+*   Guillaume Leinen (guillaume.leinen@ensta-bretagne.org)
+*   Jean-Noël Clink (jean-noel.clink@ensta-bretagne.org)
+*   Hussein Saad (hussein.saad@ensta-bretagne.org)
+*   Alexandre Froehlich (alexandre.froehlich@ensta-bretagne.org)
+*   Hugo Questroy (hugo.questroy@ensta-bretagne.org)
 
-Code disponible sur GitHub ==> [https://github.com/EVEEX-Project](https://github.com/EVEEX-Project)
+**Encadrants du projet** : 
 
-Eportfolio Mahara disponible => [https://mahara.ensta-bretagne.fr/view/groupviews.php?group=348](https://mahara.ensta-bretagne.fr/view/groupviews.php?group=348)
+*   Pascal Cotret (pascal.cotret@ensta-bretagne.fr)
+*   Jean-Christophe Le Lann (jean-christophe.le_lann@ensta-bretagne.fr)
+*   Joël Champeau (joel.champeau@ensta-bretagne.fr)
+
+**Liens utiles :**
+
+*   Code source du projet : [https://github.com/EVEEX-Project/EVEEX-Code](https://github.com/EVEEX-Project/EVEEX-Code)
+*   Code source de la documentation : [https://github.com/EVEEX-Project/EVEEX-Documentation](https://github.com/EVEEX-Project/EVEEX-Documentation)
+
+*   Eportfolio Mahara : [https://mahara.ensta-bretagne.fr/view/groupviews.php?group=348](https://mahara.ensta-bretagne.fr/view/groupviews.php?group=348)
 
 # Abstract
 
@@ -33,32 +46,36 @@ Eportfolio Mahara disponible => [https://mahara.ensta-bretagne.fr/view/groupview
 
 # Remerciements
 
+Nous n'aurions jamais pu atteindre le niveau de compétences et remplir nos objectifs sans l'aide des acteurs suivants : 
+
 -   Nos encadrants **Pascal Cotret**, **Jean-Christophe Le Lann** et **Joël Champeau**, qui nous aident à définir les objectifs à atteindre, nous prêtent le matériel nécessaire en particulier les cartes FPGA, ainsi qu'a résoudre des problèmes théoriques.
 -   **Enjoy Digital**, société créée par un Alumni Ensta-Bretagne, et son produit Litex qui nous sera très utile sur l'implémentation hardware.
 -   Le site **FPGA4students** pour ses tutoriels VHDL/Verilog.
 -   **Jean-Christophe Leinen** pour ses conseils sur les méthodes Agiles.
 
+Ainsi nous remercions toutes ces personnes qui ont contribué à notre projet ou bien qui nous ont guidé vers des chemins que nous n'aurions jamais pensé réalisables.
+
 \pagebreak
 
 # Introduction
 
-Dans son rapport annuel sur l'usage d'internet, Cisco met en exergue l'importance du trafic vidéo dans l'internet mondial [1] : la part du streaming dans le débit mondial ne fait qu'augmenter, les définitions de lecture augmentent elles aussi, ainsi que la part de "live" très gourmands en bande passante. 
+Dans son rapport annuel sur l'usage d'internet, Cisco met en exergue l'importance du trafic vidéo dans l'internet mondial [1] : la part du **streaming** dans le débit mondial ne fait qu'augmenter, les **définitions** et **résolutions** de lecture augmentent elles aussi, ainsi que la part de "**live**" (flux direct) très gourmands en bande passante. 
 
-Dans cette perspective, il est clair que l'algorithme de compression utilisée pour compresser un flux vidéo brut à toute son importance, le moindre % de bande passante économisée permettant de libérer plusieurs TB/s de bande passante. Ces codecs sont relativement peu connu du grand public, en voici quelques uns: 
+Dans cette perspective, il est évident qu'un **algorithme de compression** pour compresser un flux vidéo brut à toute son importance. Le moindre pourcent de **bande passante** économisée permet de libérer plusieurs TB/s (terabyte par seconde) de bande passante sans compter l'impact écologique lié à une consommation électrique moins importante. Cependant il existe une multitude d'algorithmes de compression, appelés "codecs". Ces **codecs** sont relativement peu connu du grand public, en voici une liste non exhaustive des plus répandus : 
 
-* MPEG-4 (H.264) : il s'agit d'un des codecs les plus connu, car il génère des fichiers d'extension .mp4 et est embarqué dans un grand nombre d'appareils. Il est important de savoir que, comme le H.265, ce codec est **protégé** par un brevet, et les services et constructeurs souhaitant utilisé cet algorithme ou un connecteur basé sur l'algorithme doivent reverser des royalties à MPEG-LA [2] (*La fabrication d'un connecteur display-port coutant 0.20$ de license au constructeur*), coalitions de plusieurs entreprises du numériques comme sony, panasonic ou encore l'université de Columbia. 
-* VPx : appartenant à l'origine à One-technologie, l'entreprise fut racheté par Google à la suite. Les codecs VP (dernière version VP9) sont ouvert et sans royalties. Ce codec est plutôt performant en terme de compression mais son encodage est lent [3], avec sur un core i7 d'intel en 720p une vitesse de compression proche de 2 images/s, occasionnant des coûts non négligeable en puissance informatique pour les entreprises productrices de contenu (comme Netflix). 
-* H.265 : l'un des codecs les plus récents, il permet une réduction significative de la bande passante nécessaire, notamment pour le streaming, mais est aussi lent à l'encodage, et demande des royalties. 
+* **MPEG-4** (H.264) : il s'agit d'un des codecs les plus connu. Il génère des fichiers d'extension `.mp4` et est embarqué dans un grand nombre d'appareils numériques. Il est important de savoir que, comme le H.265 (vu plus loin), ce codec est **protégé** par un brevet, et les services et constructeurs souhaitant utiliser cet algorithme ou un connecteur basé sur l'algorithme doivent verser des royalties à MPEG-LA [2] (*La fabrication d'un connecteur display-port coutant 0.20$ de license au constructeur*), coalitions de plusieurs entreprises du numériques comme Sony, Panasonic ou encore l'université de Columbia. 
+* **VPx** : appartenant à l'origine à One-technologie, l'entreprise fut racheté par Google à la suite. Les codecs VP (dernière version VP9) sont ouverts et sans royalties. Ce codec est plutôt performant en terme de compression mais son encodage est lent [3]. Par exemple avec un processeur core i7 d'intel en 720p, la vitesse de compression s'approche de 2 images par seconde, occasionnant des coûts non négligeable en puissance informatique pour les entreprises productrices de contenu (comme Netflix ou bien YouTube). 
+* **H.265** : l'un des codecs les plus récents, et digne successeur du H.264. Il permet une réduction significative de la bande passante nécessaire au flux vidéo, notamment pour le streaming. Cependant à l'instar du VP9, le H.265 est aussi lent à l'encodage, et demande en plus de verser des royalties de license. 
 
-Vous l'aurez constaté, les codecs les plus actuels sont souvent détenus par des entreprises du secteur. Pour limiter les coûts annexes pour les entreprises, un consortium s'est créé en 2015, a but non lucratif, afin de développer un codec libre de droit aussi efficace que les autres : l'**Aliance for Open-Media** [4]. On compte la plupart des acteurs du secteur dans ce consortium, notamment l'arrivée des acteurs du streaming comme Hulu ou Netflix. Leur création, le codec AV1, basé sur VP9, est donc libre de droit, et est notamment très employé dans le streaming vidéo. Il a l'avantage de proposer une compression 30% plus forte que le H265 [5], mais occasionne par les différentes bibliothèques utilisées une utilisation des ressources informatiques (puissance CPU) bien plus importante, aussi bien du coté encodeur que décodeur. La transition vers l'AV1 sur les grandes plateformes vidéos (Netflix, Youtube) n'est pas encore réalisé mais bien en cours de planification. 
+Vous l'aurez constaté, les codecs les plus actuels sont souvent détenus par des entreprises du secteur. Pour limiter les coûts annexes pour les entreprises, un consortium s'est créé en 2015, a but non lucratif, afin de développer un codec libre de droit aussi efficace que les autres : l'**Aliance for Open-Media** [4]. On compte la plupart des acteurs du secteur dans ce consortium, notamment l'arrivée des acteurs du streaming comme Hulu ou Netflix. Leur création, le codec **AV1**, basé sur VP9, est donc libre de droit, et est notamment très employé dans le streaming vidéo. Il a l'avantage de proposer une **compression 30% plus forte** que le H.265 [5] mais occasionne, par les différentes bibliothèques utilisées, une utilisation des ressources informatiques (puissance processeur) bien plus importante, aussi bien du coté **encodeur** que **décodeur**. La transition vers l'AV1 sur les grandes plateformes vidéos (Netflix, Youtube) n'est pas encore effectif mais est déjà en cours de réalisation. 
 
-Ce besoin en ressources CPU devient donc critique et un point économiquement important pour les entreprises du secteur vidéo. A l'heure actuelle, l'architecture PC (jeu d'instruction x64, x86) reste la plus utilisé dans l'informatique moderne, mais cela pourrait changer d'ici quelques années. En effet, les architectures a but embarqué on fait de gros progrès ces dernières années, au point que même un géant du secteur comme Apple décide de basculer tout ces ordinateurs vers une architecture ARM. 
+Ce besoin en ressources CPU devient critique et un point économiquement important pour les entreprises du secteur multimédia. A l'heure actuelle, l'**architecture PC** (jeu d'instruction x64, x86) reste la plus utilisé dans l'informatique moderne, mais cela pourrait changer d'ici quelques années. En effet, les architectures à destination de matériel embarqué, ont fait d'immenses progrès ces dernières années, au point que même un géant du secteur comme Apple décide de basculer l'ensemble de ses produits vers une **architecture ARM** (vu plus loin). 
 
-Ces architectures embarqués, plus récentes, possèdent en effet des caractéristiques de consommation et de performances qui les rendent très intéressantes pour le traitement vidéo. Voyons ensemble quelques architectures et technologies actuelles : 
+Ces architectures embarquées, plus récentes et profitant des avancées modernes, possèdent en effet des caractéristiques de **consommation** et de **performances** qui les rendent très intéressantes pour le traitement vidéo. Voyons ensemble quelques unes de ces architectures et technologies actuelles : 
 
 ### Architecture ARM
 
-Ce jeu d'instruction est très utilisé dans les appareils mobiles comme les smartphones ou tablettes. Il a l'avantage de proposer un jeu d'instruction beaucoup plus simple, ce qui permet notamment des **performances** en matières de **consommation d’énergie** très intéressantes en mobilité. En revanche, **l'architecture est**, tout comme les jeux d'instructions pc plus anciens, **sous licence** également (x64 pour AMD, x86 pour Intel). Les *SOC* ARM **embarquent** tout les composants nécessaires au fonctionnement du système (CPU, GPU, DSP, gestions des I/O) sur une seule puce ce qui rend les systèmes compacts. Le jeu d'instructions réduit rend en revanche l**’inter compatibilité** entre x64/86 et architectures de type RISC (Reduced Instruction Set Computer) comme l'ARM ou le riscV. 
+Ce jeu d'instruction est très présent dans les appareils mobiles et embarqués comme les smartphones ou tablettes. Il a l'avantage de proposer un jeu d'instruction réduit (RISC: Reduced Instruction Set Computer), ce qui permet notamment des **performances** en matières de **consommation d’énergie** très intéressantes en mobilité. En revanche, **l'architecture** est, tout comme les jeux d'instructions pc plus anciens, **sous licence** également (x64 pour AMD, x86 pour Intel). Les *SOC* ARM **embarquent** tout les composants nécessaires au fonctionnement du système (CPU, GPU, DSP, gestions des I/O) sur une seule puce ce qui rend les systèmes compacts. Le jeu d'instructions réduit rend en revanche l**’inter compatibilité** entre x64/86 et architectures de type RISC (Reduced Instruction Set Computer) comme l'ARM ou le riscV. 
 
 ### Architecture RISCV
 
