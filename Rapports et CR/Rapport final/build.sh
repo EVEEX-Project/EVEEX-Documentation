@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pandoc -s rapport\ d\'avancement.md \
+pandoc -s rapport.md \
 		--mathjax \
 		--standalone \
 		--toc \
