@@ -42,7 +42,7 @@ Most of the world's bandwidth is now used for multimedia content exchange, espec
 
 During this school year, we designed an algorithm to compress a raw video stream,send it over a network or simply store it in a file, and then a second algorithm to decompress that data. Once the algorithm was operational and mature, we sought to implement it on hardware in order to optimize the computation time and energy consumption associated with data compression.
 
-We use several programming languages to build different prototypes in an incremental way. We started with Python to create an algorithm that was easy to understand, then we settled on a C version to optimize its execution, however development difficulties led us to move to another language, Golang. These algorithms have been implemented on a Raspberry Pi, however we have to wait for an update of the Golang compiler to support 32 bits riscv before seeing an efficient FPGA implementation.
+We use several programming languages to build different prototypes in an incremental way. We started with Python to create an algorithm that was easy to understand, then we settled on a C version to optimize its execution, however development difficulties led us to move to another language, Golang. These algorithms have been implemented on a Raspberry Pi, however we have to wait for an update of the Golang compiler to support 32 bits RISC-V before seeing an efficient FPGA implementation.
 
 It is obvious that to achieve these steps, we could not rely on too many existing software libraries for reasons of portability of the code to different languages and then to different platforms.
 At the moment, the algorithm is able, based on Python language and on a Raspberry Pi, to encode, send via the network and decode images or a video stream in a synchronized way (decoding *on the fly*).
@@ -55,9 +55,9 @@ Pour réduire ces consommations excessives, une solution est la compression vid�
 
 Au cours de cette année scolaire, nous avons conçu un algorithme pour compresser un flux vidéo brut afin de l’envoyer sur un réseau ou simplement de le stocker dans un fichier, puis un second algorithme pour décompresser ces données. Une fois que l’algorithme était opérationnel et mature, nous avons cherché à l’implémenter sur le matériel afin d’optimiser le temps de calcul et la consommation d’énergie liés à la compression des données.
 
-Nous utilisons plusieurs langages de programmation pour construire différents prototypes de façon incrémentale. Nous avons commencé par Python pour créer un algorithme facile à comprendre, puis nous sommes passés sur une version en C pour optimiser son exécution, cependant des difficultés de développement nous ont amené à nous diriger vers un autre langage, le Golang. Ces algorithmes ont été implémentés sur des Raspberry Pi, il faut cependant attendre une mise a jour du compilateur Golang pour supporter le RISC-V 32 bits avant de voir une implémentation FPGA efficace.
+Nous utilisons plusieurs langages de programmation pour construire différents prototypes de façon incrémentale. Nous avons commencé par Python pour créer un algorithme facile à comprendre, puis nous sommes passés sur une version en C pour optimiser son exécution, cependant des difficultés de développement nous ont amené à nous diriger vers un autre langage, le Golang. Ces algorithmes ont été implémentés sur des Raspberry Pi, il faut cependant attendre une mise à jour du compilateur Golang pour supporter le RISC-V 32 bits avant de voir une implémentation FPGA efficace.
 
-Il est évident que pour réaliser ces étapes, nous ne pouvions pas nous appuyer sur trop de bibliothèques  logicielles existantes pour des raisons de portabilité du code vers différents langages puis vers différentes plateformes.
+Il est évident que pour réaliser ces étapes, nous ne pouvions pas nous appuyer sur trop de bibliothèques logicielles existantes pour des raisons de portabilité du code vers différents langages puis vers différentes plateformes.
 
 A l’heure actuelle, l’algorithme est capable, sur base de langage Python et sur une Raspberry Pi, d’encoder, envoyer via le réseau et de décoder des images ou un flux vidéo de manière synchronisée (décodage *on the fly*).
 
@@ -67,8 +67,8 @@ A l’heure actuelle, l’algorithme est capable, sur base de langage Python et 
 
 Nous n'aurions jamais pu atteindre le niveau de compétences et remplir nos objectifs sans l'aide des acteurs suivants : 
 
--   Nos encadrants **Pascal Cotret**, **Jean-Christophe Le Lann** et **Joël Champeau**, qui nous aident à définir les objectifs à atteindre, nous prêtent le matériel nécessaire (en particulier les cartes FPGA), ainsi qu'a résoudre des problèmes théoriques.
--   **Hélène Thomas** pour nous avoir prêté du matériel complémentaire pour que l'on puisse mettre à bien la démonstration sur Paspberry Pi.
+-   Nos encadrants **Pascal Cotret**, **Jean-Christophe Le Lann** et **Joël Champeau**, qui nous aident à définir les objectifs à atteindre, nous prêtent le matériel nécessaire (en particulier les cartes FPGA), ainsi qu'à résoudre des problèmes théoriques.
+-   **Hélène Thomas** pour nous avoir prêté du matériel complémentaire pour que l'on puisse mettre à bien la démonstration sur Raspberry Pi.
 -   **Enjoy Digital**, société créée par un Alumni Ensta-Bretagne, et son produit Litex qui nous sera très utile sur l'implémentation hardware.
 -   Le site **FPGA4students** pour ses tutoriels VHDL/Verilog.
 -   **Jean-Christophe Leinen** pour ses conseils sur les méthodes Agiles.
@@ -83,11 +83,11 @@ Dans son rapport annuel sur l'usage d'internet, Cisco met en exergue l'importanc
 
 Dans cette perspective, il est évident qu'un **algorithme de compression** pour compresser un flux vidéo brut à toute son importance. Le moindre pourcent de **bande passante** économisée permet de libérer plusieurs TB/s (terabyte par seconde) de bande passante sans compter l'impact écologique lié à une consommation électrique moins importante. Cependant, il existe une multitude d'algorithmes de compression, appelés "codecs". Ces **codecs** sont relativement peu connus du grand public, en voici une liste non-exhaustive des plus répandus :
 
-* **MPEG-4** (H.264) : il s'agit d'un des codecs les plus connus. Il génère des fichiers d'extension `.mp4` et est embarqué dans un grand nombre d'appareils numériques. Il est important de savoir que, comme le H.265 (vu plus loin), ce codec est **protégé** par un brevet, et les services et constructeurs souhaitant utiliser cet algorithme ou un connecteur basé sur l'algorithme doivent verser des royalties à MPEG-LA **[4]** (*la fabrication d'un connecteur display-port coûte 0.20$ de license au constructeur*), coalitions de plusieurs entreprises du numériques comme Sony, Panasonic ou encore l'université de Columbia. 
+* **MPEG-4** (H.264) : il s'agit d'un des codecs les plus connus. Il génère des fichiers d'extension `.mp4` et est embarqué dans un grand nombre d'appareils numériques. Il est important de savoir que, comme le H.265 (vu plus loin), ce codec est **protégé** par un brevet, et les services et constructeurs souhaitant utiliser cet algorithme ou un connecteur basé sur l'algorithme doivent verser des royalties à MPEG-LA **[4]** (*la fabrication d'un connecteur display-port coûte 0.20$ de licence au constructeur*), coalitions de plusieurs entreprises du numériques comme Sony, Panasonic ou encore l'université de Columbia. 
 * **VPx** : appartenant à l'origine à One-technologie, l'entreprise fut rachetée par Google à la suite. Les codecs VP (dernière version VP9) sont ouverts et sans royalties. Ce codec est plutôt performant en termes de compression, mais son encodage est lent **[5]**. Par exemple, avec un processeur core i7 d'Intel en 720p, la vitesse de compression s'approche de 2 images par seconde, occasionnant des coûts non-négligeables en puissance informatique pour les entreprises productrices de contenu (comme Netflix ou bien YouTube). 
-* **H.265** : l'un des codecs les plus récents, et digne successeur du H.264. Il permet une réduction significative de la bande passante nécessaire au flux vidéo, notamment pour le streaming. Cependant, à l'instar du VP9, le H.265 est aussi lent à l'encodage, et demande en plus de verser des royalties de license. 
+* **H.265** : l'un des codecs les plus récents, et digne successeur du H.264. Il permet une réduction significative de la bande passante nécessaire au flux vidéo, notamment pour le streaming. Cependant, à l'instar du VP9, le H.265 est aussi lent à l'encodage, et demande en plus de verser des royalties de licence. 
 
-Vous l'aurez constaté, les codecs les plus actuels sont souvent détenus par des entreprises du secteur. Pour limiter les coûts annexes pour les entreprises, un consortium s'est créé en 2015, a but non lucratif, afin de développer un codec libre de droit aussi efficace que les autres : l'**Aliance for Open-Media** **[6]**. On compte la plupart des acteurs du secteur dans ce consortium, notamment l'arrivée des acteurs du streaming comme Hulu ou Netflix. Leur création, le codec **AV1**, basé sur VP9, est donc libre de droit, et est notamment très employé dans le streaming vidéo. Il a l'avantage de proposer une **compression 30% plus forte** que le H.265 **[7]** mais occasionne, par les différentes bibliothèques utilisées, une utilisation des ressources informatiques (puissance processeur) bien plus importante, aussi bien du coté **encodeur** que **décodeur**. La transition vers l'AV1 sur les grandes plateformes vidéos (Netflix, Youtube) n'est pas encore effectif mais est déjà en cours de réalisation.
+Vous l'aurez constaté, les codecs les plus actuels sont souvent détenus par des entreprises du secteur. Pour limiter les coûts annexes pour les entreprises, un consortium s'est créé en 2015, a but non lucratif, afin de développer un codec libre de droit aussi efficace que les autres : l'**Alliance for Open-Media** **[6]**. On compte la plupart des acteurs du secteur dans ce consortium, notamment l'arrivée des acteurs du streaming comme Hulu ou Netflix. Leur création, le codec **AV1**, basé sur VP9, est donc libre de droit, et est notamment très employé dans le streaming vidéo. Il a l'avantage de proposer une **compression 30% plus forte** que le H.265 **[7]** mais occasionne, par les différentes bibliothèques utilisées, une utilisation des ressources informatiques (puissance processeur) bien plus importante, aussi bien du côté **encodeur** que **décodeur**. La transition vers l'AV1 sur les grandes plateformes vidéo (Netflix, Youtube) n'est pas encore effectif mais est déjà en cours de réalisation.
 
 Ce besoin en ressources CPU devient critique, et est un point économiquement important pour les entreprises du secteur multimédia. A l'heure actuelle, l'**architecture PC** (jeu d'instruction x64, x86) reste la plus utilisée dans l'informatique moderne, mais cela pourrait changer d'ici quelques années. En effet, les architectures à destination de matériel embarqué ont fait d'immenses progrès ces dernières années, au point que même un géant du secteur comme Apple a décidé de basculer l'ensemble de ses produits vers une **architecture ARM** (cf. un peu plus loin). 
 
@@ -95,7 +95,7 @@ Ces architectures embarquées, plus récentes et profitant des avancées moderne
 
 ### Architecture ARM
 
-Ce jeu d'instructions est très présent dans les appareils mobiles et embarqués (comme les smartphones ou tablettes). Il a l'avantage de proposer un jeu d'instructions réduit (RISC : Reduced Instruction Set Computer), ce qui permet notamment des **performances** en matières de **consommation d’énergie** très intéressantes en mobilité. En revanche, l'architecture est, tout comme les jeux d'instructions PC plus anciens, **sous licence** (x64 pour AMD, x86 pour Intel). Les *SOC* (System On a Chip) ARM **embarquent** tous les composants nécessaires au fonctionnement du système (CPU : Computer Processing Unit, GPU : Graphical Processing Unit, DSP : Digital Signal Processor, gestions des I/O : Input/Output) sur une seule puce ce qui rend ces systèmes extrêmement compacts. Le jeu d'instructions réduit en revanche l**’inter-compatibilité** entre x64/86 et les architectures de type RISC comme l'ARM ou le RISC-V (vu plus loin). 
+Ce jeu d'instructions est très présent dans les appareils mobiles et embarqués (comme les smartphones ou tablettes). Il a l'avantage de proposer un jeu d'instructions réduit (RISC : Reduced Instruction Set Computer), ce qui permet notamment des **performances** en matière de **consommation d’énergie** très intéressantes en mobilité. En revanche, l'architecture est, tout comme les jeux d'instructions PC plus anciens, **sous licence** (x64 pour AMD, x86 pour Intel). Les *SOC* (System On a Chip) ARM **embarquent** tous les composants nécessaires au fonctionnement du système (CPU : Computer Processing Unit, GPU : Graphical Processing Unit, DSP : Digital Signal Processor, gestions des I/O : Input/Output) sur une seule puce ce qui rend ces systèmes extrêmement compacts. Le jeu d'instructions réduit en revanche l**’inter-compatibilité** entre x64/86 et les architectures de type RISC comme l'ARM ou le RISC-V (vu plus loin). 
 
 ### Architecture RISC-V
 
@@ -105,7 +105,7 @@ L'**architecture RISC-V** est très proche de l'ARM, qui est aussi un RISC. Hist
 
 L'**architecture FPGA** est complètement différente des autres citées précédemment. Un processeur ARM (ou x86) est gravé sur une puce en silicium et inaltérable dans son architecture, donc il n'est pas possible de modifier le "hardware", c'est à dire les branchements des registres au sein-même de la puce. Avec les FPGA, on gagne cette possibilité, et c'est tout l’intérêt. La quasi-totalité du processeur est ainsi "reprogrammable" au niveau matériel. Cela implique beaucoup de choses, dont voici quelques éléments : 
 
-* Comme on peut reprogrammer les portes logiques qui le constituent, il est possible d'intégrer un **très fort parallélisme** au sein des calculs : les portes logiques peuvent être reparties en **autant d'unités de traitement qu'on le souhaite** pourvu que l'on ait assez de silicium. Si un design consomme 500 portes et qu'on en dispose de 5000, on peut tout a fait séparer le calcul en 10 cœurs alors qu'un processeur conventionnel à 4 cœurs serait limité à 4 unités de traitement, et ce peu importe le niveau de charge de ses cœurs. 
+* Comme on peut reprogrammer les portes logiques qui le constituent, il est possible d'intégrer un **très fort parallélisme** au sein des calculs : les portes logiques peuvent être réparties en **autant d'unités de traitement qu'on le souhaite** pourvu que l'on ait assez de silicium. Si un design consomme 500 portes et qu'on en dispose de 5000, on peut tout à fait séparer le calcul en 10 cœurs alors qu'un processeur conventionnel à 4 cœurs serait limité à 4 unités de traitement, et ce peu importe le niveau de charge de ses cœurs. 
 * Un code implémenté sur FPGA est par définition **optimisé pour le matériel** puisque l'on définit les branchements processeurs en fonction du code exécuté. A contrario, il y aura un processus de routage important dans une architecture "gravée dans le marbre". En fait, avec un FPGA, il est possible de développer des **Application Specific Integrated Circuit** (ASIC), massivement employés dans la réalisation de tâches simples et répétitives, comme le minage de cryptomonnaies. 
 * En revanche, l'appréhension d'une telle technologie est loin d’être aisée. Le **développement** avec des Hardware Description Langage (HDL) tels que le Verilog ou le VHDL est **loin d’être facile**, il n'existe que peu d'abstraction dans le langage et son développement. Enfin, la formation, l'apprentissage et le temps de développement sont bien plus longs sur une telle puce en comparaison avec le développement classique sur architecture x86 ou ARM. 
 * Aussi, la **synthèse FPGA** pour passer du code au branchement de portes logiques est **longue** et nécessite des ***Toolchains*** de développement **lourdes** (Vivado de Xilinx pèse 50 Go sur un disque dur).
@@ -122,26 +122,26 @@ Afin de répondre à cette problématique nouvelle, l'ENSTA Bretagne souhaite d�
 
 Afin de définir clairement nos objectifs pour ce projet, il est primordial d'être capable de définir et d'extraire les exigences à partir des souhaits de notre client : l'ENSTA Bretagne, que ces exigences soient fonctionnelles ou physiques (programmation).
 
-Nous l'avons abordée dans l'introduction, la problématique des codecs vidéos est **essentielle** dans la gestion de la bande passante globale et de l'impact énergétique d'Internet. Pour permettre une amélioration collaborative et un accès universel, il est donc primordial que le projet soit **open-source** et libre de droits. Cet algorithme doit permettre l'extraction d'un flux vidéo, provenant par exemple d'une caméra, la compression de celui-ci, la mise en forme des données compressées, l'envoi de ces données à travers le réseau, le décodage des données reçues via le réseau, la décompression des données compressées ainsi que l'affichage de celles-ci. Nos exigences tourneront donc autour de ce flux de travail passant d'un encodeur sur un premier système à un décodeur sur un second système.
+Nous l'avons abordée dans l'introduction, la problématique des codecs vidéo est **essentielle** dans la gestion de la bande passante globale et de l'impact énergétique d'Internet. Pour permettre une amélioration collaborative et un accès universel, il est donc primordial que le projet soit **open-source** et libre de droits. Cet algorithme doit permettre l'extraction d'un flux vidéo, provenant par exemple d'une caméra, la compression de celui-ci, la mise en forme des données compressées, l'envoi de ces données à travers le réseau, le décodage des données reçues via le réseau, la décompression des données compressées ainsi que l'affichage de celles-ci. Nos exigences tourneront donc autour de ce flux de travail passant d'un encodeur sur un premier système à un décodeur sur un second système.
 
 **Enfin, l'algorithme doit être développé dans un langage permettant une implémentation embarquée**, que ce soit sur FPGA ou sur une autre technologie. Nous verrons plus tard que le choix du langage est un point crucial dans la réalisation du projet.
 
-Nous avons donc défini un certain nombre d'exigences avec les performances souhaitées lorsqu'elles sont pertinentes, ainsi que notre certitude quand à la réalisation de ces exigences.
+Nous avons donc défini un certain nombre d'exigences avec les performances souhaitées lorsqu'elles sont pertinentes, ainsi que notre certitude quant à la réalisation de ces exigences.
 
 Les points de vocabulaire au niveau de exigences seront définis par la suite dans le rapport, dans un glossaire.
 
-| Numéro identifiant l'exigence |                           Exigence                           |                    Performances attendues                    | résultats                                             |
-| :---------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | ----------------------------------------------------- |
-|               1               | Le projet doit être intégralement open-source et accessible gratuitement (exigence non fonctionnelle) |                             None                             | Validée                                               |
-|              2.1              | L'algorithme doit pouvoir recevoir un flux photos et vidéo "brut" et le convertir en un format exploitable |          Conversion d'un flux RGB en flux YUV/YCbCr          | Validée                                               |
-|             2.2.1             |       L'algorithme doit compresser des données brutes        | Dans un premier temps, performances analogues au MPEG-1 => 20:1 pour une photo, 100:1 pour vidéo | Non Validée, les performances sont encore trop basse. |
-|             2.2.2             |    L'algorithme doit décompresser des données compressées    | Performances identiques ou supérieures à celles de l'encodage | identiques sur pc et Raspberry pi                     |
-|             2.2.3             | L'algorithme doit compresser les données d'une manière originale (pas une copie de MPEG) |                             None                             | Non vérifié                                           |
-|             2.3.1             | L'algorithme doit pouvoir formater les données compressées afin qu'elles puissent être envoyées via un réseau |                             None                             | Validée sur pc et Raspberry pi                        |
-|             2.3.2             | L'algorithme doit pouvoir recevoir les données par le réseau et les comprendre |                             None                             | Validée sur pc et Raspberry pi                        |
-|             2.4.1             | L'algorithme doit permettre un affichage d'une image décodée |               Affichage VGA sur la carte FPGA                | Non validée                                           |
-|              3.1              | L'algorithme doit pouvoir s’exécuter sur une carte FPGA (à défaut embarqué) |  Identiques ou supérieures à la version PC de l'algorithme   | exécution sur carte ARM (RBPI)                        |
-|              4.1              | L'algorithme implémenté sur FPGA (à défaut embarqué) doit induire une faible consommation électrique | Inférieures à la consommation d'un PC exécutant l'algorithme (< 30W) | exécution sur carte ARM moins gourmande.              |
+| Numéro identifiant l'exigence |                           Exigence                           |                    Performances attendues                    | résultats                                              |
+| :---------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | ------------------------------------------------------ |
+|               1               | Le projet doit être intégralement open-source et accessible gratuitement (exigence non fonctionnelle) |                             None                             | Validée                                                |
+|              2.1              | L'algorithme doit pouvoir recevoir un flux photos et vidéo "brut" et le convertir en un format exploitable |          Conversion d'un flux RGB en flux YUV/YCbCr          | Validée                                                |
+|             2.2.1             |       L'algorithme doit compresser des données brutes        | Dans un premier temps, performances analogues au MPEG-1 => 20:1 pour une photo, 100:1 pour vidéo | Non Validée, les performances sont encore trop basses. |
+|             2.2.2             |    L'algorithme doit décompresser des données compressées    | Performances identiques ou supérieures à celles de l'encodage | identiques sur pc et Raspberry pi                      |
+|             2.2.3             | L'algorithme doit compresser les données d'une manière originale (pas une copie de MPEG) |                             None                             | Non vérifié                                            |
+|             2.3.1             | L'algorithme doit pouvoir formater les données compressées afin qu'elles puissent être envoyées via un réseau |                             None                             | Validée sur pc et Raspberry pi                         |
+|             2.3.2             | L'algorithme doit pouvoir recevoir les données par le réseau et les comprendre |                             None                             | Validée sur pc et Raspberry pi                         |
+|             2.4.1             | L'algorithme doit permettre un affichage d'une image décodée |               Affichage VGA sur la carte FPGA                | Non validée                                            |
+|              3.1              | L'algorithme doit pouvoir s’exécuter sur une carte FPGA (à défaut embarqué) |  Identiques ou supérieures à la version PC de l'algorithme   | exécution sur carte ARM (RBPI)                         |
+|              4.1              | L'algorithme implémenté sur FPGA (à défaut embarqué) doit induire une faible consommation électrique | Inférieures à la consommation d'un PC exécutant l'algorithme (< 30W) | exécution sur carte ARM moins gourmande.               |
 
 On rajoute à ces exigences les fonctions définissant les relations entre l'algorithme et les acteurs externes. Pour cela, la méthode du diagramme en pieuvre est utilisée. Elle permet d'illustrer clairement les fonctions accomplies par le système (i.e. l'algorithme EVEEX).
 
@@ -170,7 +170,7 @@ L'image, au format RGB (que sort nativement la plupart des cameras), est tout d'
 
 ![mire TV en format YUV](rapport.assets/version_yuv-1616940328305.jpg){ width=60% }
 
-Ensuite, l'image est découpée en **macroblocs** de $16 \times 16$ pixels. En réalité, comme une image RGB contient 3 canaux de couleur, les macroblocs sont en fait de taille $16\times 16\times 3$, mais, par abus de langage, et par souci de simplicité, nous dirons simplement qu'ils ont une taille de $16 \times 16$ (ou $N \times N$ dans le cas général). Cette taille de macrobloc n'est pas arbitraire. En effet, nous avons déterminé **empiriquement** que, pour notre prototype, **et pour des images pré-existantes en 480p (720x480 pixels) ou alors générées aléatoirement**, les macroblocs $16 \times 16$ étaient ceux qui produisaient les meilleurs taux de compression parmi les tailles standards de macroblocs, à savoir $8 \times 8$, $16 \times 16$ et $32 \times 32$ pixels, pour un temps donné. 
+Ensuite, l'image est découpée en **macroblocs** de $16 \times 16$ pixels. En réalité, comme une image RGB contient 3 canaux de couleur, les macroblocs sont en fait de taille $16\times 16\times 3$, mais, par abus de langage, et par souci de simplicité, nous dirons simplement qu'ils ont une taille de $16 \times 16$ (ou $N \times N$ dans le cas général). Cette taille de macrobloc n'est pas arbitraire. En effet, nous avons déterminé **empiriquement** que, pour notre prototype, **et pour des images préexistantes en 480p (720x480 pixels) ou alors générées aléatoirement**, les macroblocs $16 \times 16$ étaient ceux qui produisaient les meilleurs taux de compression parmi les tailles standards de macroblocs, à savoir $8 \times 8$, $16 \times 16$ et $32 \times 32$ pixels, pour un temps donné. 
 
 ![Décomposition en macroblocs de 16x16 pixels](rapport.assets/macrobloc.png)
 
@@ -178,7 +178,7 @@ Après cette étape, on applique diverses transformations **à chacune de ces ma
 
 -   Une Transformation en Cosinus Discrète, ou **DCT** **[8]**, qui est une transformation (matricielle) linéaire et **réversible** qui va permettre de **concentrer** les données du macrobloc YUV dans la diagonale principale de l'image de sortie (la diagonale "nord-ouest / sud-est"). Ainsi, en-dehors de cette zone, les composantes de l'image (après application de la DCT) seront relativement faibles en valeur absolue, ce qui sera **très pratique** lors des étapes suivantes.
 
-* On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT ainsi généré. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur $16 \times 16 = 256$. **On passe donc d'une matrice à 2 dimensions à une liste en une seule dimension.** Ce découpage va se faire selon les $2\times16-1 = 31$ diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici **extrêmement commode**, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, pDécomposition en macroblocs de 16x16 pixelsartout ailleurs, ces valeurs seront moindres.
+* On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT ainsi généré. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur $16 \times 16 = 256$. **On passe donc d'une matrice à 2 dimensions à une liste en une seule dimension.** Ce découpage va se faire selon les $2\times16-1 = 31$ diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici **extrêmement commode**, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, Décomposition en macroblocs de 16x16 pixels partout ailleurs, ces valeurs seront moindres.
 
   ![Linéarisation Zig zag](rapport.assets/Zigzag linearization.png){ width=70% }
 
@@ -192,7 +192,7 @@ La partie suivante concerne le formatage des données. On utilise pour cela un *
 
 L'arbre se base sur la récurrence des caractères dans une phrase afin de les ordonner par fréquence et d'adresser à chaque caractère un mot binaire. Les "caractères" correspondent ici en fait à des tuples RLE. **L'idée est que, plus un tuple RLE apparaîtra souvent dans la frame RLE, moins le mot binaire qui lui est associé aura une taille élevée.** Les correspondances tuple RLE / mot binaire sont indiquées dans un dictionnaire, appelé **dictionnaire d'encodage de Huffman**.
 
-![Arbre binaire d'un chaine de caractère](rapport.assets/arbre.png)
+![Arbre binaire d'une chaîne de caractère](rapport.assets/arbre.png)
 
 ```
 Encoded string :
@@ -228,11 +228,9 @@ Maintenant que le serveur a reçu le bitstream complet associé à l'image compr
 
 Puis, finalement, après avoir décodé l'image au format YUV, on la convertit au format RGB.
 
-![diag_decodeur](./rapport.assets/diag_algo_decodeur.png)
+![Fonctionnement simplifié du décodeur](./rapport.assets/diag_algo_decodeur.png)
 
-<center> Figure 7 : Fonctionnement simplifié du décodeur </center>
-
-En ce qui concerne les performances de cet algorithme, pour une image typique en **480p**, notre algorithme s'effectue en **une vingtaine de secondes en moyenne**, et a des taux de compression variant entre **10:1** et **5:1** en moyenne. Ces taux de compression, _bien qu'améliorables_, sont toutefois assez satisfaisants, dans la mesure où les taux de compression d'algorithmes pré-existants (tels que le MPEG-2) varient typiquement entre **20:1** et **5:1** pour des images "classiques". 
+En ce qui concerne les performances de cet algorithme, pour une image typique en **480p**, notre algorithme s'effectue en **une vingtaine de secondes en moyenne**, et a des taux de compression variant entre **10:1** et **5:1** en moyenne. Ces taux de compression, _bien qu'améliorables_, sont toutefois assez satisfaisants, dans la mesure où les taux de compression d'algorithmes préexistants (tels que le MPEG-2) varient typiquement entre **20:1** et **5:1** pour des images "classiques". 
 
 ![Décodeur EVEEX](rapport.assets/Diagramme algo - Décodeur - PNG.png)
 
@@ -272,9 +270,9 @@ Le développement en Python de l'algorithme était relativement simple (**par ra
 
 Le prototype Python est entièrement fonctionnel et a été obtenu *relativement rapidement* : en effet, il a été finalisé vers fin novembre. Voici d'autres statistiques complémentaires sur les performances atteintes par notre algorithme : 
 
-![Statistiques obtenues (via le prototype Python) sur 5 images pré-existantes en 480p, en fonction de taille des macroblocs ](./rapport.assets/stats_DCT_images_générées_aléatoirement_Récapitulatif.png)
+![Statistiques obtenues (via le prototype Python) sur 5 images préexistantes en 480p, en fonction de taille des macroblocs ](./rapport.assets/stats_DCT_images_générées_aléatoirement_Récapitulatif.png)
 
-![Statistiques obtenues (via le prototype Python) sur 5 images pré-existantes en 480p, en fonction de taille des macroblocs ](./rapport.assets/stats_DCT_images_pré-existantes_Récapitulatif.png)
+![Statistiques obtenues (via le prototype Python) sur 5 images préexistantes en 480p, en fonction de taille des macroblocs ](./rapport.assets/stats_DCT_images_pré-existantes_Récapitulatif.png)
 
 -   **huff_ratio** correspond à la taille des données compressées de Huffman (cf. figure 5 pour plus de détails) divisée par la taille originale de l'image (en bits), i.e. img_width x img_height x 3 x 8
 -   **dict_ratio** correspond à la taille du dictionnaire de Huffman compressé divisée par la taille originale de l'image (en bits)
@@ -282,7 +280,7 @@ Le prototype Python est entièrement fonctionnel et a été obtenu *relativement
 -   **compression_rate** désigne le taux de compression de l'image, c'est-à-dire la taille du bitstream **total** de l'image divisée par la taille originale de l'image (en bits)
 -   **execution_time** correspond au temps mis par notre programme principal (cf. *main.py*) pour effectuer l'entièreté des étapes de notre algorithme
 
-On remarque assez clairement sur ces 2 derniers graphes que macroblock_size = 16 correspond (pour les images pré-existantes, donc pour les images les plus "représentatives") au taux de compression minimal, donc au cas optimal.
+On remarque assez clairement sur ces 2 derniers graphes que macroblock_size = 16 correspond (pour les images préexistantes, donc pour les images les plus "représentatives") au taux de compression minimal, donc au cas optimal.
 
  Précédemment, nous avions fait des tests de performances de compression sur "seulement" 5 images (en 480p). Nous avons donc voulu généraliser cette étude à plus d'images, et nous obtenons les résultats suivants (avec des images de taille inférieure par souci de temps d'exécution) :
 
@@ -290,7 +288,7 @@ On remarque assez clairement sur ces 2 derniers graphes que macroblock_size = 16
 
 L'avantage du script qui a permis de générer le graphe précédent est qu'il est généralisable à un nombre **arbitraire** d'images de test. Cependant, comme il est assez difficile d'en trouver en quantité suffisante (car non-libres de droit), nous nous sommes limités ici à 37 images (de taille $96 \times 64$).
 
-En outre, nous avons aussi fait le choix de proposer un "package" de cet algorithme en Python, afin de pouvoir l'importer facilement sur une machine ainsi que toute les bibliothèques nécessaire a son exécution. Vous pourrez d'ailleurs retrouver ce package ici : https://test.pypi.org/project/EVEEX/
+En outre, nous avons aussi fait le choix de proposer un "package" de cet algorithme en Python, afin de pouvoir l'importer facilement sur une machine ainsi que toutes les bibliothèques nécessaires a son exécution. Vous pourrez d'ailleurs retrouver ce package ici : https://test.pypi.org/project/EVEEX/
 
 ### Bas niveau : code en C 
 
@@ -303,7 +301,7 @@ Néanmoins, nous étions confiants sur la possibilité de réaliser le code, d'a
 
 Le temps passa et très vite le code est devenu **très dense**. La quantité de types non-natifs produits devenait relativement importante, le code augmentait très vite en volume, et la structure de programmation était devenue complexe et foisonnante. On dépasse maintenant les 7000 lignes de code ...
 
-Ce code ne fait pas rien, la plupart des fonctions de l'encodeur sont implémentées. Le problème réside dans la liaison entre ces blocs de traitements (par exemple la liaison encodeur/huffman). De plus, le grand nombre de types et d'objets créés augmentait les fuites de mémoires, et il fallu passer plus de 2 semaines pour boucher toutes ces fuites grâce à l'outil Valgrind.
+Ce code ne fait pas rien, la plupart des fonctions de l'encodeur sont implémentées. Le problème réside dans la liaison entre ces blocs de traitements (par exemple la liaison encodeur/huffman). De plus, le grand nombre de types et d'objets créés augmentait les fuites de mémoires, et il fallut passer plus de 2 semaines pour boucher toutes ces fuites grâce à l'outil Valgrind.
 
 Voici les performances que l'on a obtenues pour le prototype partiel en C :
 
@@ -319,7 +317,7 @@ Devant l'échec de la complexité d'implémentation du code en C, nous nous somm
 
 Ce langage, comme tout langage de programmation, apporte son lot d'avantages et d'inconvénients : 
 
-**Avantages:** 
+**Avantages :** 
 
 - la syntaxe est plus facile à lire que le C, notamment la gestion des arrays (slices) et la définition de méthodes de "struct" se rapprochant de la programmation orientée objet, tout en gardant une structure proche de la programmation fonctionnelle
 - un garbage collector intégré au langage qui se charge de libérer les variables une fois que celles-ci ne sont plus utilisées
@@ -328,7 +326,7 @@ Ce langage, comme tout langage de programmation, apporte son lot d'avantages et 
 - beaucoup de garde-fous : il n'y a pas de "runtime error", juste des erreurs de compilation. De plus, la structure du code est codifiée, donc il n'existe au sein d'un programme qu'un seul type de programmation, ce qui rend le code plus lisible et universel 
 - des outils de cross-compilation existent pour ce langage, nous pouvons compiler pour ARM ou RISC-V à partir d'un environnement Linux
 
-**Inconvénients:**
+**Inconvénients :**
 
 - taille du binaire en sortie conséquente (un programme simple affichant "Hello World !" peut faire 2Mo) 
 - **cross-compilation impossible en riscV32 bits**, ainsi que la HLS via Vivado
@@ -343,21 +341,21 @@ On constate que la fonction de calcul du cosinus (qui intervient dans le calcul 
 
 ![profil de performance avec développement de Taylor](rapport.assets/profile002.gif)
 
-Maintenant, on constate qu'on accélère considérablement le calcul d'encodage des frames , ce qui nous prouve l'utilité du développement de Taylor ainsi que du profiling.
+Maintenant, on constate qu'on accélère considérablement le calcul d'encodage des frames, ce qui nous prouve l'utilité du développement de Taylor ainsi que du profiling.
 
 ### La problématique du VHDL
 
-Dans nos plans initiaux, nous cherchions à implémenter le code de manière matérielle au sein d'une puce FPGA. Cela suppose d'utiliser un HDL, ou *Hardware Description Langage*. Les plus connus sont **Verilog** et **VHDL**, mais il en existe d'autres en Python, Ruby, etc.
+Dans nos plans initiaux, nous cherchions à implémenter le code de manière matérielle au sein d'une puce FPGA. Cela suppose d'utiliser un HDL, ou *Hardware Description Langage*. Les plus connus sont **Verilog** et **VHDL**, mais il en existe d'autres en Python, Ruby, etc...
 
 Avant de pouvoir développer (et surtout tester) sur une carte directement, il nous faut installer la *Toolchain* de développement de Xilinx appelée Vivado (l'installation est compliquée et lourde, en particulier sur Linux où tout se fait en mode bash). Les cartes dont nous disposons sont des FPGA artix-7 construits par la société Digilent, les cartes NEXYS4 DDR. 
 
 ![Carte FPGA Nexys4 DDR et ses entrées sorties](rapport.assets/nexys4ddr.png){ width=70% }
 
-Ces cartes possèdent une DDR (Double Data Rate) embarquée, ainsi que la plupart des entrées/sorties nécessaires à l'élaboration d'un prototype (Éthernet, VGA, P-mod pour la camera). Pour capturer l'image, nous avons à notre disposition des camera **OV7670**, capturant une image 480p et ayant l'avantage d’être très bas coût (2 euros l'unité), ce qui est utile pour en acheter plusieurs (l'une d'elles a d'ailleurs succombé à nos manipulations).
+Ces cartes possèdent une DDR (Double Data Rate) embarquée, ainsi que la plupart des entrées/sorties nécessaires à l'élaboration d'un prototype (Ethernet, VGA, P-mod pour la caméra). Pour capturer l'image, nous avons à notre disposition des camera **OV7670**, capturant une image 480p et ayant l'avantage d’être très bas coût (2 euros l'unité), ce qui est utile pour en acheter plusieurs (l'une d'elles a d'ailleurs succombé à nos manipulations).
 
 Les premières manipulations se déroulent sans soucis, nous parvenons à afficher un aperçu de la caméra sur un écran VGA, et tout ça par du code VHDL. Cependant, les choses se sont très vite compliquées quand il a fallu s'attaquer à la RAM.
 
-Sur un FPGA, on dispose de BRAM intégrés au chip qui sont faciles a utiliser, mais de taille réduite (sur nos designs nous n'arrivions pas a dépasser 32 Mo de BRAM), cependant nos estimations en termes d'usage mémoire d'EVEEX dépassaient la quantité de BRAM utilisable sur un design. La DDR a l'avantage d’être sur une puce à part et d’être beaucoup plus grande (128Mo), cependant il est nécessaire de développer un contrôleur pour cette RAM qui, de l'avis même des encadrants, dépasse nos capacités de développement en école d'ingénieur. Il faudra donc passer par une alternative.
+Sur un FPGA, on dispose de BRAM intégrés au chip qui sont faciles à utiliser, mais de taille réduite (sur nos designs nous n'arrivions pas à dépasser 32 Mo de BRAM), cependant nos estimations en termes d'usage mémoire d'EVEEX dépassaient la quantité de BRAM utilisable sur un design. La DDR a l'avantage d’être sur une puce à part et d’être beaucoup plus grande (128Mo), cependant il est nécessaire de développer un contrôleur pour cette RAM qui, de l'avis même des encadrants, dépasse nos capacités de développement en école d'ingénieur. Il faudra donc passer par une alternative.
 
 La première solution envisagée fut d'utiliser Vivado HLS, l'outil de Xilinx pour la synthèse de code. Il permet (moyennant un formalisme dans le code) de traduire du code C vers du HDL comme VHDL.
 
@@ -377,7 +375,7 @@ Nous nous sommes donc orientés vers un nouvel outil, développé par un Alumni 
 
 ![conception d'une application materielle par LiteX](rapport.assets/typicalLitex.png)
 
-LiteX permet de prendre la main du développeur dans tout le processus de dépendance au matériel. Il gère les entrées/sorties ainsi que la RAM sur un grand nombre de cartes, y compris la Nexys4 DDR. Il permet aussi de synthétiser du code HDL depuis un langage dérivé de Python appelé *Migen*. Le but était de se servir de LiteX pour intégrer un SOC (System On a Chip) d'architecture RISCV afin de contrôler l’exécution du code (on utilisera pour cela un OS linux miniature appelé Buildroot), et les processus parallélisables comme la DCT seront eux implémentés directement en matériel pour permettre un grand parallélisme et une plus grande rapidité. Tout l'outil est en Python et permet une grosse génération de code (l'ouverture d'un SOC prend une centaine de lignes sur Litex, et génère plus de 6000 lignes de VHDL).
+LiteX permet de prendre la main du développeur dans tout le processus de dépendance au matériel. Il gère les entrées/sorties ainsi que la RAM sur un grand nombre de cartes, y compris la Nexys4 DDR. Il permet aussi de synthétiser du code HDL depuis un langage dérivé de Python appelé *Migen*. Le but était de se servir de LiteX pour intégrer un SOC (System On a Chip) d'architecture RISC-V afin de contrôler l’exécution du code (on utilisera pour cela un OS linux miniature appelé Buildroot), et les processus parallélisables comme la DCT seront eux implémentés directement en matériel pour permettre un grand parallélisme et une plus grande rapidité. Tout l'outil est en Python et permet une grosse génération de code (l'ouverture d'un SOC prend une centaine de lignes sur Litex, et génère plus de 6000 lignes de VHDL).
 
 Au niveau des codes en eux-mêmes, comme expliqué plus haut, nous avons compris trop tard la manière de coder en VHDL, et nous n'avons sur FPGA que des démonstrations de création de SOC RISC-V avec insertion d'un noyau Buildroot et d'affichage d’aperçu caméra à fournir. 
 
@@ -385,11 +383,11 @@ Au niveau des codes en eux-mêmes, comme expliqué plus haut, nous avons compris
 
 Le noyau Buildroot est par ailleurs entièrement paramétrable, on peut donc sélectionner uniquement les paquets nécessaires à notre algorithme afin de réduire la taille du kernel (notre kernel de test faisait 7Mo). Ici c'est un SOC VexriscV 32 bits (donc d'architecture RISC-V) qui est instancié. 
 
-Le principal problème que nous avons rencontré par rapport à l'intégration d'un SOC, et qui a complètement ruiné nos projets d'intégrations FPGA est l'absence de cross-compilateur Go vers le riscV 32 bits (il existe pour le 64 bits). Ce cross-compilateur est encore en phase de test, et devrait prochainement arriver dans les productions publiques. Or, sur Litex, les SOC que l'on peut instancier sont tous (ou presque) 32 bits (il y avait un SOC 64 bits mais il ne disposait pas d'assez de mémoire).
+Le principal problème que nous avons rencontré par rapport à l'intégration d'un SOC, et qui a complètement ruiné nos projets d'intégrations FPGA est l'absence de cross-compilateur Go vers le RISC-V 32 bits (il existe pour le 64 bits). Ce cross-compilateur est encore en phase de test, et devrait prochainement arriver dans les productions publiques. Or, sur Litex, les SOC que l'on peut instancier sont tous (ou presque) 32 bits (il y avait un SOC 64 bits mais il ne disposait pas d'assez de mémoire).
 
 ### Alternative 2 : ARM 
 
-Suite à la complexité du développement FPGA, nous avons choisi de nous orienté vers une architecture embarquée plus conventionnelle. L'ARM est présent sur beaucoup de systèmes, y compris un très présent dans le milieu de l'enseignement, la **Raspberry Pi**. 
+Suite à la complexité du développement FPGA, nous avons choisi de nous orienter vers une architecture embarquée plus conventionnelle. L'architecture ARM est présente sur beaucoup de systèmes, y compris un très présent dans le milieu académique et pédagogique, la **Raspberry Pi**. 
 
 Pour pouvoir exécuter le code compilé (C ou Golang) il est nécessaire de **cross-compiler** : en effet, par défaut, le compilateur (GCC par exemple), qui se charge de traduire les lignes du code source vers des instructions machines (donc dépendantes de l'architecture du processeur), traduit dans le système d'instructions du système sur lequel il est exécuté (ici un PC). Il faut donc préciser au compilateur que l'on désire exécuter le binaire dans un système d'instructions particulier, ou en télécharger un autre si nécessaire. Ici il faut préciser à GCC ou au compilateur Golang que l'on souhaite un binaire en architecture ARM.
 
@@ -397,22 +395,22 @@ Pour pouvoir exécuter le code compilé (C ou Golang) il est nécessaire de **cr
 
 Notre protocole d'intégration matérielle est donc le suivant : on exécute le code (Python) sur deux Raspberry Pi : 
 
-* La carte émettrice dispose d'une caméra PiCamera (la gestion d'une camera comme l'OV 7670 est plutôt ardue via les GPIO - General Purpose Input Output - sur des cartes Raspberry pour des gestions de débit insuffisant. La capture d'images est effectuée en continu par un script Python utilisant OpenCV.
-* La carte réceptrice est relié quand à elle a un écran externe par une connectique Hdmi. L'affichage se fait part l'utilisation de matplotlib
+* La carte émettrice dispose d'une caméra PiCamera (la gestion d'une caméra comme l'OV 7670 est plutôt ardue via les GPIO - General Purpose Input Output - sur des cartes Raspberry pour des gestions de débit insuffisant. La capture d'images est effectuée en continu par un script Python utilisant OpenCV.
+* La carte réceptrice est reliée quant à elle a un écran externe par une connectique HDMI. L'affichage se fait part l'utilisation de matplotlib
 
 Ces 2 cartes sont dans le même sous-réseau et communiquent entre-elles par l'intermédiaire d'un socket TCP.
 
 Pour les langages compilés, la cross-compilation marche parfaitement et, d'une manière générale, tout ce qui fonctionne pour notre algorithme dans les différents langages sur PC fonctionne aussi sur ARM une fois la cross-compilation effectuée (la carte dispose d'un OS type Debian).
 
-### Alternative 3: RISCV 
+### Alternative 3 : RISC-V
 
-Une dernière option est encore envisageable pour une intégration matérielle. Comme l'intégration d'un SOC riscV 64 bits n'était pas possible, il suffit de s'en procurer un directement en tant que carte électronique. 
+Une dernière option est encore envisageable pour une intégration matérielle. Comme l'intégration d'un SOC RISC-V 64 bits n'était pas possible, il suffit de s'en procurer un directement en tant que carte électronique. 
 
 Les possibilités de cartes sont nombreuses mais en voici deux : 
 
 * l'option la plus optimale aurait été une carte Beagle-V: 
 
-  ![Carte beagleV disposant d'un SOC d'architecture RISCV](rapport.assets/beagle.png){ width=70% }
+  ![Carte beagleV disposant d'un SOC d'architecture RISC-V](rapport.assets/beagle.png){ width=70% }
 
   Cette carte dispose de grosses performances pour sa taille avec un processeur dual-core 64 bits cadencé à 1 Ghz et 8go de RAM. Cependant elle n'est pas encore en vente, dans quelques mois le labo STICC de l'ENSTA Bretagne devrait pouvoir en avoir une, il sera donc fort intéressant de poursuivre le projet sur cette carte puisqu'elle dispose de tout ce dont on a besoin, et a le mérite, contrairement aux cartes ARM comme les Raspberry Pi, d’être intégralement open-source. 
 
@@ -420,11 +418,11 @@ Les possibilités de cartes sont nombreuses mais en voici deux :
 
   ![carte maixduino](rapport.assets/maixduino_brrrrr){ width=80% }
 
-  Cette carte est beaucoup plus raisonnable en terme de performances, ne dispose pas de sortie vidéo et est plutôt destiné a l'IOT (Internet Of Things), cependant nous en avons à disposition et elle a le mérite d’être 64 bits. Nous sommes donc partis sur cette option. 
+  Cette carte est beaucoup plus raisonnable en termes de performances, ne dispose pas de sortie vidéo et est plutôt destiné à l'IoT (Internet of Things), cependant nous en avons à disposition et elle a le mérite d’être 64 bits. Nous sommes donc partis sur cette option. 
 
-  Par faute de temps, n'avons pas pu effectuer de manipulation propre avec cette carte. Néanmoins l'export d'un binaire compilé pour riscV s'effectue avec l'utilitaire python *Kflash*. Nous manquions d'un moyen de communiquer avec la carte une fois le binaire importé (il aurait fallu la création d'un noyau buildroot fait pour le SOC K210 de la carte). 
+  Par faute de temps, n'avons pas pu effectuer de manipulation propre avec cette carte. Néanmoins l'export d'un binaire compilé pour RISC-V s'effectue avec l'utilitaire python *Kflash*. Nous manquions d'un moyen de communiquer avec la carte une fois le binaire importé (il aurait fallu la création d'un noyau buildroot fait pour le SOC K210 de la carte). 
 
-En résumé, il ne faut pas jeter pour autant une implémentation propre sur RiscV, surtout avec les prochaines cartes, même si accélération matérielle donnée par le parallélisme en FPGA serait plus que souhaitable. 
+En résumé, il ne faut pas jeter pour autant une implémentation propre sur RISC-V, surtout avec les prochaines cartes, même si accélération matérielle donnée par le parallélisme en FPGA serait plus que souhaitable. 
 
 Vous le constater, les rebondissements et fausses pistes ont été nombreuses, et il clair que le travail aurait été à la limite de l'impossible en suivant un cycle de développement standard en V, c'est pourquoi l'approche Agile était indispensable au sein du projet. 
 
@@ -442,7 +440,7 @@ Au début, nous avons choisi de répartir les tâches selon 2 catégories :
 
 Mais très vite, cette frontière entre software et hardware finissait par ne plus avoir beaucoup de sens. Il devenait impossible de travailler le hardware sans avoir le software en tête et inversement. La distribution des tâches s'est donc plus faite en fonction des appétences et des connaissances de chacun. 
 
-Concernant les sprints eux-mêmes, nous nous sommes orientés sur des sprints de **2 semaines**, avec un objectif de release (programme, documentation, fonctions supplémentaires, etc) **tous les 3 sprints**. Nous évaluons chaque tâche par un **système de points**, prenant en compte : la difficulté de la tâche, la longueur prévue et le nombre de personnes impliquées dans celle-ci. Cependant, là aussi la rigidité d'un système de sprint en 2 semaines commençait à peser sur la productivité, et les sprints vers la fin du projet étaient plus proches de la semaine, voire de la demi-journée. 
+Concernant les sprints eux-mêmes, nous nous sommes orientés sur des sprints de **2 semaines**, avec un objectif de *release* (programme, documentation, fonctions supplémentaires, etc…) **tous les 3 sprints**. Nous évaluons chaque tâche par un **système de points**, prenant en compte : la difficulté de la tâche, la longueur prévue et le nombre de personnes impliquées dans celle-ci. Cependant, là aussi la rigidité d'un système de sprint en 2 semaines commençait à peser sur la productivité, et les sprints vers la fin du projet étaient plus proches de la semaine, voire de la demi-journée. 
 
 Afin de planifier l'activité ainsi que de garder une trace de ce qui a été fait, nous nous sommes orientés vers une solution de méthode agile basé sur GitHub, appelée **ZenHub** **[11]**.
 
@@ -454,13 +452,13 @@ Le **"Velocity tracking"** permet, via un système de points de notation des iss
 
 Nous nous sommes servis des descriptions des issues pour conserver les user-stories. Entre autres, les points intéressants pour une user-stories furent les suivants :
 
-* **difficultés rencontrées** : quelles ont été les sources de difficulté dans le travail du ou des personnes réalisant l'issue ? Cela permet de rafraîchir l'affectation des tâches en fonction des compétences de chacun et de la confiance en la réalisation de la tache.
+* **difficultés rencontrées** : quelles ont été les sources de difficulté dans le travail du ou des personnes réalisant l'issue ? Cela permet de rafraîchir l'affectation des tâches en fonction des compétences de chacun et de la confiance en la réalisation de la tâche.
 * **travail réalisé** : L'issue a-t-elle été réalisée en partie ? en totalité ? 
 * **perspectives futures** : ce qui va découler de la réalisation de la tâche. 
 
-Dans la planification des taches, nous faisions toujours attention à commencer nos travaux par un "hello-world" de la technologie à utilisée. Avant de faire de vélo, il faut mettre les roulettes et les enlever petit à petit, c'est ça etre agile. 
+Dans la planification des taches, nous faisions toujours attention à commencer nos travaux par un "hello world" de la technologie a utiliser. Avant de faire de vélo, il faut mettre les roulettes et les enlever petit à petit, c'est ça être agile. 
 
-Nous complétions ces user-stories sous forme écrite par 15 minutes de démonstration en fin de chaque journée pour pouvoir montrer à tout le monde le travail réalisé.
+Nous complétions ces *user-stories* sous forme écrite par 15 minutes de démonstration en fin de chaque journée pour pouvoir montrer à tout le monde le travail réalisé.
 
 Pour un aperçu plus convivial et plus chronologique du déroulé du projet, un portfolio est disponible sur Mahara à l'adresse suivante : https://mahara.ensta-bretagne.fr/view/groupviews.php?group=348
 
@@ -468,17 +466,17 @@ Pour un aperçu plus convivial et plus chronologique du déroulé du projet, un 
 
 # Conclusion 
 
-La **démarche agile** a été plus que nécessaire dans ce projet. En effet, nous avons rencontré plusieurs **branches** qui se sont avérées mortes (ou sans issue) a court terme. La démarche agile nous a permis de rebondir, notamment lors de la fin du code C ou de l'implémentation FPGA.
+La **démarche agile** a été plus que nécessaire dans ce projet. En effet, nous avons rencontré plusieurs **branches** qui se sont avérées mortes (ou sans issue) à court terme. La démarche agile nous a permis de rebondir, notamment lors de la fin du code C ou de l'implémentation FPGA.
 
 Nous nous sommes aperçus que nous disposions pas d'un **recul suffisant** en hardware pour travailler sur une implémentation FPGA de manière efficace au début du projet. Il s'est avéré que la quasi-totalité des cours qui nous auraient été utiles pendant le projet nous ont été dispensés vers la fin du projet (Architecture des ordinateurs, Traitement et Protection de l'Information, Conception Logicielle, Traitement Numérique des Images). 
 
 Premièrement, le **développement en C reste très compliqué**, notamment dans le traitement d'un algorithme complexe. Bien qu'il soit très performant, l'allocation en mémoire rend compliquée l'implémentation de structures à taille variable, notamment le code de Huffman (Variable Length Coding). La solution Golang est aussi très attrayante sur le papier, notamment au regard du processus de développement. Cependant, la non-compatibilité de la **cross-compilation** Golang vers RISC-V 32 bits, découverte après-coup, rend impossible l'implémentation sur un SOC à base de FPGA, comme on l'avait envisagé. Il aurait de toute façon fallu des cartes FPGA puissantes pour placer le SOC avec sa mémoire, et profiter d'un parallélisme conséquent.
 
-Enfin, nous n'avons pas saisi au départ les possibilités du FPGA en matière de programmation "objet". Nous avons pu constater pendant le cours de 2ème année de M. Le Lann sur le VHDL à quel point le langage dispose d'une certaine "abstraction" sur les types, et il est possible que si devions commencer le projet maintenant, nous aurions cherché à développer au moins une partie du code en FPGA natif. Concernant LiteX, l'approche est très séduisante. En effet, la programmation en Migen est plus rapide à développer d'une manière générale, et permet de synthétiser beaucoup de code à partir de quelques fichiers Python.
+Enfin, nous n'avons pas saisi au départ les possibilités du FPGA en matière de programmation "objet". Nous avons pu constater pendant le cours de 2ème année de M. LeLann sur le VHDL à quel point le langage dispose d'une certaine "abstraction" sur les types, et il est possible que si devions commencer le projet maintenant, nous aurions cherché à développer au moins une partie du code en FPGA natif. Concernant LiteX, l'approche est très séduisante. En effet, la programmation en Migen est plus rapide à développer d'une manière générale, et permet de synthétiser beaucoup de code à partir de quelques fichiers Python.
 
-Toutefois, nous avons pu nous concentrer sur la **maîtrise de l'algorithme** et les **possibilités d'intégration future** au sein du matériel. Il ne manque qu'un compilateur GO pour riscv32 bits ou intégration d'un soc64 bits sur LiteX pour pouvoir bénéficier d'un portage de code relativement performant, et accelerable en vhdl (calcul de DCT en dur grâce a des tables LUT par exemple). 
+Toutefois, nous avons pu nous concentrer sur la **maîtrise de l'algorithme** et les **possibilités d'intégration future** au sein du matériel. Il ne manque qu'un compilateur GO pour riscv32 bits ou intégration d'un soc64 bits sur LiteX pour pouvoir bénéficier d'un portage de code relativement performant, et accelérable en vhdl (calcul de DCT en dur grâce a des tables LUT par exemple). 
 
-Dans le futur, il est possible et souhaitable qu'un groupe d'étudiant reprenne nos travaux et puisse continuer le projet EVEEX, notamment l'aspect intégration matérielle et développement de l'algorithme. Aussi il va etre necessaire d'ajouter des éléments différenciants dans l'algorithme afin de le séparer progressivement du MJPEG, notamment sur des aspects de taille dynamique de macroblocs ou de prédiction de macroblocs. 
+Dans le futur, il est possible et souhaitable qu'un groupe d'étudiant reprenne nos travaux et puisse continuer le projet EVEEX, notamment l'aspect intégration matérielle et développement de l'algorithme. Aussi il va être nécessaire d'ajouter des éléments différenciants dans l'algorithme afin de le séparer progressivement du MJPEG, notamment sur des aspects de taille dynamique de macroblocs ou de prédiction de macroblocs. 
 
 
 
@@ -515,7 +513,7 @@ Python :
 
 C : 
 
-* Tous les "include" sont issus directement du système Linux (sys, os, time, etc) et sont donc open-source et disponibles via un `git clone` https://www.gnu.org/software/libc/libc.html
+* Tous les "include" sont issus directement du système Linux (sys, os, time, etc…) et sont donc open-source et disponibles via un `git clone` https://www.gnu.org/software/libc/libc.html
 
 Golang : 
 
@@ -568,7 +566,7 @@ Test de la fonction `RGBtoYUV` sur un nuancier de couleur et vérification visue
 
 ![Logo du langage C](https://cdn.iconscout.com/icon/free/png-512/c-programming-569564.png){ width=30% }
 
-Test des fonctions `loadIMG`, `toYUVImage` sur une image de test : image pré-existante ou image générée aléatoirement via le fichier de génération d'images tests sur python
+Test des fonctions `loadIMG`, `toYUVImage` sur une image de test : image préexistante ou image générée aléatoirement via le fichier de génération d'images tests sur python
 
 ##### Golang
 
@@ -853,7 +851,7 @@ Nous avons ici décidé de travailler avec des frames de taille 96x96 pixels (g�
 
 Comme le taux de compression pour chaque frame est difficilement obtenable (bien que ce soit possible), et qu'il n'est (**dans ce cas précis**) pas nécessairement très intéressant, nous avons choisi de nous concentrer sur l'extraction du nombre moyen de **FPS** (Frames Per Second) seulement. En effet, le taux de compression moyen est ici "inintéressant" pour 2 raisons majeures :
 
-- il ne varie pas du taux de compression d'une image de taille 96x96, car on a ici simplement appliqué l'algorithme de compression d'une image à chacune des frames, ce qui n'est **pas** ce qu'un algorithme de compression vidéo idéal effectue dans la réalité (lien entre les frames, détection de mouvement, etc)
+- il ne varie pas du taux de compression d'une image de taille 96x96, car on a ici simplement appliqué l'algorithme de compression d'une image à chacune des frames, ce qui n'est **pas** ce qu'un algorithme de compression vidéo idéal effectue dans la réalité (lien entre les frames, détection de mouvement, etc…)
 - le taux de compression d'une image de taille 96x96 est déjà connu (ou en tout cas facilement obtenable via nos différents programmes principaux)
 
 Pour différentes tailles de macroblocs (respectivement 8x8, 16x16 et 32x32), on obtient alors les résultats suivants :
