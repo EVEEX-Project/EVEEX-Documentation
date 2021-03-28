@@ -474,7 +474,9 @@ Premièrement, le **développement en C reste très compliqué**, notamment dans
 
 Enfin, nous n'avons pas saisi au départ les possibilités du FPGA en matière de programmation "objet". Nous avons pu constater pendant le cours de 2ème année de M. Le Lann sur le VHDL à quel point le langage dispose d'une certaine "abstraction" sur les types, et il est possible que si devions commencer le projet maintenant, nous aurions cherché à développer au moins une partie du code en FPGA natif. Concernant LiteX, l'approche est très séduisante. En effet, la programmation en Migen est plus rapide à développer d'une manière générale, et permet de synthétiser beaucoup de code à partir de quelques fichiers Python.
 
-Toutefois, nous avons pu nous concentrer sur la **maîtrise de l'algorithme** et les **possibilités d'intégration future** au sein du matériel. Il ne manque qu'un compilateur GO pour riscv32 bits ou intégration d'un soc64 bits sur LiteX pour pouvoir bénéficier d'un portage de code relativement performant, et accélerable en vhdl (calcul de DCT en dur grâce a des tables LUT par exemple). 
+Toutefois, nous avons pu nous concentrer sur la **maîtrise de l'algorithme** et les **possibilités d'intégration future** au sein du matériel. Il ne manque qu'un compilateur GO pour riscv32 bits ou intégration d'un soc64 bits sur LiteX pour pouvoir bénéficier d'un portage de code relativement performant, et accelerable en vhdl (calcul de DCT en dur grâce a des tables LUT par exemple). 
+
+Dans le futur, il est possible et souhaitable qu'un groupe d'étudiant reprenne nos travaux et puisse continuer le projet EVEEX, notamment l'aspect intégration matérielle et développement de l'algorithme. Aussi il va etre necessaire d'ajouter des éléments différenciants dans l'algorithme afin de le séparer progressivement du MJPEG, notamment sur des aspects de taille dynamique de macroblocs ou de prédiction de macroblocs. 
 
 
 
@@ -535,6 +537,8 @@ Golang :
 
 **Validation de l'exigence non-fonctionnelle => 100 %** 
 
+\pagebreak
+
 ### Fiche n°2.1
 
 >   Type de test : Exigence fonctionnelle
@@ -576,7 +580,7 @@ Test de la fonction `toYUVImage` et tests unitaires sur les fonctions du type `I
 
 ![Nuancier de couleurs classique disponible sur internet](../VFU/assets/mireTV.jpg)
 
-## Résultats 
+### Résultats 
 
 #### Python
 
@@ -741,6 +745,149 @@ Sortie après décodage du bitstream :
 
 \pagebreak
 
+### Type de test 
+
+Test fonctionnel (+ éventuellement test d'intégration)
+
+### Fonctionnalité testée
+
+langage : PYTHON
+
+matériel : PC (+ éventuellement RASPBERRY PI)
+
+étape de code testée : L'ensemble du prototype Python (adapté dans les 2 programmes *main_emetteur_video.py* et *main_recepteur_video.py*)
+
+### Manipulation 
+
+L'objectif de cette manipulation est le même que celui de *VFU_Démo_RPi*, mais avec une vidéo **pré-enregistrée**, et non avec un flux vidéo récupéré en temps réel : on veut transférer des données vidéo (du coup **pré-enregistrées**) d'un émetteur à un récepteur.
+
+- **Cas 1** : émetteur = PC, et récepteur = ce même PC (i.e. on fait un envoi dans le réseau **local**)
+
+Sur un terminal (resp. une console), d'abord lancer *main_recepteur_video.py*. Puis, sur un autre terminal (resp. une autre console), lancer *main_emetteur_video.py*.
+
+- **Cas 2** : émetteur = RPi et récepteur = PC
+
+Idem *VFU_Démo_RPi* (partie "Manipulation"), mais considérer les programmes *main_emetteur_video.py* et *main_recepteur_video.py* au lieu de *main_RPi_emettrice.py* et *main_PC_recepteur*.
+
+### Résultats 
+
+Ce test s'est effectué avec une vidéo simple de 3 secondes, et contenant 90 frames de taille 240x240 pixels. De même que pour *VFU_Démo_RPi*, le taux de compression moyen est ici "inintéressant", donc on s'intéressera surtout au nombre moyen de frames encodées/décodées par seconde (qu'on appellera ici "FPS" par abus de langage).
+
+**==> Tout d'abord, ce test est opérationnel, bien que le transfert de données ne se fasse pas avec des performances temporelles *idéales* !**
+
+- **Cas 1** : émetteur = PC, et récepteur = ce même PC (i.e. on fait un envoi dans le réseau **local**)
+
+Pour différentes tailles de macroblocs (respectivement 8x8 et 16x16), on obtient les résultats suivants :
+
+Pour des macroblocs 8x8 (**pour une même démonstration**) :
+
+![](..\VFU\assets\test_vidéo_local_8x8_émetteur.PNG)
+
+![](..\VFU\assets\test_vidéo_local_8x8_récepteur.PNG)
+
+Pour des macroblocs 16x16 (**pour une même démonstration**) :
+
+![](..\VFU\assets\test_vidéo_local_16x16_émetteur.PNG)
+
+![](..\VFU\assets\test_vidéo_local_16x16_récepteur.PNG)
+
+On retrouve notamment que plus la taille de `macroblock_size` augmente, meilleures sont les performances de l'algorithme.
+
+- **Cas 2** : émetteur = RPi et récepteur = PC
+
+On obtient, pour des macroblocs 16x16 (**pour une même démonstration**) :
+
+![](..\VFU\assets\test_vidéo_réseau_16x16_émetteur.PNG)
+
+![](..\VFU\assets\test_vidéo_réseau_16x16_récepteur.PNG)
+
+
+
+Ce dernier résultat (cas 2) est **étonnant** : en effet, il impliquerait que la qualité du réseau a une influence *significative* sur les performances de notre algorithme, ce qui n'a (avant cette manipulation) jamais été observé. Que doit-on en conclure ?
+
+## Test d'intégration : Validation sur Raspberry pi de l'algorithme dans son ensemble
+
+### Type de test 
+
+Test d'intégration
+
+### Fonctionnalité testée
+
+Langage : PYTHON
+
+Matériel : PC / RASPBERRY PI
+
+Étape de code testée : L'ensemble du prototype Python (adapté dans les 2 programmes *main_RPi_emettrice.py* et *main_PC_recepteur.py*)
+
+### Manipulation 
+
+L'objectif de ce test d'intégration est de tester notre prototype Python dans le cadre d'une **démonstration physique**. Nous utiliserons ici une Raspberry Pi (ou "RPi") avec une PiCaméra en tant qu'émetteur de données, et un PC portable en tant que récepteur.
+
+Concrètement, voici ce qu'il se passe :
+
+- la PiCaméra génère les frames (ici de taille 96x96)
+- les frames sont extraites du stream continu de la PiCaméra, sous la forme d'arrays Numpy tridimensionnels (exceptionnellement au format **BGR** - et non RGB - car on utilise la bibliothèque OpenCV pour décoder le stream en array exploitable)
+- les arrays précédents sont encodés (ie convertis en bitstream)
+- ce même bitstream (pour chaque frame) est envoyé dans le réseau (protocole SSH pour communiquer correctement - et surtout de manière sécurisée - entre la RPi et le récepteur) vers le récepteur (donc le PC)
+- le PC reçoit les bitstreams associés à chaque frame **en temps réel**, puis les décode **en temps réel** (sous la forme d'arrays Numpy tridimensionnels au format **RGB**)
+- les images décodées sont ensuite affichées sur l'écran du PC/récepteur via la fonction matplotlib.pyplot.show (ce qui explique notamment pourquoi on avait besoin d'avoir les images décodées au format RGB)
+
+Pour pouvoir tester cet algorithme par vous-même avec le code fourni, il faut respecter quelques étapes.
+
+D'abord, pour tester si la communication entre l'émetteur (Raspberry Pi avec une PiCamera) et le récepteur (PC ou RPi) fonctionne, d'abord lancer *test_recepteur.py* sur le récepteur puis *test_emetteur.py* sur l'émetteur (en changeant bien évidemment les adresses IP définies dans ces 2 scripts).
+
+**NB** : Il faut bien veiller à link la RPi au récepteur avec un câble Éthernet si on veut avoir une chance de détecter le récepteur depuis la RPi (et l'émetteur depuis le PC récepteur). Idéalement, il faudrait également que l'émetteur et le récepteur soient tous les deux connectés sur le même réseau.
+
+Puis, pour la démonstration, lancer *main_PC_recepteur.py* sur le récepteur (PC ou RPi) et *main_RPi_emettrice.py* sur la RPi. Ne pas oublier d'également changer les adresses IP définies dans ces 2 derniers scripts.
+
+Une fois la démo lancée, sur l'écran link à la RPi, il suffit d'appuyer sur la touche "q" du clavier afin
+d'arrêter le flux vidéo de la PiCamera (et donc par la même occasion les 2 programmes en cours).
+
+### Résultats
+
+Nous avons ici décidé de travailler avec des frames de taille 96x96 pixels (générées par la PiCamera), afin de ne pas surcharger le programme Python (qui, rappelons-le, n'a pas des performances temporelles remarquables).
+
+**==> Tout d'abord, la démonstration fonctionne parfaitement ! Bien que le framerate soit faible (car on travaille avec le prototype Python), les images générées en entrée et les images décodées en sortie sont *synchronisées* !**
+
+Comme le taux de compression pour chaque frame est difficilement obtenable (bien que ce soit possible), et qu'il n'est (**dans ce cas précis**) pas nécessairement très intéressant, nous avons choisi de nous concentrer sur l'extraction du nombre moyen de **FPS** (Frames Per Second) seulement. En effet, le taux de compression moyen est ici "inintéressant" pour 2 raisons majeures :
+
+- il ne varie pas du taux de compression d'une image de taille 96x96, car on a ici simplement appliqué l'algorithme de compression d'une image à chacune des frames, ce qui n'est **pas** ce qu'un algorithme de compression vidéo idéal effectue dans la réalité (lien entre les frames, détection de mouvement, etc)
+- le taux de compression d'une image de taille 96x96 est déjà connu (ou en tout cas facilement obtenable via nos différents programmes principaux)
+
+Pour différentes tailles de macroblocs (respectivement 8x8, 16x16 et 32x32), on obtient alors les résultats suivants :
+
+Pour des macroblocs 8x8 (**pour une même démonstration**) :
+
+![](..\VFU\assets\test_RPi_8x8_émetteur.PNG)
+
+![](..\VFU\assets\test_RPi_8x8_récepteur.PNG)
+
+
+
+Pour des macroblocs 16x16 (**pour une même démonstration**) :
+
+![](..\VFU\assets\test_RPi_16x16_émetteur.PNG)
+
+![](..\VFU\assets\test_RPi_16x16_récepteur.PNG)
+
+
+
+Pour des macroblocs 32x32 (**pour une même démonstration**) :
+
+![](..\VFU\assets\test_RPi_32x32_émetteur.PNG)
+
+![](..\VFU\assets\test_RPi_32x32_récepteur.PNG)
+
+
+
+On retrouve notamment le fait qu'à partir de `macroblock_size = 16`, les différences de performances (pour des images **réelles**, et non générées aléatoirement) ne varient que très peu.
+
+**NB** : Le récepteur peut également être une RPi (et non un PC).
+
+Tout les résultats exposés dans ce document peuvent bien évidemment être (et **seront**) répliqués le jour de la soutenance !
+
+\pagebreak
+
 # Bibliographie
 
 **[1]** Inès, S., 2020. _YouTube En Chiffres 2020_. [online] Agence des médias sociaux. Available at: [https://www.agencedesmediassociaux.com/youtube-chiffres-2020/](https://www.agencedesmediassociaux.com/youtube-chiffres-2020/)
@@ -786,7 +933,7 @@ Sortie après décodage du bitstream :
 
 **VHDL :** Langage de description de matériel destiné à représenter le comportement ainsi que l'architecture d'un système électronique numérique.
 
-**Buildroot :** Buildroot est un ensemble de Makefiles et de correctifs qui simplifie et automatise le processus de construction d'un environnement Linux complet et amorçable pour un système embarqué.
+**Buildroot :** Buildroot est un ensemble de Makefiles et de correctifs qui simplifie et automatise le processus de construction d'un environnement Linux complet et amorçable pour un système embarqué. Il permet la construction d'un noyau linux miniaturisée. 
 
 **Raspberry pi :** Le Raspberry Pi est un nano-ordinateur monocarte à processeur ARM de la taille d'une carte de crédit. 
 
