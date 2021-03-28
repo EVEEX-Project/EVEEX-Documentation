@@ -130,20 +130,31 @@ Nous avons donc défini un certain nombre d'exigences avec les performances souh
 
 Les points de vocabulaire au niveau de exigences seront définis par la suite dans le rapport, dans un glossaire.
 
-| Numéro identifiant l'exigence |                           Exigence                           |                    Performances attendues                    |
-| :---------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-|               1               | Le projet doit être intégralement open-source et accessible gratuitement (exigence non fonctionnelle) |                             None                             |
-|              2.1              | L'algorithme doit pouvoir recevoir un flux photos et vidéo "brut" et le convertir en un format exploitable |          Conversion d'un flux RGB en flux YUV/YCbCr          |
-|             2.2.1             |       L'algorithme doit compresser des données brutes        | Dans un premier temps, performances analogues au MPEG-1 => 20:1 pour une photo, 100:1 pour vidéo |
-|             2.2.2             |    L'algorithme doit décompresser des données compressées    | Performances identiques ou supérieures à celles de l'encodage |
-|             2.2.3             | L'algorithme doit compresser les données d'une manière originale (pas une copie de MPEG) |                             None                             |
-|             2.3.1             | L'algorithme doit pouvoir formater les données compressées afin qu'elles puissent être envoyées via un réseau |                             None                             |
-|             2.3.2             | L'algorithme doit pouvoir recevoir les données par le réseau et les comprendre |                             None                             |
-|             2.4.1             | L'algorithme doit permettre un affichage d'une image décodée |               Affichage VGA sur la carte FPGA                |
-|              3.1              |   L'algorithme doit pouvoir s’exécuter sur une carte FPGA    |  Identiques ou supérieures à la version PC de l'algorithme   |
-|              4.1              | L'algorithme implémenté sur FPGA doit induire une faible consommation électrique | Inférieures à la consommation d'un PC exécutant l'algorithme (< 30W) |
+| Numéro identifiant l'exigence |                           Exigence                           |                    Performances attendues                    | résultats                                             |
+| :---------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | ----------------------------------------------------- |
+|               1               | Le projet doit être intégralement open-source et accessible gratuitement (exigence non fonctionnelle) |                             None                             | Validée                                               |
+|              2.1              | L'algorithme doit pouvoir recevoir un flux photos et vidéo "brut" et le convertir en un format exploitable |          Conversion d'un flux RGB en flux YUV/YCbCr          | Validée                                               |
+|             2.2.1             |       L'algorithme doit compresser des données brutes        | Dans un premier temps, performances analogues au MPEG-1 => 20:1 pour une photo, 100:1 pour vidéo | Non Validée, les performances sont encore trop basse. |
+|             2.2.2             |    L'algorithme doit décompresser des données compressées    | Performances identiques ou supérieures à celles de l'encodage | identiques sur pc et Raspberry pi                     |
+|             2.2.3             | L'algorithme doit compresser les données d'une manière originale (pas une copie de MPEG) |                             None                             | Non vérifié                                           |
+|             2.3.1             | L'algorithme doit pouvoir formater les données compressées afin qu'elles puissent être envoyées via un réseau |                             None                             | Validée sur pc et Raspberry pi                        |
+|             2.3.2             | L'algorithme doit pouvoir recevoir les données par le réseau et les comprendre |                             None                             | Validée sur pc et Raspberry pi                        |
+|             2.4.1             | L'algorithme doit permettre un affichage d'une image décodée |               Affichage VGA sur la carte FPGA                | Non validée                                           |
+|              3.1              | L'algorithme doit pouvoir s’exécuter sur une carte FPGA (à défaut embarqué) |  Identiques ou supérieures à la version PC de l'algorithme   | exécution sur carte ARM (RBPI)                        |
+|              4.1              | L'algorithme implémenté sur FPGA (à défaut embarqué) doit induire une faible consommation électrique | Inférieures à la consommation d'un PC exécutant l'algorithme (< 30W) | exécution sur carte ARM moins gourmande.              |
 
 On rajoute à ces exigences les fonctions définissant les relations entre l'algorithme et les acteurs externes. Pour cela, la méthode du diagramme en pieuvre est utilisée. Elle permet d'illustrer clairement les fonctions accomplies par le système (i.e. l'algorithme EVEEX).
+
+![Diagramme Pieuvre](..\rapport d'avancement.assets\pieuvre.png)
+
+-   FP1 : Transmission d'images / vidéo entre 2 PC via un réseau
+-   FP2 : Transmission d'images / vidéo entre 2 FPGA (ou autre carte embarquée) via un réseau
+-   FC1 : Les données doivent être compressées _(pour être transmises par le réseau)_
+-   FC2 : Les 2 machines doivent être reliées via un réseau
+-   FC3 : Un FPGA ( ou autre carte embarquée) doit pouvoir comprendre l'algorithme
+-   FC4 : L'algorithme doit être différent des algorithmes existants (pour des raisons de copyright)
+-   FC5 : L'algorithme doit être open-source
+-   FC6 : L'algorithme doit permettre une réduction de la consommation électrique (sur FPGA ou autre carte embarquée)
 
 ## Maîtrise de l'algorithme
 
@@ -251,7 +262,7 @@ Le développement en Python de l'algorithme était relativement simple (**par ra
 
 - Les définitions de la DCT (transformée en cosinus discrète) en **deux dimensions** ainsi que son opérateur inverse n'ont pas été simples à dénicher. De même pour sa forme compacte (ie son expression sous la forme d'un produit matriciel "simple" avec un opérateur orthogonal).
 
-- Relier les 3 parties majeures du code (i.e. l'encodeur, la partie réseau et le décodeur) a été **extrêmement chronophage**, notamment pour des raisons de débuggage (extrême).
+- Relier les 3 parties majeures du code (i.e. l'encodeur, la partie réseau et le décodeur) a été **extrêmement chronophage**, notamment pour des raisons de débogage (extrême).
 
 - Initialement, notre prototype Python n'exécutait l'algorithme de compression/décompression que sur **un seul** macrobloc. La généralisation du code pour la décomposition d'une image (presque) quelconque en macroblocs s'est avérée plus ardue que prévue, **bien que réalisée rapidement**.
 
@@ -324,9 +335,11 @@ Concernant la programmation en Golang, l'encodeur fonctionne entièrement, cepen
 
 Le Golang possède, comme indiqué précédemment, un outil de profiling très évolué, nous pouvons donc avec simplicité trouver les éléments de l'algorithme qui prennent du temps, ou bien ne sont pas optimisés :
 
->   insérer image des perfs de l'algo
+![profil de performance avec cosinus tel quel](C:\Users\guill\git\EVEEX-Documentation\Rapports et CR\Rapport final\rapport.assets\profile001.gif)
 
 On constate que la fonction de calcul du cosinus (qui intervient dans le calcul d'une DCT) consomme énormément de ressources et de temps, nous avons donc eu l'idée de passer par un développement de Taylor (d'ordre 2), que nous appellerons le `FastCos`. 
+
+![profil de performance avec développement de Taylor](C:\Users\guill\git\EVEEX-Documentation\Rapports et CR\Rapport final\rapport.assets\profile002.gif)
 
 Maintenant, on constate qu'on accélère considérablement le calcul d'encodage des frames , ce qui nous prouve l'utilité du développement de Taylor ainsi que du profiling.
 
@@ -403,13 +416,15 @@ Les possibilités de cartes sont nombreuses mais en voici deux :
 
 * La deuxième option est plus raisonnable, il s'agit du kit de développement maixduino.
 
-  
+  ![carte maixduino](C:\Users\guill\git\EVEEX-Documentation\Rapports et CR\Rapport final\rapport.assets\maixduino.webp)
 
   Cette carte est beaucoup plus raisonnable en terme de performances, ne dispose pas de sortie vidéo et est plutôt destiné a l'IOT (Internet Of Things), cependant nous en avons à disposition et elle a le mérite d’être 64 bits. Nous sommes donc partis sur cette option. 
 
-  [suite a venir avec manip]
+  Par faute de temps, n'avons pas pu effectuer de manipulation propre avec cette carte. Néanmoins l'export d'un binaire compilé pour riscV s'effectue avec l'utilitaire python *Kflash*. Nous manquions d'un moyen de communiquer avec la carte une fois le binaire importé (il aurait fallu la création d'un noyau buildroot fait pour le SOC K210 de la carte). 
 
-  
+En résumé, il ne faut pas jeter pour autant une implémentation propre sur RiscV, surtout avec les prochaines cartes, même si accélération matérielle donnée par le parallélisme en FPGA serait plus que souhaitable. 
+
+Vous le constater, les rebondissements et fausses pistes ont été nombreuses, et il clair que le travail aurait été à la limite de l'impossible en suivant un cycle de développement standard en V, c'est pourquoi l'approche Agile était indispensable au sein du projet. 
 
 ## Déroulement agile du projet 
 
@@ -441,9 +456,13 @@ Nous nous sommes servis des descriptions des issues pour conserver les user-stor
 * **travail réalisé** : L'issue a-t-elle été réalisée en partie ? en totalité ? 
 * **perspectives futures** : ce qui va découler de la réalisation de la tâche. 
 
+Dans la planification des taches, nous faisions toujours attention à commencer nos travaux par un "hello-world" de la technologie à utilisée. Avant de faire de vélo, il faut mettre les roulettes et les enlever petit à petit, c'est ça etre agile. 
+
 Nous complétions ces user-stories sous forme écrite par 15 minutes de démonstration en fin de chaque journée pour pouvoir montrer à tout le monde le travail réalisé.
 
 Pour un aperçu plus convivial et plus chronologique du déroulé du projet, un portfolio est disponible sur Mahara à l'adresse suivante : https://mahara.ensta-bretagne.fr/view/groupviews.php?group=348
+
+\pagebreak
 
 # Conclusion 
 
@@ -455,7 +474,9 @@ Premièrement, le **développement en C reste très compliqué**, notamment dans
 
 Enfin, nous n'avons pas saisi au départ les possibilités du FPGA en matière de programmation "objet". Nous avons pu constater pendant le cours de 2ème année de M. Le Lann sur le VHDL à quel point le langage dispose d'une certaine "abstraction" sur les types, et il est possible que si devions commencer le projet maintenant, nous aurions cherché à développer au moins une partie du code en FPGA natif. Concernant LiteX, l'approche est très séduisante. En effet, la programmation en Migen est plus rapide à développer d'une manière générale, et permet de synthétiser beaucoup de code à partir de quelques fichiers Python.
 
-Toutefois, nous avons pu nous concentrer sur la **maîtrise de l'algorithme** et les **possibilités d'intégration future** au sein du matériel.
+Toutefois, nous avons pu nous concentrer sur la **maîtrise de l'algorithme** et les **possibilités d'intégration future** au sein du matériel. Il ne manque qu'un compilateur GO pour riscv32 bits ou intégration d'un soc64 bits sur LiteX pour pouvoir bénéficier d'un portage de code relativement performant, et accélerable en vhdl (calcul de DCT en dur grâce a des tables LUT par exemple). 
+
+
 
 \pagebreak
 
@@ -510,7 +531,7 @@ Golang :
 
     La liste des paquets nécessaires et externes au Golang est trouvable dans `go.mod`, à la racine du code. 
 
-    Tous les paquets extérieurs sont bien disponibles sur GitHub et ouverts. 
+    Tous les paquets extérieurs sont bien disponibles sur GitHub et ouverts (License MIT pour la plupart) . 
 
 **Validation de l'exigence non-fonctionnelle => 100 %** 
 
@@ -554,6 +575,82 @@ Test de la fonction `toYUVImage` et tests unitaires sur les fonctions du type `I
 ![Image de test issue de l'algorithme de génération d'images en python](../VFU/assets/image_res.png)
 
 ![Nuancier de couleurs classique disponible sur internet](../VFU/assets/mireTV.jpg)
+
+## Résultats 
+
+#### Python
+
+Prenons l'image de la **Fig 2** et testons sa conversion au format YUV par l'algorithme en python pour vérifier le respect de la colorimétrie.
+
+Voici un extrait de cette image à peu près au milieu pour la version RGB :
+
+```bash
+RGB sample :  
+[[[255 255 255]
+  [254 254 254]
+  [255 255 255]
+  ...
+  [255 255 255]
+  [255 255 255]
+  [253 253 253]]
+
+ [[253 253 253]
+  [192 192 192]
+  [ 87  87  87]
+  ...
+  [ 93  93  93]
+  [ 90  90  90]
+  [ 90  90  90]]
+```
+
+De même pour la version YUV
+
+```bash
+YUV sample :
+[[[2.55e+02 2.55e-03 2.55e-03]
+  [2.54e+02 2.54e-03 2.54e-03]
+  [2.55e+02 2.55e-03 2.55e-03]
+  ...
+  [2.55e+02 2.55e-03 2.55e-03]
+  [2.55e+02 2.55e-03 2.55e-03]
+  [2.53e+02 2.53e-03 2.53e-03]]
+
+ [[2.53e+02 2.53e-03 2.53e-03]
+  [1.92e+02 1.92e-03 1.92e-03]
+  [8.70e+01 8.70e-04 8.70e-04]
+  ...
+  [9.30e+01 9.30e-04 9.30e-04]
+  [9.00e+01 9.00e-04 9.00e-04]
+  [9.00e+01 9.00e-04 9.00e-04]]
+```
+
+On a un bon premier retour. L'avantage d'utiliser le format YUV par rapport au RGB est le fait que la quasi-totalité des données se trouvent sur la partie "Y" du pixel, la partie "U" et "V" n'étant que des informations de chrominance ces dernières sont effectivement proche de zéro.
+
+D'un point de vue visuel on obtient l'image suivante pour les données RGB : 
+
+![Résultat de l'exploitation de l'image au format RGB](C:\Users\guill\git\EVEEX-Documentation\Rapports et CR\Rapport final\rapport.assets\mireTV_version_rgb.jpg)
+
+![Résultat de l'exploitation de l'image au format YUV](C:\Users\guill\git\EVEEX-Documentation\Rapports et CR\Rapport final\rapport.assets\version_yuv.jpg)
+
+Visuellement les résultats sont identiques ce qui est normal cette étape n'étant pas destructrice en termes d'information. 
+
+#### C
+
+Pour charger une image avec la version du code en C on passe par une bibliothèque externe "stb_image" pour éviter d'avoir à réinventer la roue et réécrire 7000 lignes de codes.
+
+Le résultat de ce chargement est signalé par une ligne dans la console :
+
+![Retour sur le chargement de l'image](\rapport.assets\loading_c.png)
+
+De même la conversion en YUV donne des résultats similaires quoi que légèrement détériores lors de la sauvegarde. Après investigation il semblerait que cela soit un problème récurrent avec cette bibliothèque de fonctions.
+
+![Différence entre les versions RGB et YUV en C](\rapport.assets\yuv_c.png)
+
+#### Golang
+
+La gestion des images est bien plus aisée en Golang. La plupart des fonctions nécessaires sont déjà présentes dans la bibliothèque standard.
+
+\pagebreak
 
 ### Fiche n°2.2
 
