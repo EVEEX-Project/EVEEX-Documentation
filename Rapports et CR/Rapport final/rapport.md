@@ -166,19 +166,21 @@ Le fonctionnement global de l'algorithme est détaillé dans le diagramme en blo
 
 L'image, au format RGB (que sort nativement la plupart des cameras), est tout d'abord **convertie au format chrominance/luminance (YUV)**. Ce choix est motivé par le fait qu'au format YUV, l'essentiel de l'information de l'image se trouve dans la luminance. Les chrominances pourront alors être approximées pour gagner en espace mémoire, on parlera ici de **compression avec pertes**.
 
-![mire TV en format RGB](rapport.assets\mireTV_version_rgb.jpg)
+![mire TV en format RGB](rapport.assets/mireTV_version_rgb.jpg){ width=60%}
 
-![mire TV en format YUV](rapport.assets\version_yuv-1616940328305.jpg)
+![mire TV en format YUV](rapport.assets/version_yuv-1616940328305.jpg){ width=60% }
 
-Ensuite, l'image est découpée en **macroblocs** de $16 \times 16$ pixels. En réalité, comme une image RGB contient 3 canaux de couleur, les macroblocs sont en fait de taille $16\times 16\times 3$, mais, par abus de langage, et par souci de simplicité, nous dirons simplement qu'ils ont une taille de $16 \times 16$ (ou $N \times N$ dans le cas général). Cette taille de macrobloc n'est pas arbitraire. En effet, nous avons déterminé **empiriquement** que, pour notre prototype, **et pour des images pré-existantes en 480p (720x480 pixels) ou alors générées aléatoirement**, les macroblocs $16 \times 16$ étaient ceux qui produisaient les meilleurs taux de compression parmi les tailles standards de macroblocs, à savoir $8 \times 8$, $16 \times 16$ et $32 \times 32$ pixels, pour un temps donné. ![Décomposition en macroblocs de 16x16 pixels](rapport.assets/macrobloc.png)
+Ensuite, l'image est découpée en **macroblocs** de $16 \times 16$ pixels. En réalité, comme une image RGB contient 3 canaux de couleur, les macroblocs sont en fait de taille $16\times 16\times 3$, mais, par abus de langage, et par souci de simplicité, nous dirons simplement qu'ils ont une taille de $16 \times 16$ (ou $N \times N$ dans le cas général). Cette taille de macrobloc n'est pas arbitraire. En effet, nous avons déterminé **empiriquement** que, pour notre prototype, **et pour des images pré-existantes en 480p (720x480 pixels) ou alors générées aléatoirement**, les macroblocs $16 \times 16$ étaient ceux qui produisaient les meilleurs taux de compression parmi les tailles standards de macroblocs, à savoir $8 \times 8$, $16 \times 16$ et $32 \times 32$ pixels, pour un temps donné. 
+
+![Décomposition en macroblocs de 16x16 pixels](rapport.assets/macrobloc.png)
 
 Après cette étape, on applique diverses transformations **à chacune de ces matrices-macroblocs YUV** afin de les compresser. Ces transformations font partie de **l'étape d'encodage**.
 
 -   Une Transformation en Cosinus Discrète, ou **DCT** **[8]**, qui est une transformation (matricielle) linéaire et **réversible** qui va permettre de **concentrer** les données du macrobloc YUV dans la diagonale principale de l'image de sortie (la diagonale "nord-ouest / sud-est"). Ainsi, en-dehors de cette zone, les composantes de l'image (après application de la DCT) seront relativement faibles en valeur absolue, ce qui sera **très pratique** lors des étapes suivantes.
 
-* On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT ainsi généré. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur $16 \times 16 = 256$. **On passe donc d'une matrice à 2 dimensions à une liste en une seule dimension.** Ce découpage va se faire selon les $2\times16-1 = 31$ diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici **extrêmement commode**, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, partout ailleurs, ces valeurs seront moindres.
+* On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT ainsi généré. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur $16 \times 16 = 256$. **On passe donc d'une matrice à 2 dimensions à une liste en une seule dimension.** Ce découpage va se faire selon les $2\times16-1 = 31$ diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici **extrêmement commode**, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, pDécomposition en macroblocs de 16x16 pixelsartout ailleurs, ces valeurs seront moindres.
 
-  ![Linéarisation Zig zag](rapport.assets/Zigzag linearization.png)
+  ![Linéarisation Zig zag](rapport.assets/Zigzag linearization.png){ width=70% }
 
 * On effectue maintenant l'étape de seuillage, aussi appelée **quantization**. Cette opération consiste à ramener à zéro tous les éléments des 3 listes (issues de la linéarisation en zigzag) qui sont inférieurs **en valeur absolue** à un certain seuil, appelé _threshold_ (ou _DEFAULT_QUANTIZATION_THRESHOLD_ dans le code). Comme énoncé précédemment, la plupart des valeurs de ces 3 listes seront relativement faibles, donc appliquer ce seuillage va nous permettre d'avoir en sortie 3 listes avec **beaucoup de zéros**. Le seuil a ici été déterminé empiriquement, à partir d'une série de tests sur des images-macroblocs générées aléatoirement. **On a choisi `threshold = 10`, car il s'agissait de la valeur maximale qui permet subjectivement d'avoir une bonne qualité d'image en sortie.** Il est important de noter que cette étape de seuillage est **irréversible**, on parle ici d'une étape de traitement avec pertes car on perd de l'information dans les détails.
 
@@ -305,7 +307,7 @@ Ce code ne fait pas rien, la plupart des fonctions de l'encodeur sont implément
 
 Voici les performances que l'on a obtenues pour le prototype partiel en C :
 
-![Temps d'encodage d'une image 720p avec des blocs de $16\times 16$ pixels](./rapport.assets/c_perf)
+![Temps d'encodage d'une image 720p avec des blocs de $16\times 16$ pixels](./rapport.assets/c_perf){ width=80% }
 
 Les temps de chargement d'image sont presque $100$ fois plus rapide que par rapport à Python. Cependant **les performances atteintes sont très loin de celles attendues**. Cela peut s'expliquer notamment par le fait que nous avons tenté de reproduire un système de POO très **gourmand** en appels système et en création de variables en mémoire. Ce fut l'une des raisons pour laquelle nous avons **changé de langage**.
 
@@ -349,7 +351,7 @@ Dans nos plans initiaux, nous cherchions à implémenter le code de manière mat
 
 Avant de pouvoir développer (et surtout tester) sur une carte directement, il nous faut installer la *Toolchain* de développement de Xilinx appelée Vivado (l'installation est compliquée et lourde, en particulier sur Linux où tout se fait en mode bash). Les cartes dont nous disposons sont des FPGA artix-7 construits par la société Digilent, les cartes NEXYS4 DDR. 
 
-![Carte FPGA Nexys4 DDR et ses entrées sorties](rapport.assets/nexys4ddr.png)
+![Carte FPGA Nexys4 DDR et ses entrées sorties](rapport.assets/nexys4ddr.png){ width=70% }
 
 Ces cartes possèdent une DDR (Double Data Rate) embarquée, ainsi que la plupart des entrées/sorties nécessaires à l'élaboration d'un prototype (Éthernet, VGA, P-mod pour la camera). Pour capturer l'image, nous avons à notre disposition des camera **OV7670**, capturant une image 480p et ayant l'avantage d’être très bas coût (2 euros l'unité), ce qui est utile pour en acheter plusieurs (l'une d'elles a d'ailleurs succombé à nos manipulations).
 
@@ -391,7 +393,7 @@ Suite à la complexité du développement FPGA, nous avons choisi de nous orient
 
 Pour pouvoir exécuter le code compilé (C ou Golang) il est nécessaire de **cross-compiler** : en effet, par défaut, le compilateur (GCC par exemple), qui se charge de traduire les lignes du code source vers des instructions machines (donc dépendantes de l'architecture du processeur), traduit dans le système d'instructions du système sur lequel il est exécuté (ici un PC). Il faut donc préciser au compilateur que l'on désire exécuter le binaire dans un système d'instructions particulier, ou en télécharger un autre si nécessaire. Ici il faut préciser à GCC ou au compilateur Golang que l'on souhaite un binaire en architecture ARM.
 
-![cross-compilation vers une architecture ARM](rapport.assets/cross-compile.png)
+![cross-compilation vers une architecture ARM](rapport.assets/cross-compile.png){ width=80% }
 
 Notre protocole d'intégration matérielle est donc le suivant : on exécute le code (Python) sur deux Raspberry Pi : 
 
@@ -410,13 +412,13 @@ Les possibilités de cartes sont nombreuses mais en voici deux :
 
 * l'option la plus optimale aurait été une carte Beagle-V: 
 
-  ![Carte beagleV disposant d'un SOC d'architecture RISCV](rapport.assets/beagle.png)
+  ![Carte beagleV disposant d'un SOC d'architecture RISCV](rapport.assets/beagle.png){ width=70% }
 
   Cette carte dispose de grosses performances pour sa taille avec un processeur dual-core 64 bits cadencé à 1 Ghz et 8go de RAM. Cependant elle n'est pas encore en vente, dans quelques mois le labo STICC de l'ENSTA Bretagne devrait pouvoir en avoir une, il sera donc fort intéressant de poursuivre le projet sur cette carte puisqu'elle dispose de tout ce dont on a besoin, et a le mérite, contrairement aux cartes ARM comme les Raspberry Pi, d’être intégralement open-source. 
 
 * La deuxième option est plus raisonnable, il s'agit du kit de développement maixduino.
 
-  ![carte maixduino](rapport.assets/maixduino.webp)
+  ![carte maixduino](rapport.assets/maixduino_brrrrr){ width=80% }
 
   Cette carte est beaucoup plus raisonnable en terme de performances, ne dispose pas de sortie vidéo et est plutôt destiné a l'IOT (Internet Of Things), cependant nous en avons à disposition et elle a le mérite d’être 64 bits. Nous sommes donc partis sur cette option. 
 
@@ -556,7 +558,7 @@ Golang :
 
 ##### Python
 
-![Logo du langage Python](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Python_logo_and_wordmark.svg/1280px-Python_logo_and_wordmark.svg.png)
+![Logo du langage Python](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Python_logo_and_wordmark.svg/1280px-Python_logo_and_wordmark.svg.png){ width=50% }
 
 Test de la fonction `RGBtoYUV` sur un nuancier de couleur et vérification visuelle du respect de la colorimétrie. 
 
@@ -564,21 +566,21 @@ Test de la fonction `RGBtoYUV` sur un nuancier de couleur et vérification visue
 
 ##### C
 
-![Logo du langage C](https://cdn.iconscout.com/icon/free/png-512/c-programming-569564.png)
+![Logo du langage C](https://cdn.iconscout.com/icon/free/png-512/c-programming-569564.png){ width=30% }
 
 Test des fonctions `loadIMG`, `toYUVImage` sur une image de test : image pré-existante ou image générée aléatoirement via le fichier de génération d'images tests sur python
 
 ##### Golang
 
-![Logo du langage Golang](https://www.vertica.com/wp-content/uploads/2019/07/Golang.png)
+![Logo du langage Golang](https://www.vertica.com/wp-content/uploads/2019/07/Golang.png){ width=60% }
 
 Test de la fonction `toYUVImage` et tests unitaires sur les fonctions du type `Image` sur des images générées, notamment test de la fonction `LoadImageFromFile` afin d'obtenir un objet exploitable par les algorithmes.
 
 #### Images de test 
 
-![Image de test issue de l'algorithme de génération d'images en python](rapport.assets\image_res-1616940418548.png)
+![Image de test issue de l'algorithme de génération d'images en python](rapport.assets/image_res-1616940418548.png)
 
-![Nuancier de couleurs classique disponible sur internet](rapport.assets\mireTV-1616940421719.jpg)
+![Nuancier de couleurs classique disponible sur internet](rapport.assets/mireTV-1616940421719.jpg){ width=80% }
 
 ### Résultats 
 
@@ -632,9 +634,9 @@ On a un bon premier retour. L'avantage d'utiliser le format YUV par rapport au R
 
 D'un point de vue visuel on obtient l'image suivante pour les données RGB : 
 
-![Résultat de l'exploitation de l'image au format RGB](C:\Users\guill\git\EVEEX-Documentation\Rapports et CR\Rapport final\rapport.assets\mireTV_version_rgb.jpg)
+![Résultat de l'exploitation de l'image au format RGB](./rapport.assets/mireTV_version_rgb.jpg){ width=80% }
 
-![Résultat de l'exploitation de l'image au format YUV](C:\Users\guill\git\EVEEX-Documentation\Rapports et CR\Rapport final\rapport.assets\version_yuv.jpg)
+![Résultat de l'exploitation de l'image au format YUV](./rapport.assets/version_yuv.jpg){ width=80% }
 
 Visuellement les résultats sont identiques ce qui est normal cette étape n'étant pas destructrice en termes d'information. 
 
@@ -644,11 +646,11 @@ Pour charger une image avec la version du code en C on passe par une bibliothèq
 
 Le résultat de ce chargement est signalé par une ligne dans la console :
 
-![Retour sur le chargement de l'image](\rapport.assets\loading_c.png)
+![Retour sur le chargement de l'image](rapport.assets/loading_c.png)
 
 De même la conversion en YUV donne des résultats similaires quoi que légèrement détériores lors de la sauvegarde. Après investigation il semblerait que cela soit un problème récurrent avec cette bibliothèque de fonctions.
 
-![Différence entre les versions RGB et YUV en C](\rapport.assets\yuv_c.png)
+![Différence entre les versions RGB et YUV en C](rapport.assets/yuv_c.png)
 
 #### Golang
 
@@ -676,7 +678,7 @@ Test de la fonction `encode` grâce au CLI (Command Line Interpreter) qui ressor
 
 Entrée:
 
-![Image d'entrée dans l'algorithme](rapport.assets\Ferrari-1616940426388.jpg)
+![Image d'entrée dans l'algorithme](rapport.assets/Ferrari-1616940426388.jpg){ width=80% }
 
 Création du bitstream.
 
@@ -688,7 +690,7 @@ Le bitstream est bien de taille inférieure à l'image originale !
 
 Sortie après décodage de ce même bitstream :
 
-![Image en sortie du décodage du bitstream par EVEEX](rapport.assets\ferraritest-1616940429072.jpg)
+![Image en sortie du décodage du bitstream par EVEEX](rapport.assets/ferraritest-1616940429072.jpg){ width=80% }
 
 **La décompression est bien effectuée correctement. Les pertes sont invisibles à l’œil nu !** 
 
@@ -712,7 +714,7 @@ Dans le main (i.e. *main.py*), le bitstream est créé et est envoyé par paquet
 
 **Entrée:**
 
-![Image en entrée de l'encodeur avant envoi par le réseau](rapport.assets\Ferrari-1616940431745.jpg)
+![Image en entrée de l'encodeur avant envoi par le réseau](rapport.assets/Ferrari-1616940431745.jpg){ width=80% }
 
 
 
@@ -739,7 +741,7 @@ Dans le main (i.e. *main.py*), le bitstream est créé et est envoyé par paquet
 
 Sortie après décodage du bitstream :
 
-![Image en sortie du décodage du bitstream envoyé par le réseau](rapport.assets\ferraritest-1616940435929.jpg)
+![Image en sortie du décodage du bitstream envoyé par le réseau](rapport.assets/ferraritest-1616940435929.jpg){ width=80% }
 
 **L'image est donc bien décodée sans perte (flagrante) d'information !**
 
