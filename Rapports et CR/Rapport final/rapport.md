@@ -145,7 +145,7 @@ Les points de vocabulaire au niveau de exigences seront définis par la suite da
 
 On rajoute à ces exigences les fonctions définissant les relations entre l'algorithme et les acteurs externes. Pour cela, la méthode du diagramme en pieuvre est utilisée. Elle permet d'illustrer clairement les fonctions accomplies par le système (i.e. l'algorithme EVEEX).
 
-![Diagramme Pieuvre](..\rapport d'avancement.assets\pieuvre.png)
+![Diagramme Pieuvre](rapport.assets/pieuvre.png)
 
 -   FP1 : Transmission d'images / vidéo entre 2 PC via un réseau
 -   FP2 : Transmission d'images / vidéo entre 2 FPGA (ou autre carte embarquée) via un réseau
@@ -166,9 +166,9 @@ Le fonctionnement global de l'algorithme est détaillé dans le diagramme en blo
 
 L'image, au format RGB (que sort nativement la plupart des cameras), est tout d'abord **convertie au format chrominance/luminance (YUV)**. Ce choix est motivé par le fait qu'au format YUV, l'essentiel de l'information de l'image se trouve dans la luminance. Les chrominances pourront alors être approximées pour gagner en espace mémoire, on parlera ici de **compression avec pertes**.
 
-![mire TV en format RGB](rapport.assets/mireTV_version_rgb.jpg)
+![mire TV en format RGB](rapport.assets\mireTV_version_rgb.jpg)
 
-![mire TV en format YUV](../VFU/assets/version_yuv.jpg)
+![mire TV en format YUV](rapport.assets\version_yuv-1616940328305.jpg)
 
 Ensuite, l'image est découpée en **macroblocs** de $16 \times 16$ pixels. En réalité, comme une image RGB contient 3 canaux de couleur, les macroblocs sont en fait de taille $16\times 16\times 3$, mais, par abus de langage, et par souci de simplicité, nous dirons simplement qu'ils ont une taille de $16 \times 16$ (ou $N \times N$ dans le cas général). Cette taille de macrobloc n'est pas arbitraire. En effet, nous avons déterminé **empiriquement** que, pour notre prototype, **et pour des images pré-existantes en 480p (720x480 pixels) ou alors générées aléatoirement**, les macroblocs $16 \times 16$ étaient ceux qui produisaient les meilleurs taux de compression parmi les tailles standards de macroblocs, à savoir $8 \times 8$, $16 \times 16$ et $32 \times 32$ pixels, pour un temps donné. ![Décomposition en macroblocs de 16x16 pixels](rapport.assets/macrobloc.png)
 
@@ -178,13 +178,13 @@ Après cette étape, on applique diverses transformations **à chacune de ces ma
 
 * On effectue ensuite **une linéarisation en zigzag** du macrobloc DCT ainsi généré. Cela signifie simplement que l'on va découper les 3 canaux 16x16 du macrobloc DCT en 3 vecteurs-listes de longueur $16 \times 16 = 256$. **On passe donc d'une matrice à 2 dimensions à une liste en une seule dimension.** Ce découpage va se faire selon les $2\times16-1 = 31$ diagonales "sud-ouest / nord-est" de chacun des 3 canaux du macrobloc DCT (cf. image ci-dessous). Ce découpage, en conjonction avec la DCT (cf. étape précédente) est ici **extrêmement commode**, puisque l'on se retrouve avec des listes qui, en leur "centre", ont des valeurs représentatives non-négligeables, et puis, partout ailleurs, ces valeurs seront moindres.
 
-  ![Linéarisation Zig zag](../rapport d'avancement.assets/Zigzag linearization.png)
+  ![Linéarisation Zig zag](rapport.assets/Zigzag linearization.png)
 
 * On effectue maintenant l'étape de seuillage, aussi appelée **quantization**. Cette opération consiste à ramener à zéro tous les éléments des 3 listes (issues de la linéarisation en zigzag) qui sont inférieurs **en valeur absolue** à un certain seuil, appelé _threshold_ (ou _DEFAULT_QUANTIZATION_THRESHOLD_ dans le code). Comme énoncé précédemment, la plupart des valeurs de ces 3 listes seront relativement faibles, donc appliquer ce seuillage va nous permettre d'avoir en sortie 3 listes avec **beaucoup de zéros**. Le seuil a ici été déterminé empiriquement, à partir d'une série de tests sur des images-macroblocs générées aléatoirement. **On a choisi `threshold = 10`, car il s'agissait de la valeur maximale qui permet subjectivement d'avoir une bonne qualité d'image en sortie.** Il est important de noter que cette étape de seuillage est **irréversible**, on parle ici d'une étape de traitement avec pertes car on perd de l'information dans les détails.
 
 *   On passe ensuite à l'étape de la **RLE** (Run-Length Encoding). Cette étape consiste à regrouper de manière synthétique (dans des tuples, aussi appelés _tuples RLE_) les séries de zéros obtenues après l'étape de la quantization. Concrètement, si dans une liste seuillée on a 124 zéros puis un 5.21 (par exemple), d'abord 5.21 est arrondi à l'entier le plus proche (ici 5), puis cette série de 125 entiers sera stockée dans le tuple (124, 5). Plus généralement, si l'on a le tuple RLE $(U, V)$, cela signifie que l'on a $U$ zéros puis l'entier **non-nul** $V$. Ainsi, chaque macrobloc sera décrit de manière **extrêmement synthétique** par une liste de tuples RLE. **L'image finale, étant décomposée en une série de macroblocs, sera alors une liste de listes de tuples RLE.**
 
-![Encodeur EVEEX](../rapport d'avancement.assets/Diagramme_algo_encodeur.png)
+![Encodeur EVEEX](rapport.assets/Diagramme_algo_encodeur.png)
 
 La partie suivante concerne le formatage des données. On utilise pour cela un **encodage de Huffman** qui permet à la fois de compresser et de formater les données en utilisant un arbre binaire afin d'obtenir un encodage plus petit que l'encodage naïf, mais surtout un **encodage non ambigu**. On appellera la trame à transmettre un **bitstream**.
 
@@ -232,7 +232,7 @@ Puis, finalement, après avoir décodé l'image au format YUV, on la convertit a
 
 En ce qui concerne les performances de cet algorithme, pour une image typique en **480p**, notre algorithme s'effectue en **une vingtaine de secondes en moyenne**, et a des taux de compression variant entre **10:1** et **5:1** en moyenne. Ces taux de compression, _bien qu'améliorables_, sont toutefois assez satisfaisants, dans la mesure où les taux de compression d'algorithmes pré-existants (tels que le MPEG-2) varient typiquement entre **20:1** et **5:1** pour des images "classiques". 
 
-![Décodeur EVEEX](../rapport d'avancement.assets/Diagramme algo - Décodeur - PNG.png)
+![Décodeur EVEEX](rapport.assets/Diagramme algo - Décodeur - PNG.png)
 
 En outre, voici quelques statistiques de performances liées à notre algorithme :
 
@@ -335,11 +335,11 @@ Concernant la programmation en Golang, l'encodeur fonctionne entièrement, cepen
 
 Le Golang possède, comme indiqué précédemment, un outil de profiling très évolué, nous pouvons donc avec simplicité trouver les éléments de l'algorithme qui prennent du temps, ou bien ne sont pas optimisés :
 
-![profil de performance avec cosinus tel quel](C:\Users\guill\git\EVEEX-Documentation\Rapports et CR\Rapport final\rapport.assets\profile001.gif)
+![profil de performance avec cosinus tel quel](rapport.assets/profile001.gif)
 
 On constate que la fonction de calcul du cosinus (qui intervient dans le calcul d'une DCT) consomme énormément de ressources et de temps, nous avons donc eu l'idée de passer par un développement de Taylor (d'ordre 2), que nous appellerons le `FastCos`. 
 
-![profil de performance avec développement de Taylor](C:\Users\guill\git\EVEEX-Documentation\Rapports et CR\Rapport final\rapport.assets\profile002.gif)
+![profil de performance avec développement de Taylor](rapport.assets/profile002.gif)
 
 Maintenant, on constate qu'on accélère considérablement le calcul d'encodage des frames , ce qui nous prouve l'utilité du développement de Taylor ainsi que du profiling.
 
@@ -416,7 +416,7 @@ Les possibilités de cartes sont nombreuses mais en voici deux :
 
 * La deuxième option est plus raisonnable, il s'agit du kit de développement maixduino.
 
-  ![carte maixduino](C:\Users\guill\git\EVEEX-Documentation\Rapports et CR\Rapport final\rapport.assets\maixduino.webp)
+  ![carte maixduino](rapport.assets/maixduino.webp)
 
   Cette carte est beaucoup plus raisonnable en terme de performances, ne dispose pas de sortie vidéo et est plutôt destiné a l'IOT (Internet Of Things), cependant nous en avons à disposition et elle a le mérite d’être 64 bits. Nous sommes donc partis sur cette option. 
 
@@ -576,9 +576,9 @@ Test de la fonction `toYUVImage` et tests unitaires sur les fonctions du type `I
 
 #### Images de test 
 
-![Image de test issue de l'algorithme de génération d'images en python](../VFU/assets/image_res.png)
+![Image de test issue de l'algorithme de génération d'images en python](rapport.assets\image_res-1616940418548.png)
 
-![Nuancier de couleurs classique disponible sur internet](../VFU/assets/mireTV.jpg)
+![Nuancier de couleurs classique disponible sur internet](rapport.assets\mireTV-1616940421719.jpg)
 
 ### Résultats 
 
@@ -676,7 +676,7 @@ Test de la fonction `encode` grâce au CLI (Command Line Interpreter) qui ressor
 
 Entrée:
 
-![Image d'entrée dans l'algorithme](../VFU/assets/Ferrari.jpg)
+![Image d'entrée dans l'algorithme](rapport.assets\Ferrari-1616940426388.jpg)
 
 Création du bitstream.
 
@@ -688,7 +688,7 @@ Le bitstream est bien de taille inférieure à l'image originale !
 
 Sortie après décodage de ce même bitstream :
 
-![Image en sortie du décodage du bitstream par EVEEX](../VFU/assets/ferraritest.jpg)
+![Image en sortie du décodage du bitstream par EVEEX](rapport.assets\ferraritest-1616940429072.jpg)
 
 **La décompression est bien effectuée correctement. Les pertes sont invisibles à l’œil nu !** 
 
@@ -712,7 +712,7 @@ Dans le main (i.e. *main.py*), le bitstream est créé et est envoyé par paquet
 
 **Entrée:**
 
-![Image en entrée de l'encodeur avant envoi par le réseau](../VFU/assets/Ferrari.jpg)
+![Image en entrée de l'encodeur avant envoi par le réseau](rapport.assets\Ferrari-1616940431745.jpg)
 
 
 
@@ -739,7 +739,7 @@ Dans le main (i.e. *main.py*), le bitstream est créé et est envoyé par paquet
 
 Sortie après décodage du bitstream :
 
-![Image en sortie du décodage du bitstream envoyé par le réseau](../VFU/assets/ferraritest.jpg)
+![Image en sortie du décodage du bitstream envoyé par le réseau](rapport.assets\ferraritest-1616940435929.jpg)
 
 **L'image est donc bien décodée sans perte (flagrante) d'information !**
 
@@ -781,15 +781,15 @@ Pour différentes tailles de macroblocs (respectivement 8x8 et 16x16), on obtien
 
 Pour des macroblocs 8x8 (**pour une même démonstration**) :
 
-![](..\VFU\assets\test_vidéo_local_8x8_émetteur.PNG)
+![](rapport.assets/test_vidéo_local_8x8_émetteur.PNG)
 
-![](..\VFU\assets\test_vidéo_local_8x8_récepteur.PNG)
+![](rapport.assets/test_vidéo_local_8x8_récepteur.PNG)
 
 Pour des macroblocs 16x16 (**pour une même démonstration**) :
 
-![](..\VFU\assets\test_vidéo_local_16x16_émetteur.PNG)
+![](rapport.assets/test_vidéo_local_16x16_émetteur.PNG)
 
-![](..\VFU\assets\test_vidéo_local_16x16_récepteur.PNG)
+![](rapport.assets/test_vidéo_local_16x16_récepteur.PNG)
 
 On retrouve notamment que plus la taille de `macroblock_size` augmente, meilleures sont les performances de l'algorithme.
 
@@ -797,9 +797,9 @@ On retrouve notamment que plus la taille de `macroblock_size` augmente, meilleur
 
 On obtient, pour des macroblocs 16x16 (**pour une même démonstration**) :
 
-![](..\VFU\assets\test_vidéo_réseau_16x16_émetteur.PNG)
+![](rapport.assets/test_vidéo_réseau_16x16_émetteur.PNG)
 
-![](..\VFU\assets\test_vidéo_réseau_16x16_récepteur.PNG)
+![](rapport.assets/test_vidéo_réseau_16x16_récepteur.PNG)
 
 
 
@@ -858,25 +858,25 @@ Pour différentes tailles de macroblocs (respectivement 8x8, 16x16 et 32x32), on
 
 Pour des macroblocs 8x8 (**pour une même démonstration**) :
 
-![](..\VFU\assets\test_RPi_8x8_émetteur.PNG)
+![](rapport.assets/test_RPi_8x8_émetteur.PNG)
 
-![](..\VFU\assets\test_RPi_8x8_récepteur.PNG)
+![](rapport.assets/test_RPi_8x8_récepteur.PNG)
 
 
 
 Pour des macroblocs 16x16 (**pour une même démonstration**) :
 
-![](..\VFU\assets\test_RPi_16x16_émetteur.PNG)
+![](rapport.assets/test_RPi_16x16_émetteur.PNG)
 
-![](..\VFU\assets\test_RPi_16x16_récepteur.PNG)
+![](rapport.assets/test_RPi_16x16_récepteur.PNG)
 
 
 
 Pour des macroblocs 32x32 (**pour une même démonstration**) :
 
-![](..\VFU\assets\test_RPi_32x32_émetteur.PNG)
+![](rapport.assets/test_RPi_32x32_émetteur.PNG)
 
-![](..\VFU\assets\test_RPi_32x32_récepteur.PNG)
+![](rapport.assets/test_RPi_32x32_récepteur.PNG)
 
 
 
