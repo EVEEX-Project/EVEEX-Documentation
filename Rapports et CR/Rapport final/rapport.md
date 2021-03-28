@@ -679,6 +679,8 @@ Sortie après décodage du bitstream :
 
 **RGB :** Rouge, Vert, Bleu. C'est un système de codage informatique des couleurs. Chaque pixel possède une valeur de rouge, une de vert et une de bleu.
 
+**RISC-V :** Une architecture de jeu d'instruction open-source à destination de l'embarqué.
+
 **FPGA :** Une puce FPGA est un circuit imprimé reconfigurable fonctionnant à base de portes logiques.
 
 **Macrobloc (ou macroblock)** : Une partie de l'image de taille N x N (avec N qui vaut généralement 8, 16 ou 32 pixels).
@@ -686,6 +688,14 @@ Sortie après décodage du bitstream :
 **Bitstream :** Flux de données en binaire.
 
 **VHDL :** Langage de description de matériel destiné à représenter le comportement ainsi que l'architecture d'un système électronique numérique.
+
+**Buildroot :** Buildroot est un ensemble de Makefiles et de correctifs qui simplifie et automatise le processus de construction d'un environnement Linux complet et amorçable pour un système embarqué.
+
+**Raspberry pi :** Le Raspberry Pi est un nano-ordinateur monocarte à processeur ARM de la taille d'une carte de crédit. 
+
+**ARM :** Les architectures ARM sont des architectures externes de type RISC 32 bits et 64 bits.
+
+**SoC (system on chip):** Système complet embarqué sur une seule puce ("circuit intégré"), pouvant comprendre de la mémoire, un ou plusieurs microprocesseurs, des périphériques d'interface, ou tout autre composant nécessaire à la réalisation de la fonction attendue.
 
 **IDE :** Environnement de Développement Intégré.
 
